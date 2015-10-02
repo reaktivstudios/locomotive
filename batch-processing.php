@@ -53,6 +53,7 @@ final class Batch_Processing {
 	 */
 	public function load_includes() {
 		require_once( BATCH_PLUGIN_DIR . '/includes/abstracts/abstract-batch.php' );
+		require_once( BATCH_PLUGIN_DIR . '/includes/batches/class-batch-posts.php' );
 		require_once( BATCH_PLUGIN_DIR . '/includes/batch-functions.php' );
 	}
 
@@ -61,6 +62,14 @@ final class Batch_Processing {
 	 */
 	public function attach_hooks() {
 		add_action( 'admin_menu', array( $this, 'add_dashboard' ) );
+		add_action( 'after_setup_theme', array( $this, 'loaded' ) );
+	}
+
+	/**
+	 * Let everyone know we are loaded and ready to go.
+	 */
+	public function loaded() {
+		do_action( 'batch_processing_init' );
 	}
 
 	/**

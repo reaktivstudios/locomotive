@@ -11,12 +11,17 @@ namespace Batch_Processing;
  * Register a new batch process.
  *
  * @param  array $args Arguments for the batch process.
+ * @throws Exception Only post & user are accepted $args['type'].
  */
 function register( $args ) {
-	$args = wp_parse_args( $args, array(
-		'name'     => '',
-		'object'   => 'post',
-		'args'     => array(),
-		'callback' => '',
-	) );
+	switch ( $args['type'] ) {
+		case 'post':
+			$batch_process = new Posts();
+			$batch_process->register( $args );
+			break;
+
+		default:
+			throw new \Exception( 'Type not supported.' );
+			break;
+	}
 }
