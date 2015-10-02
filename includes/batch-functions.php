@@ -5,7 +5,7 @@
  * @package Batch_Processing
  */
 
-namespace Batch_Processing;
+namespace Batch_Process;
 
 /**
  * Register a new batch process.

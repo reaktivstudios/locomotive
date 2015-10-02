@@ -5,7 +5,7 @@
  * @package Batch_Process/Batch
  */
 
-namespace Batch_Processing;
+namespace Batch_Process;
 
 /**
  * Abstract batch class.
