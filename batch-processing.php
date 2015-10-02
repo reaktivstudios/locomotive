@@ -29,23 +29,9 @@ final class Batch_Processing {
 	}
 
 	/**
-	 * Load in all the files we need.
+	 * Admin Dashboard.
 	 */
-	public function load_includes() {
-		require_once( BATCH_PLUGIN_DIR . '/includes/class-batch.php' );
-	}
-
-	/**
-	 * Handle hooks.
-	 */
-	public function attach_hooks() {
-		add_action( 'admin_menu', array( $this, 'dashboard' ) );
-	}
-
-	/**
-	 * Dashboard.
-	 */
-	public function dashboard() {
+	public function add_dashboard() {
 		add_menu_page(
 			'Batch Processes',
 			'Batch Processes',
@@ -59,11 +45,21 @@ final class Batch_Processing {
 	 * Dashboard display.
 	 */
 	public function dashboard_display() {
-		?>
-		<div class="wrap">
-			<h2><?php esc_html_e( get_admin_page_title() ); ?></h2>
-		</div>
-		<?php
+		include BATCH_PLUGIN_DIR . 'templates/dashboard.php';
+	}
+
+	/**
+	 * Load in all the files we need.
+	 */
+	public function load_includes() {
+		require_once( BATCH_PLUGIN_DIR . '/includes/abstracts/abstract-batch.php' );
+	}
+
+	/**
+	 * Handle hooks.
+	 */
+	public function attach_hooks() {
+		add_action( 'admin_menu', array( $this, 'add_dashboard' ) );
 	}
 
 	/**
