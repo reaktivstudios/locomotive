@@ -11,7 +11,7 @@ namespace Batch_Processing;
  * Register a new batch process.
  *
  * @param  array $args Arguments for the batch process.
- * @throws Exception Only post & user are accepted $args['type'].
+ * @throws \Exception Only post & user are accepted $args['type'].
  */
 function register( $args ) {
 	switch ( $args['type'] ) {
