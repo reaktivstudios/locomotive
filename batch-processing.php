@@ -7,7 +7,7 @@
  * Author URI: http://reaktivstudios.com/
  * License: GPL
  *
- * @package  Batch_Process
+ * @package Batch_Process
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -53,6 +53,7 @@ final class Batch_Processing {
 	 */
 	public function load_includes() {
 		require_once( BATCH_PLUGIN_DIR . '/includes/abstracts/abstract-batch.php' );
+		require_once( BATCH_PLUGIN_DIR . '/includes/batch-functions.php' );
 	}
 
 	/**
