@@ -18,6 +18,7 @@
 			this.$form           = $( '.batch-processing-form' );
 			this.$submit         = this.$form.find( '#submit' );
 			this.$overlay        = $( '.batch-processing-overlay' );
+			this.$overlay_inner  = $( '.batch-overlay__inner' );
 			this.$batch_option   = $( '.batch-process-option' );
 			this.$close_overlay  = $( '.batch-processing-overlay .close' );
 			this.$batch_progress = $( '.batch-progress' );
@@ -103,11 +104,9 @@
 				},
 				dataType: 'json',
 				success: function( response ) {
-					console.log( response );
-
 					// Fill our overlay with relevant information.
 					var results_template = wp.template( 'batch-processing-results' );
-					$( '.batch-overlay__inner' ).html( results_template( response ) );
+					_this.$overlay_inner.html( results_template( response ) );
 
 					// Show visual progresss.
 					$( '.batch-overlay__inner' ).find( '.batch-progress' ).css( { 
@@ -116,8 +115,6 @@
 
 					if ( response.current_step !== response.total_steps ) {
 						_this.run( current_step + 1 );
-					} else {
-						console.log( 'Youre done!' );
 					}
 				}
 			} ).fail( function ( response ) {

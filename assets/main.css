@@ -13,11 +13,10 @@
 	transition: all .5s ease-in-out;
 	-webkit-transition: all .5s ease-in-out;
 	opacity: 0;
+	display: table;
 
-	padding: 24px;
+	padding: 48px 24px;
 	width: 75%;
-	height: 80%;
-	min-height: 200px;
 
 	margin: auto;
   position: absolute;
@@ -27,25 +26,30 @@
 	background: white;
 	box-shadow: 0 0 10px #ccc;
 }
+	.batch-overlay__inner {
+		display: table-cell;
+		vertical-align: middle;
+	}
 	.batch-processing-overlay.is-open {
 		top: 0;
 		opacity: 1;
 	}
 	.batch-processing-overlay .close {
 		position: absolute;
-		top: 12px;
+		top: 8px;
 		right: 12px;
-		font-size: 18px;
 		cursor: pointer;
 	}
 	.batch-processing-overlay h2 {
+		margin-top: 0;
 		margin-bottom: 12px;
 	}
 	.batch-info {
 		margin-bottom: 6px;
 	}
 	.batch-progress {
-		height: 35px;
-		margin-bottom: 24px;
-		background: green;
+		color: white;
+		line-height: 35px;
+		padding-left: 12px;
+		background: #81b01f; /* Old browsers */
 	}

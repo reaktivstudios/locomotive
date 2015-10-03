@@ -24,15 +24,15 @@
 </div>
 
 <div class="batch-processing-overlay">
-	<div class="close">x</div>
+	<div class="close">close</div>
 	<div class="batch-overlay__inner">
+		<h2>Starting batch process</h2>
 	</div>
 </div><!-- .batch-processing-overlay -->
 
 <script type="text/html" id="tmpl-batch-processing-results">	
 	<h2>Running: {{ data.batch }}</h2>
-	<div class="batch-info">
+	<div class="batch-progress" data-progress="{{ data.progress }}">
 		Progress: {{ data.progress }}%
-	</div><!-- .batch-info -->
-	<div class="batch-progress" data-progress="{{ data.progress }}"></div>
+	</div>
 </script>
