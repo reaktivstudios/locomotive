@@ -16,7 +16,8 @@
 
 	padding: 24px;
 	width: 75%;
-	height: 60%;
+	height: 80%;
+	min-height: 200px;
 
 	margin: auto;
   position: absolute;
@@ -36,4 +37,15 @@
 		right: 12px;
 		font-size: 18px;
 		cursor: pointer;
+	}
+	.batch-processing-overlay h2 {
+		margin-bottom: 12px;
+	}
+	.batch-info {
+		margin-bottom: 6px;
+	}
+	.batch-progress {
+		height: 35px;
+		margin-bottom: 24px;
+		background: green;
 	}

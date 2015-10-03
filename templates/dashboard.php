@@ -21,10 +21,18 @@
 
 		<?php submit_button( 'Run Batch Process' ); ?>
 	</form>
-
-	<div class="batch-processing-overlay">
-		<div class="close">x</div>
-		<h2>Running XX</h2>
-		<p>Loader or something goes here..</p>
-	</div><!-- -->
 </div>
+
+<div class="batch-processing-overlay">
+	<div class="close">x</div>
+	<div class="batch-overlay__inner">
+	</div>
+</div><!-- .batch-processing-overlay -->
+
+<script type="text/html" id="tmpl-batch-processing-results">	
+	<h2>Running: {{ data.batch }}</h2>
+	<div class="batch-info">
+		Progress: {{ data.progress }}%
+	</div><!-- .batch-info -->
+	<div class="batch-progress" data-progress="{{ data.progress }}"></div>
+</script>

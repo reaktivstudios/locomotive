@@ -15,11 +15,12 @@
 		 * Cache various selectors we will be using.
 		 */
 		cacheSelectors : function() {
-			this.$form          = $( '.batch-processing-form' );
-			this.$submit        = this.$form.find( '#submit' );
-			this.$overlay       = $( '.batch-processing-overlay' );
-			this.$batch_option  = $( '.batch-process-option' );
-			this.$close_overlay = $( '.batch-processing-overlay .close' );
+			this.$form           = $( '.batch-processing-form' );
+			this.$submit         = this.$form.find( '#submit' );
+			this.$overlay        = $( '.batch-processing-overlay' );
+			this.$batch_option   = $( '.batch-process-option' );
+			this.$close_overlay  = $( '.batch-processing-overlay .close' );
+			this.$batch_progress = $( '.batch-progress' );
 		},
 
 		/**
@@ -104,6 +105,15 @@
 				success: function( response ) {
 					console.log( response );
 
+					// Fill our overlay with relevant information.
+					var results_template = wp.template( 'batch-processing-results' );
+					$( '.batch-overlay__inner' ).html( results_template( response ) );
+
+					// Show visual progresss.
+					$( '.batch-overlay__inner' ).find( '.batch-progress' ).css( { 
+						'width': response.progress + '%',
+					} );
+
 					if ( response.current_step !== response.total_steps ) {
 						_this.run( current_step + 1 );
 					} else {
@@ -111,8 +121,7 @@
 					}
 				}
 			} ).fail( function ( response ) {
-				console.log( 'FAIL' );
-				console.log( response );
+				alert( 'Something went wrong!' )
 			});
 		},
 	};

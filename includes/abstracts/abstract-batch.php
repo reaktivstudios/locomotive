@@ -197,14 +197,17 @@ abstract class Batch {
 			call_user_func_array( $this->callback, array( $result ) );
 		}
 
+		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
+
 		// Tell our AJAX request that we were successful.
 		wp_send_json( array(
 			'success'           => true,
 			'callback'          => $this->callback,
 			'batch'             => $this->name,
 			'current_step'      => $this->current_step,
-			'total_steps'       => ceil( $this->total_num_results / $this->args['posts_per_page'] ),
+			'total_steps'       => $total_steps,
 			'query_results'     => $results,
+			'progress'          => round( ( $this->current_step / $total_steps ) * 100 ),
 			'total_num_results' => $this->total_num_results,
 		) );
 	}
