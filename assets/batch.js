@@ -91,13 +91,18 @@
 		 * Batch run process.
 		 */
 		run : function( current_step ) {
-			var _this = this;
+			var _this          = this,
+				$batch_start_msg = $( '<h2>Starting batch process</h2>' );
+
+			if ( 1 === current_step ) {
+				_this.$overlay_inner.html( $batch_start_msg );
+			}
 
 			$.ajax( {
 				type: 'POST',
 				url: batch.ajaxurl,
 				data: {
-					batch_process: this.$form.find( 'input:radio[name=batch_process]:checked').val(),
+					batch_process: _this.$form.find( 'input:radio[name=batch_process]:checked').val(),
 					nonce: batch.nonce,
 					step: current_step,
 					action: 'run_batch',

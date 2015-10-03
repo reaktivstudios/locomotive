@@ -25,9 +25,7 @@
 
 <div class="batch-processing-overlay">
 	<div class="close">close</div>
-	<div class="batch-overlay__inner">
-		<h2>Starting batch process</h2>
-	</div>
+	<div class="batch-overlay__inner"></div>
 </div><!-- .batch-processing-overlay -->
 
 <script type="text/html" id="tmpl-batch-processing-results">	
