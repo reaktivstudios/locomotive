@@ -83,13 +83,6 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
-	 * Is the batch running?
-	 *
-	 * @var array
-	 */
-	public $running = false;
-
-	/**
 	 * Main plugin method for querying data.
 	 *
 	 * @since 0.1
@@ -180,7 +173,6 @@ abstract class Batch {
 	 * @param int $current_step Current step.
 	 */
 	public function run( $current_step ) {
-		$this->running = true;
 		$this->current_step = $current_step;
 		$results = $this->get_results();
 		$this->process_results( $results );
