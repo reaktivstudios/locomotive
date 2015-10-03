@@ -36,7 +36,7 @@ function get_all_batches() {
 }
 
 /**
- * Clear all existing batches.]
+ * Clear all existing batches.
  */
 function clear_existing_batches() {
 	return update_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
