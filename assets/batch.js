@@ -33,6 +33,46 @@
 		},
 
 		/**
+		 * Toggle the overlay that holds our batch process information.
+		 */
+		toggleOverlay : function() {
+			this.$overlay.toggleClass( 'is-open' );
+
+			if ( ! this.$overlay.hasClass( 'is-open' ) ) {
+				this.enableSubmitButton();
+				this.enableBatchOptions();
+			}
+		},
+
+		/**
+		 * Enable submit button.
+		 */
+		enableSubmitButton : function() {
+			this.$submit.prop( 'disabled', false );
+		},
+
+		/**
+		 * Disable submit button.
+		 */
+		disableSubmitButton : function() {
+			this.$submit.prop( 'disabled', true );
+		},
+
+		/**
+		 * Disable batch options.
+		 */
+		disableBatchOptions : function() {
+			this.$batch_option.prop( 'disabled', true );
+		},
+
+		/**
+		 * Enable batch options.
+		 */
+		enableBatchOptions : function() {
+			this.$batch_option.prop( 'disabled', false );
+		},
+
+		/**
 		 * Run a selected batch.
 		 * 
 		 * @param {event} e Click event.
@@ -40,6 +80,7 @@
 		submit : function( e ) {
 			e.preventDefault();
 			this.disableSubmitButton();
+			this.disableBatchOptions();
 			this.toggleOverlay();
 			this.run( 1 );
 		},
@@ -62,7 +103,7 @@
 				dataType: 'json',
 				success: function( response ) {
 					console.log( response );
-					
+
 					if ( response.current_step !== response.total_steps ) {
 						_this.run( current_step + 1 );
 					} else {
@@ -74,31 +115,6 @@
 				console.log( response );
 			});
 		},
-
-		/**
-		 * Toggle the overlay that holds our batch process information.
-		 */
-		toggleOverlay : function() {
-			this.$overlay.toggleClass( 'is-open' );
-
-			if ( ! this.$overlay.hasClass( 'is-open' ) ) {
-				this.enableSubmitButton();
-			}
-		},
-
-		/**
-		 * Enable submit button.
-		 */
-		enableSubmitButton : function() {
-			this.$submit.prop( 'disabled', false );
-		},
-
-		/**
-		 * Disable submit button.
-		 */
-		disableSubmitButton : function() {
-			this.$submit.prop( 'disabled', true );
-		}
 	};
 
 	batchProcess.init();
