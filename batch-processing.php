@@ -53,9 +53,9 @@ final class Batch_Processing {
 	 * Load in all the files we need.
 	 */
 	public function load_includes() {
-		require_once( BATCH_PLUGIN_DIR . '/includes/abstracts/abstract-batch.php' );
-		require_once( BATCH_PLUGIN_DIR . '/includes/batches/class-batch-posts.php' );
-		require_once( BATCH_PLUGIN_DIR . '/includes/batch-functions.php' );
+		require_once( BATCH_PLUGIN_DIR . 'includes/abstracts/abstract-batch.php' );
+		require_once( BATCH_PLUGIN_DIR . 'includes/batches/class-batch-posts.php' );
+		require_once( BATCH_PLUGIN_DIR . 'includes/batch-functions.php' );
 	}
 
 	/**
@@ -64,6 +64,15 @@ final class Batch_Processing {
 	public function attach_hooks() {
 		add_action( 'admin_menu', array( $this, 'add_dashboard' ) );
 		add_action( 'after_setup_theme', array( $this, 'loaded' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+	}
+
+	/**
+	 * Plugin stylesheet and JavaScript.
+	 */
+	public function scripts() {
+		wp_enqueue_style( 'batch-process-styles', BATCH_PLUGIN_URL . 'assets/main.css' );
+		wp_enqueue_script( 'batch-process-js', BATCH_PLUGIN_URL . 'assets/global.js', array( 'jquery' ), '0.1.0', true );
 	}
 
 	/**

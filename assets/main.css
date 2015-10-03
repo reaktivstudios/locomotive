@@ -1,0 +1,32 @@
+/**
+ * Styles for the batch processing plugin.
+ */
+
+* {
+	box-sizing: border-box;
+}
+
+/**
+ * Overlay that contains info about current batch process.
+ */
+.batch-processing-overlay {
+	transition: all .5s ease-in-out;
+	-webkit-transition: all .5s ease-in-out;
+	opacity: 0;
+
+	padding: 24px;
+	width: 75%;
+	height: 60%;
+
+	margin: auto;
+  position: absolute;
+  top: -650px;
+  left: 0; bottom: 0; right: 0;
+
+	background: white;
+	box-shadow: 0 0 10px #ccc;
+}
+	.batch-processing-overlay.is-open {
+		top: 0;
+		opacity: 1;
+	}
