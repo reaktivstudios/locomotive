@@ -17,7 +17,12 @@
 					<label for="<?php echo esc_attr( $slug ); ?>">
 						<?php echo esc_html( $batch['name'] ); ?>
 						<small>
-							last run: <?php echo esc_html( Batch_Process\time_ago( $batch['last_run'] ) ); ?>
+							last run: 
+							<?php if ( ! empty( $batch['last_run'] ) ) { ?>
+								<?php echo esc_html( Batch_Process\time_ago( $batch['last_run'] ) ); ?>
+							<?php } else { ?>
+								never
+							<?php } ?>
 						</small>
 					</label>
 				</li>

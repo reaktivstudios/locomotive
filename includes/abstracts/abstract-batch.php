@@ -20,6 +20,13 @@ abstract class Batch {
 	const REGISTERED_BATCHES_KEY = '_rkv_batches';
 
 	/**
+	 * Meta key for the option that holds all of the batch timestamps.
+	 *
+	 * @var string
+	 */
+	const BATCH_TIMESTAMPS_KEY = '_rkv_batch_timestamps';
+
+	/**
 	 * Prefix for batch hook actions.
 	 *
 	 * @var string
@@ -117,13 +124,12 @@ abstract class Batch {
 		if ( ! isset( $this->currently_registered[ $this->slug ] ) ) {
 			$this->currently_registered[ $this->slug ] = array(
 				'name' => $this->name,
-				'last_run' => '',
 			);
-
-			$this->update_registered_batches();
+		} else {
+			$this->currently_registered[ $this->slug ]['name'] = $this->name;
 		}
 
-		return true;
+		return $this->update_registered_batches();
 	}
 
 	/**
@@ -180,9 +186,7 @@ abstract class Batch {
 	 * @param int $current_step Current step.
 	 */
 	public function run( $current_step ) {
-		$this->currently_registered[ $this->slug ]['last_run'] = current_time( 'timestamp' );
-		$this->update_registered_batches();
-
+		$this->update_timestamp( current_time( 'timestamp' ) );
 		$this->current_step = $current_step;
 		$results = $this->get_results();
 		$this->process_results( $results );
@@ -193,6 +197,17 @@ abstract class Batch {
 	 */
 	private function update_registered_batches() {
 		return update_site_option( self::REGISTERED_BATCHES_KEY, $this->currently_registered );
+	}
+
+	/**
+	 * Update batch timestamps.
+	 *
+	 * @param  timestamp $timestamp Timestamp to update the batch.
+	 */
+	private function update_timestamp( $timestamp ) {
+		$timestamps = get_site_option( self::BATCH_TIMESTAMPS_KEY, array() );
+		$timestamps[ $this->slug ] = $timestamp;
+		update_site_option( self::BATCH_TIMESTAMPS_KEY, $timestamps );
 	}
 
 	/**

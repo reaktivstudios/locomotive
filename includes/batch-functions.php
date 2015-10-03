@@ -32,7 +32,27 @@ function register( $args ) {
  * @return array
  */
 function get_all_batches() {
-	return get_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	$batches = get_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	$timestamps = get_all_timestamps();
+
+	foreach ( $batches as $k => $batch ) {
+		if ( ! empty( $timestamps[ $k ] ) ) {
+			$batches[ $k ]['last_run'] = $timestamps[ $k ];
+		} else {
+			$batches[ $k ]['last_run'] = '';
+		}
+	}
+
+	return $batches;
+}
+
+/**
+ * Get the batch hooks that have been added
+ *
+ * @return array
+ */
+function get_all_timestamps() {
+	return get_site_option( Batch::BATCH_TIMESTAMPS_KEY, array() );
 }
 
 /**
