@@ -34,11 +34,32 @@ abstract class Batch {
 	public $slug;
 
 	/**
-	 * Args for the batch process.
+	 * Args for the batch query.
 	 *
 	 * @var array
 	 */
 	public $args;
+
+	/**
+	 * Tyoe if batch.
+	 *
+	 * @var array
+	 */
+	public $type;
+
+	/**
+	 * Callback function to run on each result of query.
+	 *
+	 * @var array
+	 */
+	public $callback;
+
+	/**
+	 * Currently registered batches.
+	 *
+	 * @var array
+	 */
+	public $currently_registered;
 
 	/**
 	 * Register the batch process so we can run it.
@@ -46,7 +67,7 @@ abstract class Batch {
 	 * @param  array $args Details about the batch you are registering.
 	 */
 	public function register( $args ) {
-		if ( $this->verify_register_args( $args ) ) {
+		if ( $this->setup( $args ) ) {
 			$this->add();
 		} else {
 			return false;
@@ -54,42 +75,30 @@ abstract class Batch {
 	}
 
 	/**
-	 * Add a batch hook to our system.
+	 * Add a batch process to our system.
 	 */
 	public function add() {
-		$current_batches = self::get_all_batches();
-
-		if ( ! is_array( $current_batches ) ) {
-			$current_batches = array();
+		if ( ! is_array( $this->currently_registered ) ) {
+			$this->currently_registered = array();
 		}
 
-		$current_batches[ $this->slug ] = array(
-			'name'   => $this->name,
-			'active' => true,
+		$this->currently_registered[ $this->slug ] = array(
+			'name' => $this->name,
 		);
 
-		return update_site_option( self::REGISTERED_BATCHES_KEY, $current_batches );
+		return update_site_option( self::REGISTERED_BATCHES_KEY, $this->currently_registered );
 	}
 
 	/**
-	 * Get the batch hooks that have been added
+	 * Setup our Batch object to have everything it needs.
 	 *
-	 * @return array
-	 */
-	public static function get_all_batches() {
-		return get_site_option( self::REGISTERED_BATCHES_KEY, array() );
-	}
-
-	/**
-	 * Verify that our args has everything we need it to.
-	 *
-	 * @todo  Research the best way to handle exceptions.
+	 * @todo Research the best way to handle exceptions.
 	 *
 	 * @param  array $args Array of args for register.
 	 * @throws \Exception Type must be provided.
 	 * @return true|exception
 	 */
-	private function verify_register_args( $args ) {
+	private function setup( $args ) {
 		if ( empty( $args['name'] ) ) {
 			throw new \Exception( 'Batch name must be provided.' );
 		} else {
@@ -119,6 +128,8 @@ abstract class Batch {
 		} else {
 			$this->callback = $args['callback'];
 		}
+
+		$this->currently_registered = get_all_batches();
 
 		return true;
 	}

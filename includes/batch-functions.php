@@ -25,3 +25,19 @@ function register( $args ) {
 			break;
 	}
 }
+
+/**
+ * Get the batch hooks that have been added
+ *
+ * @return array
+ */
+function get_all_batches() {
+	return get_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+}
+
+/**
+ * Clear all existing batches.]
+ */
+function clear_existing_batches() {
+	return update_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+}

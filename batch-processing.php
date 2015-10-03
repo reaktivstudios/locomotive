@@ -69,7 +69,10 @@ final class Batch_Processing {
 	 * Let everyone know we are loaded and ready to go.
 	 */
 	public function loaded() {
-		do_action( 'batch_processing_init' );
+		if ( is_admin() ) {
+			Batch_Process\clear_existing_batches();
+			do_action( 'add_batch_processes' );
+		}
 	}
 
 	/**
