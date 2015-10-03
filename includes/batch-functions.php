@@ -36,6 +36,15 @@ function get_all_batches() {
 }
 
 /**
+ * Template function for showing time ago.
+ *
+ * @param  timestamp $time Timestamp.
+ */
+function time_ago( $time ) {
+	return human_time_diff( $time, current_time( 'timestamp' ) ) . ' ago';
+}
+
+/**
  * Clear all existing batches.
  */
 function clear_existing_batches() {

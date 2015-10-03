@@ -98,7 +98,9 @@ abstract class Batch {
 	 */
 	public function register( $args ) {
 		if ( $this->setup( $args ) ) {
-			$this->add();
+			if ( ! defined( 'DOING_AJAX' ) ) {
+				$this->add();
+			}
 		} else {
 			return false;
 		}
@@ -108,10 +110,6 @@ abstract class Batch {
 	 * Add a batch process to our system.
 	 */
 	private function add() {
-		if ( defined( 'DOING_AJAX' ) ) {
-			return;
-		}
-
 		error_log( 'Added:  ' . $this->name );
 
 		if ( ! is_array( $this->currently_registered ) ) {
@@ -185,7 +183,8 @@ abstract class Batch {
 	 */
 	public function run( $current_step ) {
 		error_log( 'Running: ' . $this->name );
-		$this->currently_registered[ $this->slug ]['last_run'] = time();
+		$this->currently_registered[ $this->slug ]['last_run'] = current_time( 'timestamp' );
+
 		$this->update_registered_batches();
 
 		$this->current_step = $current_step;
@@ -197,6 +196,8 @@ abstract class Batch {
 	 * Update the registered batches.
 	 */
 	private function update_registered_batches() {
+		error_log( 'Updaing currently registered:' );
+		error_log( print_r( $this->currently_registered, true ) );
 		return update_site_option( self::REGISTERED_BATCHES_KEY, $this->currently_registered );
 	}
 

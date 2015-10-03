@@ -16,7 +16,9 @@
 					<input type="radio" id="<?php echo esc_attr( $slug ); ?>" name="batch_process" class="batch-process-option" value="<?php echo esc_attr( $slug ); ?>">
 					<label for="<?php echo esc_attr( $slug ); ?>">
 						<?php echo esc_html( $batch['name'] ); ?>
-						Last run: <?php echo esc_html( $batch['last_run'] ); ?>
+						<small>
+							last run: <?php echo esc_html( Batch_Process\time_ago( $batch['last_run'] ) ); ?>
+						</small>
 					</label>
 				</li>
 			<?php endforeach; ?>
