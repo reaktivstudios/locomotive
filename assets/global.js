@@ -6,7 +6,7 @@
 		/**
 		 * Init.
 		 */
-		init: function() {
+		init : function() {
 			this.cacheSelectors();
 			this.bind();
 		},
@@ -14,7 +14,7 @@
 		/**
 		 * Cache various selectors we will be using.
 		 */
-		cacheSelectors: function() {
+		cacheSelectors : function() {
 			this.$submit        = $( '.batch-processing-form #submit' );
 			this.$overlay       = $( '.batch-processing-overlay' );
 			this.$batch_option  = $( '.batch-process-option' );
@@ -24,7 +24,7 @@
 		/**
 		 * Bind any actions to elements.
 		 */
-		bind: function() {
+		bind : function() {
 			this.$submit.on( 'click', this.submit.bind( this ) );
 			this.$close_overlay.on( 'click', this.toggleOverlay.bind( this ) );
 			this.disableSubmitButton();
@@ -36,7 +36,7 @@
 		 * 
 		 * @param {event} e Click event.
 		 */
-		submit: function( e ) {
+		submit : function( e ) {
 			e.preventDefault();
 			this.disableSubmitButton();
 			this.toggleOverlay();
@@ -45,7 +45,7 @@
 		/**
 		 * Toggle the overlay that holds our batch process information.
 		 */
-		toggleOverlay: function() {
+		toggleOverlay : function() {
 			this.$overlay.toggleClass( 'is-open' );
 
 			if ( ! this.$overlay.hasClass( 'is-open' ) ) {
@@ -56,14 +56,14 @@
 		/**
 		 * Enable submit button.
 		 */
-		enableSubmitButton: function() {
+		enableSubmitButton : function() {
 			this.$submit.prop( 'disabled', false );
 		},
 
 		/**
 		 * Disable submit button.
 		 */
-		disableSubmitButton: function() {
+		disableSubmitButton : function() {
 			this.$submit.prop( 'disabled', true );
 		}
 	};
