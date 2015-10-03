@@ -47,7 +47,7 @@ function get_all_batches() {
 }
 
 /**
- * Get the batch hooks that have been added
+ * Get the batch hooks that have been added.
  *
  * @return array
  */
