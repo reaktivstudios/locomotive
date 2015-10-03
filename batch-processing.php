@@ -88,7 +88,6 @@ final class Batch_Processing {
 	 */
 	public function loaded() {
 		if ( is_admin() ) {
-			Batch_Process\clear_existing_batches();
 			do_action( 'add_batch_processes' );
 		}
 	}

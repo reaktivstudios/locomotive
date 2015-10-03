@@ -14,7 +14,10 @@
 			<?php foreach ( $registered_batches as $slug => $batch ) : ?>
 				<li>
 					<input type="radio" id="<?php echo esc_attr( $slug ); ?>" name="batch_process" class="batch-process-option" value="<?php echo esc_attr( $slug ); ?>">
-					<label for="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $batch['name'] ); ?></label>
+					<label for="<?php echo esc_attr( $slug ); ?>">
+						<?php echo esc_html( $batch['name'] ); ?>
+						Last run: <?php echo esc_html( $batch['last_run'] ); ?>
+					</label>
 				</li>
 			<?php endforeach; ?>
 		</ul>

@@ -108,15 +108,26 @@ abstract class Batch {
 	 * Add a batch process to our system.
 	 */
 	private function add() {
+		if ( defined( 'DOING_AJAX' ) ) {
+			return;
+		}
+
+		error_log( 'Added:  ' . $this->name );
+
 		if ( ! is_array( $this->currently_registered ) ) {
 			$this->currently_registered = array();
 		}
 
-		$this->currently_registered[ $this->slug ] = array(
-			'name' => $this->name,
-		);
+		if ( ! isset( $this->currently_registered[ $this->slug ] ) ) {
+			$this->currently_registered[ $this->slug ] = array(
+				'name' => $this->name,
+				'last_run' => '',
+			);
 
-		return update_site_option( self::REGISTERED_BATCHES_KEY, $this->currently_registered );
+			$this->update_registered_batches();
+		}
+
+		return true;
 	}
 
 	/**
@@ -173,9 +184,20 @@ abstract class Batch {
 	 * @param int $current_step Current step.
 	 */
 	public function run( $current_step ) {
+		error_log( 'Running: ' . $this->name );
+		$this->currently_registered[ $this->slug ]['last_run'] = time();
+		$this->update_registered_batches();
+
 		$this->current_step = $current_step;
 		$results = $this->get_results();
 		$this->process_results( $results );
+	}
+
+	/**
+	 * Update the registered batches.
+	 */
+	private function update_registered_batches() {
+		return update_site_option( self::REGISTERED_BATCHES_KEY, $this->currently_registered );
 	}
 
 	/**
