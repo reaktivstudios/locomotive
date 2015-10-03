@@ -45,6 +45,7 @@ final class Batch_Processing {
 	 * Dashboard display.
 	 */
 	public function dashboard_display() {
+		$registered_batches = Batch_Process\get_all_batches();
 		include BATCH_PLUGIN_DIR . 'templates/dashboard.php';
 	}
 
