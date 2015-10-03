@@ -61,8 +61,9 @@
 				},
 				dataType: 'json',
 				success: function( response ) {
+					console.log( response );
+					
 					if ( response.current_step !== response.total_steps ) {
-						console.log( response );
 						_this.run( current_step + 1 );
 					} else {
 						console.log( 'Youre done!' );
