@@ -23,6 +23,7 @@
 	</form>
 
 	<div class="batch-processing-overlay">
+		<div class="close">x</div>
 		<h2>Running XX</h2>
 		<p>Loader or something goes here..</p>
 	</div><!-- -->

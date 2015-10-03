@@ -30,3 +30,10 @@
 		top: 0;
 		opacity: 1;
 	}
+	.batch-processing-overlay .close {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		font-size: 18px;
+		cursor: pointer;
+	}

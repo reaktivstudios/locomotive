@@ -15,9 +15,10 @@
 		 * Cache various selectors we will be using.
 		 */
 		cacheSelectors: function() {
-			this.$submit       = $( '.batch-processing-form #submit' );
-			this.$overlay      = $( '.batch-processing-overlay' );
-			this.$batch_option = $( '.batch-process-option' );
+			this.$submit        = $( '.batch-processing-form #submit' );
+			this.$overlay       = $( '.batch-processing-overlay' );
+			this.$batch_option  = $( '.batch-process-option' );
+			this.$close_overlay = $( '.batch-processing-overlay .close' );
 		},
 
 		/**
@@ -25,8 +26,9 @@
 		 */
 		bind: function() {
 			this.$submit.on( 'click', this.submit.bind( this ) );
-			this.$submit.prop( 'disabled', true );
-			this.$batch_option.on( 'change', this.handleBatchSelection.bind( this ) );
+			this.$close_overlay.on( 'click', this.toggleOverlay.bind( this ) );
+			this.disableSubmitButton();
+			this.$batch_option.on( 'change', this.enableSubmitButton.bind( this ) );
 		},
 
 		/**
@@ -36,7 +38,7 @@
 		 */
 		submit: function( e ) {
 			e.preventDefault();
-
+			this.disableSubmitButton();
 			this.toggleOverlay();
 		},
 
@@ -45,13 +47,24 @@
 		 */
 		toggleOverlay: function() {
 			this.$overlay.toggleClass( 'is-open' );
+
+			if ( ! this.$overlay.hasClass( 'is-open' ) ) {
+				this.enableSubmitButton();
+			}
 		},
 
 		/**
 		 * Enable submit button on batch selection.
 		 */
-		handleBatchSelection: function() {
+		enableSubmitButton: function() {
 			this.$submit.prop( 'disabled', false );
+		},
+
+		/**
+		 * Enable submit button on batch selection.
+		 */
+		disableSubmitButton: function() {
+			this.$submit.prop( 'disabled', true );
 		}
 	};
 
