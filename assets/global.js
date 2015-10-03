@@ -54,14 +54,14 @@
 		},
 
 		/**
-		 * Enable submit button on batch selection.
+		 * Enable submit button.
 		 */
 		enableSubmitButton: function() {
 			this.$submit.prop( 'disabled', false );
 		},
 
 		/**
-		 * Enable submit button on batch selection.
+		 * Disable submit button.
 		 */
 		disableSubmitButton: function() {
 			this.$submit.prop( 'disabled', true );
