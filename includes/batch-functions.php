@@ -18,7 +18,6 @@ function register( $args ) {
 		case 'post':
 			$batch_process = new Posts();
 			$batch_process->register( $args );
-			$batch_process->run( 10, 0 );
 			break;
 
 		default:

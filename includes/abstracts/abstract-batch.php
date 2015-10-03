@@ -73,11 +73,10 @@ abstract class Batch {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $results_per_batch Number of results you want per batch.
 	 * @param int $offset            The offset to use for querying data.
 	 * @return mixed                 An array of data to be processed in bulk fashion.
 	 */
-	abstract function get_results( $results_per_batch, $offset );
+	abstract function get_results( $offset );
 
 	/**
 	 * Register the batch process so we can run it.
@@ -108,7 +107,8 @@ abstract class Batch {
 	}
 
 	/**
-	 * Setup our Batch object to have everything it needs.
+	 * Setup our Batch object to have everything it needs (callback, name, slug,
+	 * etc).
 	 *
 	 * @todo Research the best way to handle exceptions.
 	 *
@@ -157,16 +157,16 @@ abstract class Batch {
 	/**
 	 * Run this batch process (query for the data and process the results).
 	 *
-	 * @param int $results_per_batch Number of results you want per batch.
-	 * @param int $offset            The offset to use for querying data.
+	 * @param int $offset The offset to use for querying data.
 	 */
-	public function run( $results_per_batch, $offset ) {
-		$results = $this->get_results( $results_per_batch, $offset );
+	public function run( $offset ) {
+		$results = $this->get_results( $offset );
 		$this->process_results( $results );
 	}
 
 	/**
-	 * Process one of the results for the query.
+	 * Loop over an array of results (posts, pages, etc) and run the callback
+	 * function that was passed through when this batch was registered.
 	 *
 	 * @param  array $results Array of results from the query.
 	 */
@@ -174,7 +174,5 @@ abstract class Batch {
 		foreach ( $results as $result ) {
 			call_user_func_array( $this->callback, array( $result ) );
 		}
-
-		die();
 	}
 }

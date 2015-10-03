@@ -26,7 +26,7 @@ class Posts extends Batch {
 		// Make sure we set this specifically as it should change as this gets run..
 		$this->args['offset'] = $offset;
 
-		$query = new WP_Query( $this->args );
+		$query = new \WP_Query( $this->args );
 
 		return $query->get_posts();
 	}
