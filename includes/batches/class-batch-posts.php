@@ -22,8 +22,9 @@ class Posts extends Batch {
 			'offset'         => 0,
 		) );
 
-		// Make sure we set this specifically as it should change as this gets run.
-		$this->args['offset'] = $offset;
+		if ( 1 !== $this->current_step ) {
+			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args['posts_per_page'] );
+		}
 
 		$query = new \WP_Query( $this->args );
 

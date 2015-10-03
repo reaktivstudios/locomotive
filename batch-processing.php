@@ -97,12 +97,19 @@ final class Batch_Processing {
 	 * @todo Move this to it's own AJAX class.
 	 */
 	public function run() {
+		$errors = array();
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
-			$errors = array( 'Batch process not specified.' );
+			$errors[] = 'Batch process not specified.';
 		} else {
 			$batch_process = sanitize_text_field( $_POST['batch_process'] );
+		}
+
+		if ( empty( $_POST['step'] ) ) {
+			$errors[] = 'Step must be defined.';
+		} else {
+			$step = absint( $_POST['step'] );
 		}
 
 		if ( $errors ) {
@@ -112,7 +119,7 @@ final class Batch_Processing {
 			) );
 		}
 
-		do_action( Batch_Process\Batch::BATCH_HOOK_PREFIX . $batch_process );
+		do_action( Batch_Process\Batch::BATCH_HOOK_PREFIX . $batch_process, $step );
 	}
 
 	/**

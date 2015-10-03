@@ -73,7 +73,7 @@ abstract class Batch {
 	 *
 	 * @var array
 	 */
-	public $current_step = 1;
+	public $current_step = 0;
 
 	/**
 	 * Total number of results.
@@ -176,9 +176,12 @@ abstract class Batch {
 
 	/**
 	 * Run this batch process (query for the data and process the results).
+	 *
+	 * @param int $current_step Current step.
 	 */
-	public function run() {
+	public function run( $current_step ) {
 		$this->running = true;
+		$this->current_step = $current_step;
 		$results = $this->get_results();
 		$this->process_results( $results );
 	}
@@ -201,6 +204,7 @@ abstract class Batch {
 			'batch'             => $this->name,
 			'current_step'      => $this->current_step,
 			'total_steps'       => ceil( $this->total_num_results / $this->args['posts_per_page'] ),
+			'query_results'     => $results,
 			'total_num_results' => $this->total_num_results,
 		) );
 	}

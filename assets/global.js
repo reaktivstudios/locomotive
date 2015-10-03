@@ -41,6 +41,14 @@
 			e.preventDefault();
 			this.disableSubmitButton();
 			this.toggleOverlay();
+			this.run( 1 );
+		},
+
+		/**
+		 * Batch run process.
+		 */
+		run : function( current_step ) {
+			var _this = this;
 
 			$.ajax( {
 				type: 'POST',
@@ -48,13 +56,20 @@
 				data: {
 					batch_process: this.$form.find( 'input:radio[name=batch_process]:checked').val(),
 					nonce: batch.nonce,
+					step: current_step,
 					action: 'run_batch',
 				},
 				dataType: 'json',
 				success: function( response ) {
-					console.log( response );
+					if ( response.current_step !== response.total_steps ) {
+						console.log( response );
+						_this.run( current_step + 1 );
+					} else {
+						console.log( 'Youre done!' );
+					}
 				}
 			} ).fail( function ( response ) {
+				console.log( 'FAIL' );
 				console.log( response );
 			});
 		},

@@ -19,9 +19,7 @@
 			<?php endforeach; ?>
 		</ul>
 
-		<?php
-		submit_button( 'Run Batch Process' );
-		?>
+		<?php submit_button( 'Run Batch Process' ); ?>
 	</form>
 
 	<div class="batch-processing-overlay">
