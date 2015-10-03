@@ -15,7 +15,8 @@
 		 * Cache various selectors we will be using.
 		 */
 		cacheSelectors : function() {
-			this.$submit        = $( '.batch-processing-form #submit' );
+			this.$form          = $( '.batch-processing-form' );
+			this.$submit        = this.$form.find( '#submit' );
 			this.$overlay       = $( '.batch-processing-overlay' );
 			this.$batch_option  = $( '.batch-process-option' );
 			this.$close_overlay = $( '.batch-processing-overlay .close' );
@@ -40,6 +41,22 @@
 			e.preventDefault();
 			this.disableSubmitButton();
 			this.toggleOverlay();
+
+			$.ajax( {
+				type: 'POST',
+				url: batch.ajaxurl,
+				data: {
+					batch_process: this.$form.find( 'input:radio[name=batch_process]:checked').val(),
+					nonce: batch.nonce,
+					action: 'run_batch',
+				},
+				dataType: 'json',
+				success: function( response ) {
+					console.log( response );
+				}
+			} ).fail( function ( response ) {
+				console.log( response );
+			});
 		},
 
 		/**

@@ -13,13 +13,15 @@
 		<ul class="batch-processes">
 			<?php foreach ( $registered_batches as $slug => $batch ) : ?>
 				<li>
-					<input type="radio" id="<?php echo esc_attr( $slug ); ?>" name="batch-process" class="batch-process-option" value="<?php echo esc_attr( $slug ); ?>">
+					<input type="radio" id="<?php echo esc_attr( $slug ); ?>" name="batch_process" class="batch-process-option" value="<?php echo esc_attr( $slug ); ?>">
 					<label for="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $batch['name'] ); ?></label>
 				</li>
 			<?php endforeach; ?>
 		</ul>
 
-		<?php submit_button( 'Run Batch Process' ); ?>
+		<?php
+		submit_button( 'Run Batch Process' );
+		?>
 	</form>
 
 	<div class="batch-processing-overlay">

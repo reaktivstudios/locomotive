@@ -65,6 +65,8 @@ final class Batch_Processing {
 		add_action( 'admin_menu', array( $this, 'add_dashboard' ) );
 		add_action( 'after_setup_theme', array( $this, 'loaded' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+
+		add_action( 'wp_ajax_run_batch', array( $this, 'run' ) );
 	}
 
 	/**
@@ -73,6 +75,10 @@ final class Batch_Processing {
 	public function scripts() {
 		wp_enqueue_style( 'batch-process-styles', BATCH_PLUGIN_URL . 'assets/main.css' );
 		wp_enqueue_script( 'batch-process-js', BATCH_PLUGIN_URL . 'assets/global.js', array( 'jquery' ), '0.1.0', true );
+		wp_localize_script( 'batch-process-js', 'batch', array(
+			'nonce' => wp_create_nonce( 'run-batch-process' ),
+			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+		) );
 	}
 
 	/**
@@ -83,6 +89,30 @@ final class Batch_Processing {
 			Batch_Process\clear_existing_batches();
 			do_action( 'add_batch_processes' );
 		}
+	}
+
+	/**
+	 * AJAX handler for running a batch.
+	 *
+	 * @todo Move this to it's own AJAX class.
+	 */
+	public function run() {
+		check_ajax_referer( 'run-batch-process', 'nonce' );
+
+		if ( empty( $_POST['batch_process'] ) ) {
+			$errors = array( 'Batch process not specified.' );
+		} else {
+			$batch_process = sanitize_text_field( $_POST['batch_process'] );
+		}
+
+		if ( $errors ) {
+			wp_send_json( array(
+				'success' => false,
+				'errors' => $errors,
+			) );
+		}
+
+		do_action( Batch_Process\Batch::BATCH_HOOK_PREFIX . $batch_process );
 	}
 
 	/**

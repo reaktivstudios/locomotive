@@ -45,7 +45,7 @@ abstract class Batch {
 	 *
 	 * @var array
 	 */
-	public $args;
+	public $args = array();
 
 	/**
 	 * Tyoe if batch.
@@ -66,17 +66,37 @@ abstract class Batch {
 	 *
 	 * @var array
 	 */
-	public $currently_registered;
+	public $currently_registered = array();
+
+	/**
+	 * Current step this batch is on.
+	 *
+	 * @var array
+	 */
+	public $current_step = 1;
+
+	/**
+	 * Total number of results.
+	 *
+	 * @var array
+	 */
+	public $total_num_results;
+
+	/**
+	 * Is the batch running?
+	 *
+	 * @var array
+	 */
+	public $running = false;
 
 	/**
 	 * Main plugin method for querying data.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $offset            The offset to use for querying data.
 	 * @return mixed                 An array of data to be processed in bulk fashion.
 	 */
-	abstract function get_results( $offset );
+	abstract function get_results();
 
 	/**
 	 * Register the batch process so we can run it.
@@ -94,7 +114,7 @@ abstract class Batch {
 	/**
 	 * Add a batch process to our system.
 	 */
-	public function add() {
+	private function add() {
 		if ( ! is_array( $this->currently_registered ) ) {
 			$this->currently_registered = array();
 		}
@@ -149,18 +169,17 @@ abstract class Batch {
 
 		$this->currently_registered = get_all_batches();
 
-		add_action( self::BATCH_HOOK_PREFIX . $this->slug, array( $this, 'process_results' ) );
+		add_action( self::BATCH_HOOK_PREFIX . $this->slug, array( $this, 'run' ) );
 
 		return true;
 	}
 
 	/**
 	 * Run this batch process (query for the data and process the results).
-	 *
-	 * @param int $offset The offset to use for querying data.
 	 */
-	public function run( $offset ) {
-		$results = $this->get_results( $offset );
+	public function run() {
+		$this->running = true;
+		$results = $this->get_results();
 		$this->process_results( $results );
 	}
 
@@ -168,11 +187,21 @@ abstract class Batch {
 	 * Loop over an array of results (posts, pages, etc) and run the callback
 	 * function that was passed through when this batch was registered.
 	 *
-	 * @param  array $results Array of results from the query.
+	 * @param array $results Array of results from the query.
 	 */
 	public function process_results( $results ) {
 		foreach ( $results as $result ) {
 			call_user_func_array( $this->callback, array( $result ) );
 		}
+
+		// Tell our AJAX request that we were successful.
+		wp_send_json( array(
+			'success'           => true,
+			'callback'          => $this->callback,
+			'batch'             => $this->name,
+			'current_step'      => $this->current_step,
+			'total_steps'       => ceil( $this->total_num_results / $this->args['posts_per_page'] ),
+			'total_num_results' => $this->total_num_results,
+		) );
 	}
 }
