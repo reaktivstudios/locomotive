@@ -20,6 +20,13 @@ abstract class Batch {
 	const REGISTERED_BATCHES_KEY = '_rkv_batches';
 
 	/**
+	 * Prefix for batch hook actions.
+	 *
+	 * @var string
+	 */
+	const BATCH_HOOK_PREFIX = '_rkv_batch_';
+
+	/**
 	 * Name of the batch process.
 	 *
 	 * @var string
@@ -60,6 +67,17 @@ abstract class Batch {
 	 * @var array
 	 */
 	public $currently_registered;
+
+	/**
+	 * Main plugin method for querying data.
+	 *
+	 * @since 0.1
+	 *
+	 * @param int $results_per_batch Number of results you want per batch.
+	 * @param int $offset            The offset to use for querying data.
+	 * @return mixed                 An array of data to be processed in bulk fashion.
+	 */
+	abstract function get_results( $results_per_batch, $offset );
 
 	/**
 	 * Register the batch process so we can run it.
@@ -131,6 +149,32 @@ abstract class Batch {
 
 		$this->currently_registered = get_all_batches();
 
+		add_action( self::BATCH_HOOK_PREFIX . $this->slug, array( $this, 'process_results' ) );
+
 		return true;
+	}
+
+	/**
+	 * Run this batch process (query for the data and process the results).
+	 *
+	 * @param int $results_per_batch Number of results you want per batch.
+	 * @param int $offset            The offset to use for querying data.
+	 */
+	public function run( $results_per_batch, $offset ) {
+		$results = $this->get_results( $results_per_batch, $offset );
+		$this->process_results( $results );
+	}
+
+	/**
+	 * Process one of the results for the query.
+	 *
+	 * @param  array $results Array of results from the query.
+	 */
+	public function process_results( $results ) {
+		foreach ( $results as $result ) {
+			call_user_func_array( $this->callback, array( $result ) );
+		}
+
+		die();
 	}
 }
