@@ -67,6 +67,8 @@ function get_all_timestamps() {
 /**
  * Template function for showing time ago.
  *
+ * @todo Move this to a template functions file.
+ *
  * @param  timestamp $time Timestamp.
  */
 function time_ago( $time ) {
