@@ -109,21 +109,25 @@
 				},
 				dataType: 'json',
 				success: function( response ) {
-					// Fill our overlay with relevant information.
-					var results_template = wp.template( 'batch-processing-results' );
-					_this.$overlay_inner.html( results_template( response ) );
+					if ( response.success ) {
+						// Fill our overlay with relevant information.
+						var results_template = wp.template( 'batch-processing-results' );
+						_this.$overlay_inner.html( results_template( response ) );
 
-					// Show visual progresss.
-					$( '.batch-overlay__inner' ).find( '.batch-progress' ).css( { 
-						'width': response.progress + '%',
-					} );
+						// Show visual progresss.
+						$( '.batch-overlay__inner' ).find( '.batch-progress' ).css( { 
+							'width': response.progress + '%',
+						} );
 
-					if ( response.current_step !== response.total_steps ) {
-						_this.run( current_step + 1 );
+						if ( response.current_step !== response.total_steps ) {
+							_this.run( current_step + 1 );
+						}
+					} else {
+						_this.$overlay_inner.html( response.error );
 					}
 				}
 			} ).fail( function ( response ) {
-				alert( 'Something went wrong!' )
+				alert( 'Something went wrong!' );
 			});
 		},
 	};

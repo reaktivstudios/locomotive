@@ -39,7 +39,7 @@
 </div><!-- .batch-processing-overlay -->
 
 <script type="text/html" id="tmpl-batch-processing-results">	
-	<h2>Running: {{ data.batch }}</h2>
+	<h2>{{ data.status }}: {{ data.batch }}</h2>
 	<div class="batch-progress" data-progress="{{ data.progress }}">
 		Progress: {{ data.progress }}%
 	</div>

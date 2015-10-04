@@ -178,10 +178,44 @@ abstract class Batch {
 	 * @param int $current_step Current step.
 	 */
 	public function run( $current_step ) {
-		$this->update_timestamp( current_time( 'timestamp' ) );
 		$this->current_step = $current_step;
 		$results = $this->get_results();
+
+		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
+
+		$this->update_timestamp( current_time( 'timestamp' ) );
 		$this->process_results( $results );
+
+		if ( (int) $this->current_step === (int) $total_steps ) {
+			$this->status = __( 'Finished' );
+		} else {
+			$this->status = __( 'Running' );
+		}
+
+		$batch_details = $this->get_ajax_details( array(
+			'total_steps'   => $total_steps,
+			'query_results' => $results,
+			'progress'      => round( ( $this->current_step / $total_steps ) * 100 ),
+		) );
+
+		// Tell our AJAX request that we were successful.
+		wp_send_json( $batch_details );
+	}
+
+	/**
+	 * Get details for Ajax requests.
+	 *
+	 * @param  array $details Array of details to send via Ajax.
+	 */
+	private function get_ajax_details( $details = array() ) {
+		return wp_parse_args( $details, array(
+			'success'           => true,
+			'current_step'      => $this->current_step,
+			'callback'          => $this->callback,
+			'status'            => $this->status,
+			'batch'             => $this->name,
+			'total_num_results' => $this->total_num_results,
+		) );
 	}
 
 	/**
@@ -203,21 +237,15 @@ abstract class Batch {
 	 */
 	public function process_results( $results ) {
 		foreach ( $results as $result ) {
-			call_user_func_array( $this->callback, array( $result ) );
+			try {
+				call_user_func_array( $this->callback, array( $result ) );
+			} catch ( \Exception $e ) {
+				wp_send_json( $this->get_ajax_details( array(
+					'success' => false,
+					'status'  => __( 'Failed' ),
+					'error'   => $e->getMessage(),
+				) ) );
+			}
 		}
-
-		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
-
-		// Tell our AJAX request that we were successful.
-		wp_send_json( array(
-			'success'           => true,
-			'callback'          => $this->callback,
-			'batch'             => $this->name,
-			'current_step'      => $this->current_step,
-			'total_steps'       => $total_steps,
-			'query_results'     => $results,
-			'progress'          => round( ( $this->current_step / $total_steps ) * 100 ),
-			'total_num_results' => $this->total_num_results,
-		) );
 	}
 }
