@@ -32,7 +32,7 @@ function register( $args ) {
  * @return array
  */
 function get_all_batches() {
-	$batches = get_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	$batches = get_site_option( \Batch_Processing::REGISTERED_BATCHES_KEY, array() );
 	$timestamps = get_all_timestamps();
 
 	foreach ( $batches as $k => $batch ) {
@@ -44,6 +44,15 @@ function get_all_batches() {
 	}
 
 	return $batches;
+}
+
+/**
+ * Update the registered batches.
+ *
+ * @param array $batches Batches you want to register.
+ */
+function update_registered_batches( $batches ) {
+	return update_site_option( \Batch_Processing::REGISTERED_BATCHES_KEY, $batches );
 }
 
 /**
@@ -68,5 +77,5 @@ function time_ago( $time ) {
  * Clear all existing batches.
  */
 function clear_existing_batches() {
-	return update_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	return update_site_option( \Batch_Processing::REGISTERED_BATCHES_KEY, array() );
 }

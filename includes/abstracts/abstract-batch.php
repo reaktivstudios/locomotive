@@ -12,14 +12,6 @@ namespace Batch_Process;
  */
 abstract class Batch {
 	/**
-	 * Meta key for the option that holds all of the batch hooks that a dev
-	 * registers.
-	 *
-	 * @var string
-	 */
-	const REGISTERED_BATCHES_KEY = '_rkv_batches';
-
-	/**
 	 * Meta key for the option that holds all of the batch timestamps.
 	 *
 	 * @var string
@@ -129,7 +121,7 @@ abstract class Batch {
 			$this->currently_registered[ $this->slug ]['name'] = $this->name;
 		}
 
-		return $this->update_registered_batches();
+		return update_registered_batches( $this->currently_registered );
 	}
 
 	/**
@@ -190,13 +182,6 @@ abstract class Batch {
 		$this->current_step = $current_step;
 		$results = $this->get_results();
 		$this->process_results( $results );
-	}
-
-	/**
-	 * Update the registered batches.
-	 */
-	private function update_registered_batches() {
-		return update_site_option( self::REGISTERED_BATCHES_KEY, $this->currently_registered );
 	}
 
 	/**
