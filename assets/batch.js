@@ -91,7 +91,7 @@
 		 * Batch run process.
 		 */
 		run : function( current_step ) {
-			var _this          = this,
+			var _this = this,
 				$batch_start_msg = $( '<h2>Starting batch process</h2>' );
 
 			if ( 1 === current_step ) {
