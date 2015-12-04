@@ -56,7 +56,7 @@ function update_registered_batches( $batches ) {
 }
 
 /**
- * Get the batch hooks that have been added.
+ * Get the batch timestamps.
  *
  * @return array
  */

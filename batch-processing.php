@@ -113,7 +113,7 @@ final class Batch_Processing {
 		if ( empty( $_POST['batch_process'] ) ) {
 			$errors[] = 'Batch process not specified.';
 		} else {
-			$batch_process = sanitize_text_field( $_POST['batch_process'] );
+			$batch_process = sanitize_text_field( wp_unslash( $_POST['batch_process'] ) );
 		}
 
 		if ( empty( $_POST['step'] ) ) {
