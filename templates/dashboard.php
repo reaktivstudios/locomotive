@@ -13,7 +13,7 @@
 		<ul class="batch-processes">
 			<?php
 			if ( empty( $registered_batches ) ) :
-				echo wp_kses_post( __( 'No batches registered. Check out the <a href="https://github.com/reaktivstudios/batch-processing">GitHub Repo</a> for info on how to register one.' ) );
+				echo wp_kses_post( __( 'No batches registered.' ) );
 			else :
 				foreach ( $registered_batches as $slug => $batch ) : ?>
 					<li>
