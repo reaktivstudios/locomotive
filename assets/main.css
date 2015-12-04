@@ -19,9 +19,9 @@
 	width: 75%;
 
 	margin: auto;
-  position: absolute;
-  top: -650px;
-  left: 0; bottom: 0; right: 0;
+	position: absolute;
+	top: -650px;
+	left: 0; bottom: 0; right: 0;
 
 	background: white;
 	box-shadow: 0 0 10px #ccc;
@@ -47,9 +47,23 @@
 	.batch-info {
 		margin-bottom: 6px;
 	}
-	.batch-progress {
+	.progress-bar {
+        background: #f0f0f0;
 		color: white;
 		line-height: 35px;
 		padding-left: 12px;
-		background: #81b01f; /* Old browsers */
+        position: relative;
 	}
+    .progress-bar__text {
+        display: block;
+        position: relative;
+        z-index: 10;
+    }
+    .progress-bar__visual {
+        background: #81b01f;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }

@@ -15,13 +15,14 @@
 		 * Cache various selectors we will be using.
 		 */
 		cacheSelectors : function() {
-			this.$form           = $( '.batch-processing-form' );
-			this.$submit         = this.$form.find( '#submit' );
-			this.$overlay        = $( '.batch-processing-overlay' );
-			this.$overlay_inner  = $( '.batch-overlay__inner' );
-			this.$batch_option   = $( '.batch-process-option' );
-			this.$close_overlay  = $( '.batch-processing-overlay .close' );
-			this.$batch_progress = $( '.batch-progress' );
+			this.$form            = $( '.batch-processing-form' );
+			this.$submit          = this.$form.find( '#submit' );
+			this.$overlay         = $( '.batch-processing-overlay' );
+			this.$overlay_inner   = $( '.batch-overlay__inner' );
+			this.$batch_option    = $( '.batch-process-option' );
+			this.$close_overlay   = $( '.batch-processing-overlay .close' );
+			this.$batch_progress  = $( '.progress-bar' );
+			this.$visual_progress = $( '.progress-bar__visual' );
 		},
 
 		/**
@@ -115,7 +116,7 @@
 						_this.$overlay_inner.html( results_template( response ) );
 
 						// Show visual progresss.
-						$( '.batch-overlay__inner' ).find( '.batch-progress' ).css( { 
+						$( '.batch-overlay__inner' ).find( '.progress-bar__visual' ).css( {
 							'width': response.progress + '%',
 						} );
 

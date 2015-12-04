@@ -45,7 +45,8 @@
 
 <script type="text/html" id="tmpl-batch-processing-results">	
 	<h2>{{ data.status }}: {{ data.batch }}</h2>
-	<div class="batch-progress" data-progress="{{ data.progress }}">
-		Progress: {{ data.progress }}%
+	<div class="progress-bar" data-progress="{{ data.progress }}">
+		<span class="progress-bar__text">Progress: {{ data.progress }}%</span>
+		<div class="progress-bar__visual"></div>
 	</div>
 </script>
