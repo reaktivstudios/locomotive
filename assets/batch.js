@@ -120,7 +120,7 @@
 							'width': response.progress + '%',
 						} );
 
-						if ( response.current_step !== response.total_steps ) {
+						if ( response.current_step !== response.total_steps && 'running' === response.status.toLowerCase() ) {
 							_this.run( current_step + 1 );
 						}
 					} else {

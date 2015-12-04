@@ -191,10 +191,11 @@ abstract class Batch {
 			$this->update_status( 'running' );
 		}
 
+		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
 		$batch_details = $this->format_ajax_details( array(
 			'total_steps'   => $total_steps,
 			'query_results' => $results,
-			'progress'      => round( ( $this->current_step / $total_steps ) * 100 ),
+			'progress'      => $progress,
 		) );
 
 		// Tell our AJAX request that we were successful.
@@ -228,7 +229,7 @@ abstract class Batch {
 			'timestamp' => current_time( 'timestamp' ),
 		) );
 
-		$this->status = __( strtoupper( $status ) );
+		$this->status = __( ucfirst( $status ) );
 	}
 
 	/**
@@ -241,13 +242,27 @@ abstract class Batch {
 		foreach ( $results as $result ) {
 			try {
 				call_user_func_array( $this->callback, array( $result ) );
+				$this->update_result_status( $result, 'success' );
 			} catch ( \Exception $e ) {
+				$this->update_result_status( $result, 'failed' );
 				wp_send_json( $this->format_ajax_details( array(
 					'success' => false,
 					'status'  => __( 'Failed' ),
 					'error'   => $e->getMessage(),
 				) ) );
 			}
+		}
+	}
+
+	/**
+	 * Update the meta info on a result.
+	 *
+	 * @param mixed  $result  The result we want to track meta data on.
+	 * @param string $status Status of this result in the batch.
+	 */
+	public function update_result_status( $result, $status ) {
+		if ( $result instanceof \WP_Post ) {
+			update_post_meta( $result->ID, $this->slug . '_status', $status );
 		}
 	}
 }
