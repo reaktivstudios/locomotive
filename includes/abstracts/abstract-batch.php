@@ -12,18 +12,19 @@ namespace Batch_Process;
  */
 abstract class Batch {
 	/**
-	 * Meta key for the option that holds all of the batch timestamps.
-	 *
-	 * @var string
-	 */
-	const BATCH_TIMESTAMPS_KEY = '_rkv_batch_timestamps';
-
-	/**
 	 * Prefix for batch hook actions.
 	 *
 	 * @var string
 	 */
 	const BATCH_HOOK_PREFIX = '_rkv_batch_';
+
+	/**
+	 * Meta key for the option that holds all of the batch hooks that a dev
+	 * registers.
+	 *
+	 * @var string
+	 */
+	const REGISTERED_BATCHES_KEY = '_rkv_batches';
 
 	/**
 	 * Name of the batch process.
@@ -179,20 +180,18 @@ abstract class Batch {
 	 */
 	public function run( $current_step ) {
 		$this->current_step = $current_step;
+
 		$results = $this->get_results();
-
-		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
-
-		$this->update_timestamp( current_time( 'timestamp' ) );
 		$this->process_results( $results );
 
+		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
 		if ( (int) $this->current_step === (int) $total_steps ) {
-			$this->status = __( 'Finished' );
+			$this->update_status( 'finished' );
 		} else {
-			$this->status = __( 'Running' );
+			$this->update_status( 'running' );
 		}
 
-		$batch_details = $this->get_ajax_details( array(
+		$batch_details = $this->format_ajax_details( array(
 			'total_steps'   => $total_steps,
 			'query_results' => $results,
 			'progress'      => round( ( $this->current_step / $total_steps ) * 100 ),
@@ -207,7 +206,7 @@ abstract class Batch {
 	 *
 	 * @param  array $details Array of details to send via Ajax.
 	 */
-	private function get_ajax_details( $details = array() ) {
+	private function format_ajax_details( $details = array() ) {
 		return wp_parse_args( $details, array(
 			'success'           => true,
 			'current_step'      => $this->current_step,
@@ -221,12 +220,15 @@ abstract class Batch {
 	/**
 	 * Update batch timestamps.
 	 *
-	 * @param  timestamp $timestamp Timestamp to update the batch.
+	 * @param  string $status Status of batch process.
 	 */
-	private function update_timestamp( $timestamp ) {
-		$timestamps = get_site_option( self::BATCH_TIMESTAMPS_KEY, array() );
-		$timestamps[ $this->slug ] = $timestamp;
-		update_site_option( self::BATCH_TIMESTAMPS_KEY, $timestamps );
+	private function update_status( $status ) {
+		update_site_option( self::BATCH_HOOK_PREFIX . $this->slug, array(
+			'status' => $status,
+			'timestamp' => current_time( 'timestamp' ),
+		) );
+
+		$this->status = __( strtoupper( $status ) );
 	}
 
 	/**
@@ -240,7 +242,7 @@ abstract class Batch {
 			try {
 				call_user_func_array( $this->callback, array( $result ) );
 			} catch ( \Exception $e ) {
-				wp_send_json( $this->get_ajax_details( array(
+				wp_send_json( $this->format_ajax_details( array(
 					'success' => false,
 					'status'  => __( 'Failed' ),
 					'error'   => $e->getMessage(),

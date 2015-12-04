@@ -19,14 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class Batch_Processing {
 	/**
-	 * Meta key for the option that holds all of the batch hooks that a dev
-	 * registers.
-	 *
-	 * @var string
-	 */
-	const REGISTERED_BATCHES_KEY = '_rkv_batches';
-
-	/**
 	 * Define all the constants we need
 	 */
 	public function define_constants() {
