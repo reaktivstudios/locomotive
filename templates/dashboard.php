@@ -11,25 +11,30 @@
 	
 	<form class="batch-processing-form" method="post">
 		<ul class="batch-processes">
-			<?php foreach ( $registered_batches as $slug => $batch ) : ?>
-				<li>
-					<input type="radio" id="<?php echo esc_attr( $slug ); ?>" name="batch_process" class="batch-process-option" value="<?php echo esc_attr( $slug ); ?>">
-					<label for="<?php echo esc_attr( $slug ); ?>">
-						<?php echo esc_html( $batch['name'] ); ?>
-						<small>
-							last run: 
-							<?php if ( ! empty( $batch['last_run'] ) ) { ?>
-								<?php echo esc_html( Batch_Process\time_ago( $batch['last_run'] ) ); ?>
-							<?php } else { ?>
-								never
-							<?php } ?>
-						</small>
-					</label>
-				</li>
-			<?php endforeach; ?>
-		</ul>
+			<?php
+			if ( empty( $registered_batches ) ) :
+				echo wp_kses_post( __( 'No batches registered. Check out the <a href="https://github.com/reaktivstudios/batch-processing">GitHub Repo</a> for info on how to register one.' ) );
+			else :
+				foreach ( $registered_batches as $slug => $batch ) : ?>
+					<li>
+						<input type="radio" id="<?php echo esc_attr( $slug ); ?>" name="batch_process" class="batch-process-option" value="<?php echo esc_attr( $slug ); ?>">
+						<label for="<?php echo esc_attr( $slug ); ?>">
+							<?php echo esc_html( $batch['name'] ); ?>
+							<small>
+								last run:
+								<?php if ( ! empty( $batch['last_run'] ) ) { ?>
+									<?php echo esc_html( Batch_Process\time_ago( $batch['last_run'] ) ); ?>
+								<?php } else { ?>
+									never
+								<?php } ?>
+							</small>
+						</label>
+					</li>
+				<?php endforeach;
 
-		<?php submit_button( 'Run Batch Process' ); ?>
+				submit_button( 'Run Batch Process' );
+			endif; ?>
+		</ul>
 	</form>
 </div>
 
