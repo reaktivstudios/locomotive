@@ -13,7 +13,7 @@
 		<ul class="batch-processes">
 			<?php
 			if ( empty( $registered_batches ) ) :
-				echo wp_kses_post( __( 'No batches registered.' ) );
+				esc_html_e( 'No batches registered.' );
 			else :
 				foreach ( $registered_batches as $slug => $batch ) : ?>
 					<li>
