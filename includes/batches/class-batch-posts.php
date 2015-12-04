@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract batch class.
+ * Posts batch class.
  *
  * @package Batch_Process/Batch
  */
