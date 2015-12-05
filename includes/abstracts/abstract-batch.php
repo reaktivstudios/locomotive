@@ -184,6 +184,7 @@ abstract class Batch {
 		$results = $this->get_results();
 
 		if ( empty( $results ) ) {
+			$this->update_status( 'no results found' );
 			wp_send_json( $this->format_ajax_details( array(
 				'success' => false,
 				'error' => __( 'No results found.' ),
@@ -244,14 +245,20 @@ abstract class Batch {
 	 * @param array $results Array of results from the query.
 	 */
 	public function process_results( $results ) {
-		$processed_results = array();
+		$success_status = 'success';
+		$failed_status = 'failed';
 
 		foreach ( $results as $result ) {
+			// If this result item has been processed already, skip it.
+			if ( $success_status === $this->get_result_status( $result ) ) {
+				continue;
+			}
+
 			try {
 				call_user_func_array( $this->callback, array( $result ) );
-				$processed_results[] = $result;
+				$this->update_result_status( $result, $success_status );
 			} catch ( \Exception $e ) {
-				$this->update_result_status( array( $result ), 'failed' );
+				$this->update_result_status( $result, $failed_status );
 				wp_send_json( $this->format_ajax_details( array(
 					'success' => false,
 					'status'  => __( 'Failed' ),
@@ -259,21 +266,30 @@ abstract class Batch {
 				) ) );
 			}
 		}
-
-		$this->update_result_status( $processed_results, 'success' );
 	}
 
 	/**
 	 * Update the meta info on a result.
 	 *
-	 * @param mixed  $results The result we want to track meta data on.
+	 * @param mixed  $result The result we want to track meta data on.
 	 * @param string $status  Status of this result in the batch.
 	 */
-	public function update_result_status( $results, $status ) {
-		foreach ( $results as $result ) {
-			if ( $result instanceof \WP_Post ) {
-				update_post_meta( $result->ID, $this->slug . '_status', $status );
-			}
+	public function update_result_status( $result, $status ) {
+		if ( $result instanceof \WP_Post ) {
+			update_post_meta( $result->ID, $this->slug . '_status', $status );
 		}
+	}
+
+	/**
+	 * Update the meta info on a result.
+	 *
+	 * @param mixed $result The result we want to get status of.
+	 */
+	public function get_result_status( $result ) {
+		if ( $result instanceof \WP_Post ) {
+			return get_post_meta( $result->ID, $this->slug . '_status', true );
+		}
+
+		return false;
 	}
 }
