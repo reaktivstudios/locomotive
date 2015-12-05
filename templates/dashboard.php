@@ -27,6 +27,11 @@
 								<?php } else { ?>
 									never
 								<?php } ?>
+
+								| status:
+								<?php if ( ! empty( $batch['status'] ) ) { ?>
+									<?php esc_html_e( $batch['status'] ); ?>
+								<?php } ?>
 							</small>
 						</label>
 					</li>
