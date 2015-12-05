@@ -182,6 +182,14 @@ abstract class Batch {
 		$this->current_step = $current_step;
 
 		$results = $this->get_results();
+
+		if ( empty( $results ) ) {
+			wp_send_json( $this->format_ajax_details( array(
+				'success' => false,
+				'error' => __( 'No results found.' ),
+			) ) );
+		}
+
 		$this->process_results( $results );
 
 		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
@@ -192,14 +200,11 @@ abstract class Batch {
 		}
 
 		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
-		$batch_details = $this->format_ajax_details( array(
+		wp_send_json( $this->format_ajax_details( array(
 			'total_steps'   => $total_steps,
 			'query_results' => $results,
 			'progress'      => $progress,
-		) );
-
-		// Tell our AJAX request that we were successful.
-		wp_send_json( $batch_details );
+		) ) );
 	}
 
 	/**
@@ -239,12 +244,14 @@ abstract class Batch {
 	 * @param array $results Array of results from the query.
 	 */
 	public function process_results( $results ) {
+		$processed_results = array();
+
 		foreach ( $results as $result ) {
 			try {
 				call_user_func_array( $this->callback, array( $result ) );
-				$this->update_result_status( $result, 'success' );
+				$processed_results[] = $result;
 			} catch ( \Exception $e ) {
-				$this->update_result_status( $result, 'failed' );
+				$this->update_result_status( array( $result ), 'failed' );
 				wp_send_json( $this->format_ajax_details( array(
 					'success' => false,
 					'status'  => __( 'Failed' ),
@@ -252,17 +259,21 @@ abstract class Batch {
 				) ) );
 			}
 		}
+
+		$this->update_result_status( $processed_results, 'success' );
 	}
 
 	/**
 	 * Update the meta info on a result.
 	 *
-	 * @param mixed  $result  The result we want to track meta data on.
-	 * @param string $status Status of this result in the batch.
+	 * @param mixed  $results The result we want to track meta data on.
+	 * @param string $status  Status of this result in the batch.
 	 */
-	public function update_result_status( $result, $status ) {
-		if ( $result instanceof \WP_Post ) {
-			update_post_meta( $result->ID, $this->slug . '_status', $status );
+	public function update_result_status( $results, $status ) {
+		foreach ( $results as $result ) {
+			if ( $result instanceof \WP_Post ) {
+				update_post_meta( $result->ID, $this->slug . '_status', $status );
+			}
 		}
 	}
 }
