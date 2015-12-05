@@ -21,17 +21,23 @@
 						<label for="<?php echo esc_attr( $slug ); ?>">
 							<?php echo esc_html( $batch['name'] ); ?>
 							<small>
-								last run:
-								<?php if ( ! empty( $batch['last_run'] ) ) { ?>
-									<?php echo esc_html( Batch_Process\time_ago( $batch['last_run'] ) ); ?>
-								<?php } else { ?>
-									never
-								<?php } ?>
+								<?php
+								esc_html_e( 'last run: ' );
 
-								| status:
-								<?php if ( ! empty( $batch['status'] ) ) { ?>
-									<?php esc_html_e( $batch['status'] ); ?>
-								<?php } ?>
+								if ( ! empty( $batch['last_run'] ) ) {
+									echo esc_html( Batch_Process\time_ago( $batch['last_run'] ) );
+								} else {
+									esc_html_e( 'never' );
+								}
+
+								esc_html_e( '| status: ' );
+
+								if ( ! empty( $batch['status'] ) ) {
+									esc_html_e( $batch['status'] );
+								} else {
+									esc_html_e( 'hasn\'t been run' );
+								}
+								?>
 							</small>
 						</label>
 					</li>
