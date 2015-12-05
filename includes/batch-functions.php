@@ -37,6 +37,7 @@ function get_all_batches() {
 	foreach ( $batches as $k => $batch ) {
 		$batch_status = get_site_option( Batch::BATCH_HOOK_PREFIX . $k );
 		$batches[ $k ]['last_run'] = $batch_status['timestamp'];
+		$batches[ $k ]['status'] = $batch_status['status'];
 	}
 
 	return $batches;
