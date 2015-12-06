@@ -107,13 +107,14 @@
 		 * Reset batch status.
 		 */
 		reset_status : function() {
-			var _this = this;
+			var _this = this,
+				batch_slug =_this.$form.find( 'input:radio[name=batch_process]:checked').val();
 
 			$.ajax( {
 				type: 'POST',
 				url: batch.ajaxurl,
 				data: {
-					batch_process: _this.$form.find( 'input:radio[name=batch_process]:checked').val(),
+					batch_process: batch_slug,
 					nonce: batch.nonce,
 					action: 'reset_batch',
 				},
@@ -121,6 +122,9 @@
 				success: function( response ) {
 					if ( response.success ) {
 						alert( 'Reset batch successfully.' );
+
+						var batch_label = $( 'label[for="' + batch_slug + '"' );
+						batch_label.find( 'small' ).text( 'last run: just now | status: reset' );
 					} else {
 						alert( 'Unable to reset batch.' );
 					}
@@ -137,7 +141,8 @@
 		 */
 		run : function( current_step ) {
 			var _this = this,
-				$batch_start_msg = $( '<h2>Starting batch process</h2>' );
+				$batch_start_msg = $( '<h2>Starting batch process</h2>' ),
+				batch_slug =_this.$form.find( 'input:radio[name=batch_process]:checked').val();
 
 			if ( 1 === current_step ) {
 				_this.$overlay_inner.html( $batch_start_msg );
@@ -147,7 +152,7 @@
 				type: 'POST',
 				url: batch.ajaxurl,
 				data: {
-					batch_process: _this.$form.find( 'input:radio[name=batch_process]:checked').val(),
+					batch_process: batch_slug,
 					nonce: batch.nonce,
 					step: current_step,
 					action: 'run_batch',
@@ -166,6 +171,9 @@
 
 						if ( response.current_step !== response.total_steps && 'running' === response.status.toLowerCase() ) {
 							_this.run( current_step + 1 );
+						} else {
+							var batch_label = $( 'label[for="' + batch_slug + '"' );
+							batch_label.find( 'small' ).text( 'last run: just now | status: ' + response.status.toLowerCase() );
 						}
 					} else {
 						_this.$overlay_inner.html( response.error );
