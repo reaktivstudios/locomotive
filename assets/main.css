@@ -6,6 +6,10 @@
 	box-sizing: border-box;
 }
 
+.batch-processing-form #submit {
+	margin-right: 12px;
+}
+
 /**
  * Overlay that contains info about current batch process.
  */

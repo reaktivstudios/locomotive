@@ -46,7 +46,7 @@
 				<p>
 					<?php
 					submit_button( 'Run Batch Process', 'primary', 'submit', false );
-					submit_button( 'Reset Result Item Status', 'secondary', 'reset', false );
+					submit_button( 'Reset Batch Process', 'secondary', 'reset', false );
 					?>
 				</p>
 			<?php endif; ?>
