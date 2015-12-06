@@ -41,10 +41,15 @@
 							</small>
 						</label>
 					</li>
-				<?php endforeach;
+				<?php endforeach; ?>
 
-				submit_button( 'Run Batch Process' );
-			endif; ?>
+				<p>
+					<?php
+					submit_button( 'Run Batch Process', 'primary', 'submit', false );
+					submit_button( 'Reset Result Item Status', 'secondary', 'reset', false );
+					?>
+				</p>
+			<?php endif; ?>
 		</ul>
 	</form>
 </div>

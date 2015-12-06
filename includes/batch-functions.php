@@ -53,15 +53,6 @@ function update_registered_batches( $batches ) {
 }
 
 /**
- * Get the batch timestamps.
- *
- * @return array
- */
-function get_all_timestamps() {
-	return get_site_option( Batch::BATCH_TIMESTAMPS_KEY, array() );
-}
-
-/**
  * Template function for showing time ago.
  *
  * @todo Move this to a template functions file.

@@ -17,6 +17,7 @@
 		cacheSelectors : function() {
 			this.$form            = $( '.batch-processing-form' );
 			this.$submit          = this.$form.find( '#submit' );
+			this.$reset           = this.$form.find( '#reset' );
 			this.$overlay         = $( '.batch-processing-overlay' );
 			this.$overlay_inner   = $( '.batch-overlay__inner' );
 			this.$batch_option    = $( '.batch-process-option' );
@@ -30,9 +31,10 @@
 		 */
 		bind : function() {
 			this.$submit.on( 'click', this.submit.bind( this ) );
+			this.$reset.on( 'click', this.reset.bind( this ) );
 			this.$close_overlay.on( 'click', this.toggleOverlay.bind( this ) );
-			this.disableSubmitButton();
-			this.$batch_option.on( 'change', this.enableSubmitButton.bind( this ) );
+			this.disableSubmitButtons();
+			this.$batch_option.on( 'change', this.enableSubmitButtons.bind( this ) );
 		},
 
 		/**
@@ -42,7 +44,7 @@
 			this.$overlay.toggleClass( 'is-open' );
 
 			if ( ! this.$overlay.hasClass( 'is-open' ) ) {
-				this.enableSubmitButton();
+				this.enableSubmitButtons();
 				this.enableBatchOptions();
 			}
 		},
@@ -50,15 +52,17 @@
 		/**
 		 * Enable submit button.
 		 */
-		enableSubmitButton : function() {
+		enableSubmitButtons : function() {
 			this.$submit.prop( 'disabled', false );
+			this.$reset.prop( 'disabled', false );
 		},
 
 		/**
 		 * Disable submit button.
 		 */
-		disableSubmitButton : function() {
+		disableSubmitButtons : function() {
 			this.$submit.prop( 'disabled', true );
+			this.$reset.prop( 'disabled', true );
 		},
 
 		/**
@@ -82,10 +86,50 @@
 		 */
 		submit : function( e ) {
 			e.preventDefault();
-			this.disableSubmitButton();
+			this.disableSubmitButtons();
 			this.disableBatchOptions();
 			this.toggleOverlay();
 			this.run( 1 );
+		},
+
+		/**
+		 * Reset a selected batch.
+		 *
+		 * @param {event} e Click event.
+		 */
+		reset : function( e ) {
+			e.preventDefault();
+			this.disableSubmitButtons();
+			this.reset_status();
+		},
+
+		/**
+		 * Reset batch status.
+		 */
+		reset_status : function() {
+			var _this = this;
+
+			$.ajax( {
+				type: 'POST',
+				url: batch.ajaxurl,
+				data: {
+					batch_process: _this.$form.find( 'input:radio[name=batch_process]:checked').val(),
+					nonce: batch.nonce,
+					action: 'reset_batch',
+				},
+				dataType: 'json',
+				success: function( response ) {
+					if ( response.success ) {
+						alert( 'Reset batch successfully.' );
+					} else {
+						alert( 'Unable to reset batch.' );
+					}
+				}
+			} ).fail( function ( response ) {
+				alert( 'Something went wrong!' );
+			});
+
+			this.enableSubmitButtons();
 		},
 
 		/**

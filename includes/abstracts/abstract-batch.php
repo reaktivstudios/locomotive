@@ -48,7 +48,7 @@ abstract class Batch {
 	public $args = array();
 
 	/**
-	 * Tyoe if batch.
+	 * Tyoe of batch.
 	 *
 	 * @var array
 	 */
@@ -169,6 +169,7 @@ abstract class Batch {
 		$this->currently_registered = get_all_batches();
 
 		add_action( self::BATCH_HOOK_PREFIX . $this->slug, array( $this, 'run' ) );
+		add_action( self::BATCH_HOOK_PREFIX . $this->slug . '_reset', array( $this, 'clear_result_status' ) );
 
 		return true;
 	}
@@ -291,5 +292,16 @@ abstract class Batch {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Clear the result status for a batch.
+	 */
+	public function clear_result_status() {
+		if ( 'post' === $this->type ) {
+			delete_post_meta_by_key( $this->slug . '_status' );
+		}
+
+		$this->update_status( 'reset' );
 	}
 }

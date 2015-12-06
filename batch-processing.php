@@ -67,6 +67,7 @@ final class Batch_Processing {
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
 
 		add_action( 'wp_ajax_run_batch', array( $this, 'run' ) );
+		add_action( 'wp_ajax_reset_batch', array( $this, 'reset' ) );
 	}
 
 	/**
@@ -122,6 +123,33 @@ final class Batch_Processing {
 		}
 
 		do_action( Batch_Process\Batch::BATCH_HOOK_PREFIX . $batch_process, $step );
+	}
+
+	/**
+	 * AJAX handler for running a batch.
+	 *
+	 * @todo Move this to it's own AJAX class.
+	 */
+	public function reset() {
+		$errors = array();
+		check_ajax_referer( 'run-batch-process', 'nonce' );
+
+		if ( empty( $_POST['batch_process'] ) ) {
+			$errors[] = 'Batch process not specified.';
+		} else {
+			$batch_process = sanitize_text_field( wp_unslash( $_POST['batch_process'] ) );
+		}
+
+		if ( $errors ) {
+			wp_send_json( array(
+				'success' => false,
+				'errors' => $errors,
+			) );
+		}
+
+		do_action( Batch_Process\Batch::BATCH_HOOK_PREFIX . $batch_process . '_reset' );
+
+		wp_send_json( array( 'success' => true ) );
 	}
 
 	/**
