@@ -25,10 +25,28 @@ var App = React.createClass( {
      * @param key Currently selected batch key.
      */
     updateSelectedBatch : function( key ) {
-        if ( ! this.state.processing.active ) {
-            this.state.processing.batch = key;
-            this.setState( { processing: this.state.processing } );
+        if ( this.state.processing.active ) {
+            return;
         }
+
+        this.state.processing.batch = key;
+        this.setState( { processing: this.state.processing } );
+    },
+
+    /**
+     * Run the currently selected batch process.
+     */
+    runBatch : function() {
+        if ( '' === this.state.processing.batch ) {
+            return;
+        }
+
+        this.state.processing.active = true;
+        this.setState( { processing: this.state.processing } );
+    },
+
+    resetBatch : function() {
+
     },
 
     /**
