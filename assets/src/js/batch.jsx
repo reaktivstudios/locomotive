@@ -25,9 +25,10 @@ var App = React.createClass( {
      * @param key Currently selected batch key.
      */
     updateSelectedBatch : function( key ) {
-        // @todo Only allow this action if we are not currently processing something.
-        this.state.processing.batch = key;
-        this.setState( { processing: this.state.processing } );
+        if ( ! this.state.processing.active ) {
+            this.state.processing.batch = key;
+            this.setState( { processing: this.state.processing } );
+        }
     },
 
     /**
@@ -61,6 +62,7 @@ var BatchPicker = React.createClass( {
      */
     renderBatchOption : function( key ) {
         var batch = this.props.batches[ key ];
+
         return (
             <li key={ key } onClick={ this.props.updateSelectedBatch.bind( null, key ) }>
                 <input type="radio" id={ key } name="batch_process" className="batch-process-option" value="test-another-batch" />
