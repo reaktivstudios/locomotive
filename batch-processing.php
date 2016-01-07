@@ -75,8 +75,7 @@ final class Batch_Processing {
 	 */
 	public function scripts() {
 		wp_enqueue_style( 'batch-process-styles', BATCH_PLUGIN_URL . 'assets/main.css' );
-		wp_enqueue_script( 'wp-util' );
-		wp_enqueue_script( 'batch-js', BATCH_PLUGIN_URL . 'assets/batch.js', array( 'jquery', 'wp-util' ), '0.1.0', true );
+		wp_enqueue_script( 'batch-js', BATCH_PLUGIN_URL . 'assets/dist/batch.min.js', array(), '0.1.0', true );
 
 		wp_localize_script( 'batch-js', 'batch', array(
 			'nonce' => wp_create_nonce( 'run-batch-process' ),
