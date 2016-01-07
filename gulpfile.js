@@ -9,7 +9,7 @@ var path = {
         'assets/src/js/**/*.js'
     ],
     MINIFIED_OUT: 'build.min.js',
-    DEST: 'assets'
+    DEST: 'assets/dist'
 };
 
 gulp.task( 'build', function() {
@@ -20,7 +20,7 @@ gulp.task( 'build', function() {
         .pipe( gulp.dest( path.DEST ) );
 });
 
-gulp.task('watch', function(){
+gulp.task( 'watch', function(){
     gulp.watch( path.JS, [ 'build' ] );
 });
 
