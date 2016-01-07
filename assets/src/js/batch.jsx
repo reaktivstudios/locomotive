@@ -13,6 +13,11 @@ var App = React.createClass( {
         };
     },
 
+    /**
+     * Render our batch application.
+     *
+     * @returns {JSX}
+     */
     render : function() {
         return (
             <div className="wrap">
