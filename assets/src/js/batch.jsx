@@ -1,5 +1,7 @@
 var React = require( 'react' );
 var ReactDOM = require( 'react-dom' );
+var CSSTransitionGroup = require('react-addons-css-transition-group');
+
 
 /**
  * Our Batch Processing App.
@@ -34,6 +36,18 @@ var App = React.createClass( {
     },
 
     /**
+     * Function to handle flipping the switches for the modal.
+     *
+     * @param bool active Whether or not we are processing a batch.
+     */
+    toggleProcessing : function( active ) {
+        if ( false === active || true === active ) {
+            this.state.processing.active = active;
+            this.setState( { processing: this.state.processing } );
+        }
+    },
+
+    /**
      * Run the currently selected batch process.
      */
     runBatch : function() {
@@ -41,8 +55,7 @@ var App = React.createClass( {
             return;
         }
 
-        this.state.processing.active = true;
-        this.setState( { processing: this.state.processing } );
+        this.toggleProcessing( true );
     },
 
     resetBatch : function() {
@@ -60,8 +73,13 @@ var App = React.createClass( {
                 <h2>{ this.state.page_title }</h2>
                 <BatchPicker
                     batches={ this.state.batches }
-                    processing={ this.state.processing }
                     updateSelectedBatch={ this.updateSelectedBatch }
+                    runBatch={ this.runBatch }
+                    resetBatch={ this.resetBatch }
+                />
+                <Modal
+                    isOpen={ this.state.processing.active }
+                    toggleProcessing={ this.toggleProcessing }
                 />
             </div>
         )
@@ -103,10 +121,29 @@ var BatchPicker = React.createClass( {
                     { Object.keys( this.props.batches ).map( this.renderBatchOption ) }
                 </ul>
 
-                <button id="submit" className="button button-primary" onClick={ this.run }>Run Batch Process</button>
-                <button id="reset" className="button button-secondary" onClick={ this.reset }>Reset Batch Process</button>
+                <button id="submit" className="button button-primary" onClick={ this.props.runBatch }>Run Batch Process</button>
+                <button id="reset" className="button button-secondary" onClick={ this.props.resetBatch }>Reset Batch Process</button>
             </div>
         )
+    }
+} );
+
+/**
+ * Modal component.
+ */
+var Modal = React.createClass( {
+    render : function() {
+        var classes = 'batch-processing-overlay';
+        if ( this.props.isOpen ) {
+            classes += ' is-open';
+        }
+
+        return (
+            <div className={ classes }>
+                <div className="close" onClick={ this.props.toggleProcessing.bind( null, false ) }>close</div>
+                <div className="batch-overlay__inner"></div>
+            </div>
+        );
     }
 } );
 

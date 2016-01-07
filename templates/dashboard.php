@@ -8,11 +8,6 @@
 ?>
 <div id="batch-main" class="batch-processing-form"></div>
 
-<div class="batch-processing-overlay">
-	<div class="close">close</div>
-	<div class="batch-overlay__inner"></div>
-</div><!-- .batch-processing-overlay -->
-
 <script type="text/html" id="tmpl-batch-processing-results">	
 	<h2>{{ data.status }}: {{ data.batch }}</h2>
 	<div class="progress-bar" data-progress="{{ data.progress }}">
