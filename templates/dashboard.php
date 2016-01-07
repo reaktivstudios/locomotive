@@ -6,13 +6,7 @@
  */
 
 ?>
-<div class="wrap">
-	<h2><?php esc_html_e( get_admin_page_title() ); ?></h2>
-	
-	<form class="batch-processing-form" method="post">
-		<div id="batch-main"></div>
-	</form>
-</div>
+<div id="batch-main" class="batch-processing-form"></div>
 
 <div class="batch-processing-overlay">
 	<div class="close">close</div>

@@ -83,6 +83,7 @@ final class Loader {
 			'nonce' => wp_create_nonce( 'run-batch-process' ),
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
 			'batches' => get_all_batches(),
+			'page_title' => esc_html( get_admin_page_title() ),
 		) );
 	}
 

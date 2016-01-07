@@ -8,13 +8,17 @@ var App = React.createClass( {
     getInitialState: function() {
         return {
             // Batches that can be run. Loaded through `wp_localize_script()`.
-            batches: batch.batches
+            batches: batch.batches,
+            page_title: batch.page_title,
         };
     },
 
     render : function() {
         return (
-            <BatchPicker batches={ this.state.batches } />
+            <div className="wrap">
+                <h2>{ this.state.page_title }</h2>
+                <BatchPicker batches={ this.state.batches } />
+            </div>
         )
     }
 } );
