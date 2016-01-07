@@ -63,9 +63,9 @@ function bundle( bundler ) {
         .pipe( uglify() ) // Minify the JS.
         .pipe( sourcemaps.write( './map' ) ) // Set folder for sourcemaps to output to.
         .pipe( gulp.dest( config.js.outputDir) ) // Set the output folder.
-        .pipe( notify( {
-            message: 'Generated file: <%= file.relative %>',
-        } ) ) // Output the file being created.
+        //.pipe( notify( {
+        //    message: 'Generated file: <%= file.relative %>',
+        //} ) ) // Output the file being created.
         .pipe( bundleTimer ) // Output time timing of the file creation.
         .pipe( livereload() ); // Reload the view in the browser.
 }
