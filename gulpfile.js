@@ -15,7 +15,7 @@ var buffer = require('vinyl-buffer'); // Vinyl stream support
 var watchify = require('watchify'); // Watchify for source changes
 var merge = require('utils-merge'); // Object merge tool
 var duration = require('gulp-duration'); // Time aspects of your gulp process
-var uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify'); // Minify the JS.
 
 // Configuration for Gulp
 var config = {
@@ -57,7 +57,7 @@ function bundle( bundler ) {
         .pipe( buffer() ) // Convert to gulp pipeline
         .pipe( rename( config.js.outputFile ) ) // Rename the output file
         .pipe( sourcemaps.init( { loadMaps: true } ) ) // Extract the inline sourcemaps
-        .pipe( uglify() )
+        .pipe( uglify() ) // Minify the JS.
         .pipe( sourcemaps.write( './map' ) ) // Set folder for sourcemaps to output to
         .pipe( gulp.dest( config.js.outputDir) ) // Set the output folder
         .pipe( notify( {
