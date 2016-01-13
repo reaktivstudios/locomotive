@@ -1,7 +1,7 @@
 var React = require( 'react' );
 var ReactDOM = require( 'react-dom' );
-var CSSTransitionGroup = require('react-addons-css-transition-group');
-
+var CSSTransitionGroup = require( 'react-addons-css-transition-group' );
+var $ = jQuery; // We are loading this file after jQuery through `wp_enqueue_script`.
 
 /**
  * Our Batch Processing App.
@@ -16,7 +16,18 @@ var App = React.createClass( {
             // Object to hold data relating to running a migration (in the modal).
             processing: {
                 active: false,
-                batch: false
+                batch: false,
+
+                // Remote data is data that is retrieved via Ajax calls during a
+                // batch process.
+                remote_data: {
+                    batch_title: '',
+                    status: '',
+                    progress: 0,
+                    current_step: 0,
+                    total_steps: 0,
+                    total_num_results: 0
+                }
             }
         };
     },
@@ -50,10 +61,55 @@ var App = React.createClass( {
     /**
      * Run the currently selected batch process.
      */
-    runBatch : function() {
+    runBatch : function( current_step ) {
         if ( '' === this.state.processing.batch ) {
             return;
         }
+
+        var _this = this,
+            batch_slug = _this.state.processing.batch.toString();
+
+        if ( 1 === current_step ) {
+            // Starting batch process.
+        }
+
+        $.ajax( {
+            type: 'POST',
+            url: batch.ajaxurl,
+            data: {
+                batch_process: batch_slug,
+                nonce: batch.nonce,
+                step: current_step,
+                action: 'run_batch',
+            },
+            dataType: 'json',
+            success: function( response ) {
+                // Update our state with the processing status and progress.
+                if ( response.success ) {
+                    _this.state.processing.remote_data = {
+                        batch_title:       response.batch,
+                        status:            response.status,
+                        progress:          response.progress,
+                        current_step:      response.current_step,
+                        total_steps:       response.total_steps,
+                        total_num_results: response.total_num_results
+                    };
+                    _this.setState( { processing: _this.state.processing } );
+
+                    //
+                    if ( response.current_step !== response.total_steps && 'running' === response.status.toLowerCase() ) {
+                        _this.runBatch( current_step + 1 );
+                    } else {
+                        // Make sure the select list is updated with the right text.
+                    }
+                } else {
+                    // Update the modal with response.error.
+                    alert( response.error );
+                }
+            }
+        } ).fail( function ( response ) {
+            alert( 'Something went wrong!' );
+        });
 
         this.toggleProcessing( true );
     },
@@ -77,8 +133,10 @@ var App = React.createClass( {
                     runBatch={ this.runBatch }
                     resetBatch={ this.resetBatch }
                 />
+
                 <Modal
                     isOpen={ this.state.processing.active }
+                    batchInfo={ this.state.processing.remote_data }
                     toggleProcessing={ this.toggleProcessing }
                 />
             </div>
@@ -121,7 +179,7 @@ var BatchPicker = React.createClass( {
                     { Object.keys( this.props.batches ).map( this.renderBatchOption ) }
                 </ul>
 
-                <button id="submit" className="button button-primary" onClick={ this.props.runBatch }>Run Batch Process</button>
+                <button id="submit" className="button button-primary" onClick={ this.props.runBatch.bind( null, 1 ) }>Run Batch Process</button>
                 <button id="reset" className="button button-secondary" onClick={ this.props.resetBatch }>Reset Batch Process</button>
             </div>
         )
@@ -133,15 +191,27 @@ var BatchPicker = React.createClass( {
  */
 var Modal = React.createClass( {
     render : function() {
-        var classes = 'batch-processing-overlay';
+        var classes = 'batch-processing-overlay',
+            batch_info = this.props.batchInfo;
+
         if ( this.props.isOpen ) {
             classes += ' is-open';
+        }
+
+        var progress_style = {
+            width: batch_info.progress + '%'
         }
 
         return (
             <div className={ classes }>
                 <div className="close" onClick={ this.props.toggleProcessing.bind( null, false ) }>close</div>
-                <div className="batch-overlay__inner"></div>
+                <div className="batch-overlay__inner">
+                    <h2>{ batch_info.batch_title }: { batch_info.status }</h2>
+                    <div className="progress-bar">
+                        <span className="progress-bar__text">Progress: { batch_info.progress }%</span>
+                        <div className="progress-bar__visual" style={ progress_style }></div>
+                    </div>
+                </div>
             </div>
         );
     }
