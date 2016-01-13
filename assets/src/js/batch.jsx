@@ -19,10 +19,10 @@ var App = React.createClass( {
                 batch: false,
 
                 // Remote data is data that is retrieved via Ajax calls during a
-                // batch process.
+                // batch process..
                 remote_data: {
                     batch_title: '',
-                    status: '',
+                    status: 'Starting',
                     progress: 0,
                     current_step: 0,
                     total_steps: 0,
@@ -94,7 +94,14 @@ var App = React.createClass( {
                         total_steps:       response.total_steps,
                         total_num_results: response.total_num_results
                     };
-                    _this.setState( { processing: _this.state.processing } );
+
+                    _this.state.batches[ _this.state.processing.batch ].last_run = 'just ran';
+                    _this.state.batches[ _this.state.processing.batch ].status = _this.state.processing.remote_data.status;
+
+                    _this.setState( {
+                        processing: _this.state.processing,
+                        batches: _this.state.batches
+                    } );
 
                     //
                     if ( response.current_step !== response.total_steps && 'running' === response.status.toLowerCase() ) {
