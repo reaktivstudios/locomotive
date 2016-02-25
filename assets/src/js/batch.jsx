@@ -168,6 +168,28 @@ var App = React.createClass( {
     },
 
     /**
+     * Decides if `Run Batch` button is enabled or disabled.
+     *
+     * @returns {boolean} Can we run a batch?
+     */
+    canInteractWithBatch : function() {
+        // Default to being able to run a batch.
+        var canRun = true;
+
+        // If we don't have a batch selected.
+        if ( false === this.state.processing.batch ) {
+            canRun = false;
+        }
+
+        // If we are currently processing a batch.
+        if ( this.state.processing.active ) {
+            canRun = false;
+        }
+
+        return canRun;
+    },
+
+    /**
      * Render our batch application.
      *
      * @returns {JSX}
@@ -183,7 +205,7 @@ var App = React.createClass( {
                 <h2>{ this.state.page_title }</h2>
                 <BatchPicker
                     batches={ this.state.batches }
-                    isBatchRunning={ this.state.processing.active }
+                    canInteractWithBatch={ this.canInteractWithBatch() }
                     updateSelectedBatch={ this.updateSelectedBatch }
                     runBatch={ this.runBatch }
                     resetBatch={ this.resetBatch }
