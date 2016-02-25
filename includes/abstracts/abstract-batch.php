@@ -206,10 +206,10 @@ abstract class Batch {
 
 		if ( (int) $this->current_step === (int) $total_steps ) {
 			// If we are on the last step.
-			$this->update_status( 'finished' );
+			$this->update_status( 'completed' );
 		} else if ( $this->total_num_processed_results >= $this->total_num_results ) {
 			// If we already processed everything.
-			$this->update_status( 'already processed' );
+			$this->update_status( 'completed' );
 
 			// Set progress to 100 since it is already processed.
 			$progress = 100;
