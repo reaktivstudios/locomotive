@@ -36,6 +36,7 @@ var Modal = React.createClass( {
          * @returns {JSX}
          */
         var content = function() {
+            // @todo Change from `error` to `message`. For instance, we want to pass message of 'no results found' but that isn't an error.
             if ( batch_info.error ) {
                 return (
                     <div className="batch-error">
@@ -44,9 +45,14 @@ var Modal = React.createClass( {
                 );
             } else {
                 return (
-                    <div className="progress-bar">
-                        <span className="progress-bar__text">Progress: { batch_info.progress }%</span>
-                        <div className="progress-bar__visual" style={ progress_style }></div>
+                    <div>
+                        <div className="batch-info">
+                            Processed [{ batch_info.total_num_processed_results }] out of [{ batch_info.total_num_results }] total results.
+                        </div>
+                        <div className="progress-bar">
+                            <span className="progress-bar__text">Progress: { batch_info.progress }%</span>
+                            <div className="progress-bar__visual" style={ progress_style }></div>
+                        </div>
                     </div>
                 );
             }

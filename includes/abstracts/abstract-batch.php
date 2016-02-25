@@ -83,6 +83,13 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
+	 * Total number of processed results.
+	 *
+	 * @var array
+	 */
+	public $total_num_processed_results = 0;
+
+	/**
 	 * Main plugin method for querying data.
 	 *
 	 * @since 0.1
@@ -195,13 +202,21 @@ abstract class Batch {
 		$this->process_results( $results );
 
 		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
+		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
+
 		if ( (int) $this->current_step === (int) $total_steps ) {
-			$this->update_status( 'finished' );
+			// If we are on the last step.
+			$this->update_status( 'completed' );
+		} else if ( $this->total_num_processed_results >= $this->total_num_results ) {
+			// If we already processed everything.
+			$this->update_status( 'completed' );
+
+			// Set progress to 100 since it is already processed.
+			$progress = 100;
 		} else {
 			$this->update_status( 'running' );
 		}
 
-		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
 		wp_send_json( $this->format_ajax_details( array(
 			'total_steps'   => $total_steps,
 			'query_results' => $results,
@@ -216,13 +231,36 @@ abstract class Batch {
 	 */
 	private function format_ajax_details( $details = array() ) {
 		return wp_parse_args( $details, array(
-			'success'           => true,
-			'current_step'      => $this->current_step,
-			'callback'          => $this->callback,
-			'status'            => $this->status,
-			'batch'             => $this->name,
-			'total_num_results' => $this->total_num_results,
+			'success'                     => true,
+			'current_step'                => $this->current_step,
+			'callback'                    => $this->callback,
+			'status'                      => $this->status,
+			'batch'                       => $this->name,
+			'total_num_results'           => $this->total_num_results,
+			'total_num_processed_results' => $this->total_num_processed_results,
 		) );
+	}
+
+	/**
+	 * Update the processed number of results.
+	 */
+	private function update_processed_result_count() {
+		$this->total_num_processed_results = $this->get_processed_result_count();
+	}
+
+	/**
+	 * Get the count of processed results.
+	 */
+	private function get_processed_result_count() {
+		global $wpdb;
+
+		// @todo How inefficent is this?
+		$num_processed_results = $wpdb->get_var( $wpdb->prepare(
+			"SELECT count(*) FROM $wpdb->postmeta WHERE meta_key = %s",
+			$this->slug . '_status'
+		) );
+
+		return $num_processed_results;
 	}
 
 	/**
@@ -267,6 +305,8 @@ abstract class Batch {
 				) ) );
 			}
 		}
+
+		$this->update_processed_result_count();
 	}
 
 	/**
