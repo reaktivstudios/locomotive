@@ -187,7 +187,7 @@ abstract class Batch {
 		if ( empty( $results ) ) {
 			$this->update_status( 'no results found' );
 			wp_send_json( $this->format_ajax_details( array(
-				'success' => false,
+				'success' => true,
 				'error' => __( 'No results found.' ),
 			) ) );
 		}
