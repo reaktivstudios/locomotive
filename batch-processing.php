@@ -150,7 +150,7 @@ final class Loader {
 			) );
 		}
 
-		do_action( Batch_Process\Batch::BATCH_HOOK_PREFIX . $batch_process . '_reset' );
+		do_action( Batch::BATCH_HOOK_PREFIX . $batch_process . '_reset' );
 
 		wp_send_json( array( 'success' => true ) );
 	}
