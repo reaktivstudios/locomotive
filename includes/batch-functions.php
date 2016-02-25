@@ -35,9 +35,16 @@ function get_all_batches() {
 	$batches = get_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
 
 	foreach ( $batches as $k => $batch ) {
-		$batch_status = get_site_option( Batch::BATCH_HOOK_PREFIX . $k );
-		$batches[ $k ]['last_run'] = time_ago( $batch_status['timestamp'] );
-		$batches[ $k ]['status'] = $batch_status['status'];
+		if ( $batch_status = get_site_option( Batch::BATCH_HOOK_PREFIX . $k ) ) {
+			$last_run = time_ago( $batch_status['timestamp'] );
+			$status = $batch_status['status'];
+		} else {
+			$last_run = 'never';
+			$status = 'new';
+		}
+
+		$batches[ $k ]['last_run'] = $last_run;
+		$batches[ $k ]['status'] = $status;
 	}
 
 	return $batches;
