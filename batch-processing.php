@@ -10,6 +10,8 @@
  * @package Batch_Process
  */
 
+namespace Batch_Process;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -17,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin class to handle setting constants and loading files and static helper methods.
  */
-final class Batch_Processing {
+final class Loader {
 	/**
 	 * Define all the constants we need
 	 */
@@ -45,7 +47,7 @@ final class Batch_Processing {
 	 * Dashboard display.
 	 */
 	public function dashboard_display() {
-		$registered_batches = Batch_Process\get_all_batches();
+		$registered_batches = get_all_batches();
 		include BATCH_PLUGIN_DIR . 'templates/dashboard.php';
 	}
 
@@ -75,12 +77,13 @@ final class Batch_Processing {
 	 */
 	public function scripts() {
 		wp_enqueue_style( 'batch-process-styles', BATCH_PLUGIN_URL . 'assets/main.css' );
-		wp_enqueue_script( 'wp-util' );
-		wp_enqueue_script( 'batch-js', BATCH_PLUGIN_URL . 'assets/batch.js', array( 'jquery', 'wp-util' ), '0.1.0', true );
+		wp_enqueue_script( 'batch-js', BATCH_PLUGIN_URL . 'assets/dist/batch.min.js', array( 'jquery' ), '0.1.0', true );
 
 		wp_localize_script( 'batch-js', 'batch', array(
 			'nonce' => wp_create_nonce( 'run-batch-process' ),
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'batches' => get_all_batches(),
+			'page_title' => esc_html( get_admin_page_title() ),
 		) );
 	}
 
@@ -89,7 +92,7 @@ final class Batch_Processing {
 	 */
 	public function loaded() {
 		if ( is_admin() ) {
-			Batch_Process\clear_existing_batches();
+			clear_existing_batches();
 			do_action( 'add_batch_processes' );
 		}
 	}
@@ -122,7 +125,7 @@ final class Batch_Processing {
 			) );
 		}
 
-		do_action( Batch_Process\Batch::BATCH_HOOK_PREFIX . $batch_process, $step );
+		do_action( Batch::BATCH_HOOK_PREFIX . $batch_process, $step );
 	}
 
 	/**
@@ -162,5 +165,5 @@ final class Batch_Processing {
 	}
 }
 
-$batch_processing = new Batch_Processing();
+$batch_processing = new Loader();
 $batch_processing->init();

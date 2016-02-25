@@ -6,6 +6,10 @@
 	box-sizing: border-box;
 }
 
+.batch-processes small {
+	text-transform: lowercase;
+}
+
 .batch-processing-form #submit {
 	margin-right: 12px;
 }
