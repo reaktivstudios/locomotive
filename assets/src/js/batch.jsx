@@ -128,8 +128,43 @@ var App = React.createClass( {
         this.toggleProcessing( true );
     },
 
+    /**
+     * Reset the selected batch process.
+     */
     resetBatch : function() {
+        if ( '' === this.state.processing.batch ) {
+            return;
+        }
 
+        var self = this,
+            batch_slug = self.state.processing.batch.toString();
+
+        $.ajax( {
+            type: 'POST',
+            url: batch.ajaxurl,
+            data: {
+                batch_process: batch_slug,
+                nonce:         batch.nonce,
+                action:        'reset_batch',
+            },
+            dataType: 'json',
+            success: function( response ) {
+                if ( response.success ) {
+                    // Update our batches, which will update the batch listing.
+                    self.state.batches[ self.state.processing.batch ].last_run = 'never';
+                    self.state.batches[ self.state.processing.batch ].status = 'new';
+
+                    self.setState( {
+                        processing: self.state.processing,
+                        batches: self.state.batches
+                    } );
+                } else {
+                    alert( 'Reset batch failed.' );
+                }
+            }
+        } ).fail( function ( response ) {
+            alert( 'Something went wrong.' );
+        });
     },
 
     /**
