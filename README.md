@@ -5,26 +5,53 @@ Creating batch processes in WordPress has never been so easy
 ## Example Implementation
 
 ``` php
-add_action( 'add_batch_processes', 'my_batch_processes' );
-
 /**
  * Register our batch process.
  */
 function my_batch_processes() {
+	// Example post query.
 	try {
 		Batch_Process\register( array(
-			'name'     => 'My Test Batch process',
-			'slug'     => 'test-another-batch',
+			'name'     => 'Just another batch',
 			'type'     => 'post',
 			'callback' => 'my_callback_function',
 			'args'     => array(
-				'posts_per_page' => 5,
+				'posts_per_page' => 1,
 				'post_type'      => 'post',
 			),
 		) );
 	} catch ( Exception $e ) {
-		var_dump( $e->getMessage() );
-		die();
+		error_log( print_r( $e->getMessage(), true ) );
+	}
+	
+	// Example non existant post type query.
+	try {
+		Batch_Process\register( array(
+			'name'     => 'Not existing post type',
+			'type'     => 'post',
+			'callback' => 'my_callback_function',
+			'args'     => array(
+				'posts_per_page' => 1,
+				'post_type'      => 'Not existing post type',
+			),
+		) );
+	} catch ( Exception $e ) {
+		error_log( print_r( $e->getMessage(), true ) );
+	}
+	
+	// Example page batch.
+	try {
+		Batch_Process\register( array(
+			'name'     => 'Pages Batch',
+			'type'     => 'post',
+			'callback' => 'my_callback_function',
+			'args'     => array(
+				'posts_per_page' => 2,
+				'post_type'      => 'page',
+			),
+		) );
+	} catch ( Exception $e ) {
+		error_log( print_r( $e->getMessage(), true ) );
 	}
 }
 
@@ -34,6 +61,6 @@ function my_batch_processes() {
  * @param  array $result Individual result from batch query.
  */
 function my_callback_function( $result ) {
-	var_dump( $result->post_title );
+	error_log( print_r( $result->post_title, true ) );
 }
 ```
