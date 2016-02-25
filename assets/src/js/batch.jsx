@@ -32,7 +32,8 @@ var App = React.createClass( {
                     progress: 0,
                     current_step: 0,
                     total_steps: 0,
-                    total_num_results: 0
+                    total_num_results: 0,
+                    total_num_processed_results: 0
                 }
             }
         };
@@ -93,7 +94,8 @@ var App = React.createClass( {
                     progress:          response.progress,
                     current_step:      response.current_step,
                     total_steps:       response.total_steps,
-                    total_num_results: response.total_num_results
+                    total_num_results: response.total_num_results,
+                    total_num_processed_results: response.total_num_processed_results
                 };
 
                 // Update our batches, which will update the batch listing.
