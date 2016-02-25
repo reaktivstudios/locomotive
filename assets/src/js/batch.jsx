@@ -1,6 +1,5 @@
 var React = require( 'react' );
 var ReactDOM = require( 'react-dom' );
-var CSSTransitionGroup = require( 'react-addons-css-transition-group' );
 var $ = jQuery; // We are loading this file after jQuery through `wp_enqueue_script`.
 
 /**
