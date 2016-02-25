@@ -202,13 +202,21 @@ abstract class Batch {
 		$this->process_results( $results );
 
 		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
+		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
+
 		if ( (int) $this->current_step === (int) $total_steps ) {
+			// If we are on the last step.
 			$this->update_status( 'finished' );
+		} else if ( $this->total_num_processed_results >= $this->total_num_results ) {
+			// If we already processed everything.
+			$this->update_status( 'already processed' );
+
+			// Set progress to 100 since it is already processed.
+			$progress = 100;
 		} else {
 			$this->update_status( 'running' );
 		}
 
-		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
 		wp_send_json( $this->format_ajax_details( array(
 			'total_steps'   => $total_steps,
 			'query_results' => $results,
