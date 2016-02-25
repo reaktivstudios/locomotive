@@ -72,8 +72,8 @@ var App = React.createClass( {
             return;
         }
 
-        var _this = this,
-            batch_slug = _this.state.processing.batch.toString();
+        var self = this,
+            batch_slug = self.state.processing.batch.toString();
 
         $.ajax( {
             type: 'POST',
@@ -87,7 +87,7 @@ var App = React.createClass( {
             dataType: 'json',
             success: function( response ) {
                 // Update our state with the processing status and progress, which will update the modal.
-                _this.state.processing.remote_data = {
+                self.state.processing.remote_data = {
                     batch_title:       response.batch,
                     status:            response.status,
                     progress:          response.progress,
@@ -97,25 +97,25 @@ var App = React.createClass( {
                 };
 
                 // Update our batches, which will update the batch listing.
-                _this.state.batches[ _this.state.processing.batch ].last_run = 'just ran';
-                _this.state.batches[ _this.state.processing.batch ].status = _this.state.processing.remote_data.status;
+                self.state.batches[ self.state.processing.batch ].last_run = 'just ran';
+                self.state.batches[ self.state.processing.batch ].status = self.state.processing.remote_data.status;
 
                 // Check for errors.
                 if ( response.error ) {
-                    _this.state.processing.remote_data.error = response.error;
-                    _this.setState( { processing: _this.state.processing } );
+                    self.state.processing.remote_data.error = response.error;
+                    self.setState( { processing: self.state.processing } );
                 }
 
-                _this.setState( {
-                    processing: _this.state.processing,
-                    batches: _this.state.batches
+                self.setState( {
+                    processing: self.state.processing,
+                    batches: self.state.batches
                 } );
 
                 // Determine if we have to run another step in the batch. Checks if there are more steps
                 // that need to run and makes sure the 'status' from the server is still 'running'.
                 if ( response.success ) {
                     if ( response.current_step !== response.total_steps && 'running' === response.status.toLowerCase() ) {
-                        _this.runBatch( current_step + 1 );
+                        self.runBatch( current_step + 1 );
                     }
                 } else {
                     alert( 'Batch failed.' );
