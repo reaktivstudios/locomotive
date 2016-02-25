@@ -56,16 +56,17 @@ function bundle( bundler ) {
 
     return bundler
         .bundle()
-        .pipe( source('batch.jsx')) // Set source name.
+        .on('error', function(err) { console.error(err); this.emit('end'); })
+        .pipe( source( 'batch.jsx' )) // Set source name.
         .pipe( buffer() ) // Convert to gulp pipeline.
         .pipe( rename( config.js.outputFile ) ) // Rename the output file.
         .pipe( sourcemaps.init( { loadMaps: true } ) ) // Extract the inline sourcemaps.
         .pipe( uglify() ) // Minify the JS.
         .pipe( sourcemaps.write( './map' ) ) // Set folder for sourcemaps to output to.
-        .pipe( gulp.dest( config.js.outputDir) ) // Set the output folder.
-        //.pipe( notify( {
-        //    message: 'Generated file: <%= file.relative %>',
-        //} ) ) // Output the file being created.
+        .pipe( gulp.dest( config.js.outputDir ) ) // Set the output folder.
+        .pipe( notify( {
+           message: 'Generated file: <%= file.relative %>',
+        } ) ) // Output the file being created.
         .pipe( bundleTimer ) // Output time timing of the file creation.
         .pipe( livereload() ); // Reload the view in the browser.
 }

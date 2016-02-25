@@ -4,6 +4,12 @@ var CSSTransitionGroup = require( 'react-addons-css-transition-group' );
 var $ = jQuery; // We are loading this file after jQuery through `wp_enqueue_script`.
 
 /**
+ * Application components.
+ */
+import BatchPicker from './components/BatchPicker';
+import Modal from './components/Modal';
+
+/**
  * Our Batch Processing App.
  */
 var App = React.createClass( {
@@ -154,112 +160,6 @@ var App = React.createClass( {
                 />
             </div>
         )
-    }
-} );
-
-/**
- * Potential Batch listings.
- */
-var BatchPicker = React.createClass( {
-    /**
-     * Render an individual batch option.
-     *
-     * @param key Used to get the right batch from this.props.batches.
-     * @returns {JSX}
-     */
-    renderBatchOption : function( key ) {
-        var batch = this.props.batches[ key ];
-
-        return (
-            <li key={ key } onClick={ this.props.updateSelectedBatch.bind( null, key ) }>
-                <input type="radio" id={ key } name="batch_process" className="batch-process-option" value="test-another-batch" />
-                    <label htmlFor={ key }>
-                        { batch.name } <small>last run: { batch.last_run } | status: { batch.status }</small>
-                    </label>
-            </li>
-        )
-    },
-
-    /**
-     * Render the batch processes list.
-     *
-     * @returns {JSX}
-     */
-    render : function() {
-        return (
-            <div className="batch-picker">
-                <ul className="batch-processes">
-                    { Object.keys( this.props.batches ).map( this.renderBatchOption ) }
-                </ul>
-
-                <button id="submit" className="button button-primary" onClick={ this.props.runBatch.bind( null, 1 ) }>Run Batch Process</button>
-                <button id="reset" className="button button-secondary" onClick={ this.props.resetBatch }>Reset Batch Process</button>
-            </div>
-        )
-    }
-} );
-
-/**
- * Modal component.
- */
-var Modal = React.createClass( {
-    render : function() {
-        var classes        = 'batch-processing-overlay',
-            batch_info     = this.props.batchInfo,
-            batch_title    = ( batch_info.batch_title ) ? batch_info.batch_title : this.props.selectedBatch,
-            status         = ( batch_info.status ) ? batch_info.status : '',
-            progress_style = {
-                width: batch_info.progress + '%'
-            };
-
-        if ( this.props.isOpen ) {
-            classes += ' is-open';
-        }
-
-        /**
-         * Return the title for the modal.
-         *
-         * @returns {JSX}
-         */
-        var title = function() {
-            if ( status ) {
-                return <h2>{ batch_title }: { status }</h2>;
-            } else {
-                return <h2>{ batch_title }</h2>
-            }
-        }
-
-        /**
-         * Return content for the modal.
-         *
-         * @returns {JSX}
-         */
-        var content = function() {
-            if ( batch_info.error ) {
-                return (
-                    <div className="batch-error">
-                        { batch_info.error }
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="progress-bar">
-                        <span className="progress-bar__text">Progress: { batch_info.progress }%</span>
-                        <div className="progress-bar__visual" style={ progress_style }></div>
-                    </div>
-                );
-            }
-        }
-
-        return (
-            <div className={ classes }>
-                <div className="close" onClick={ this.props.toggleProcessing.bind( null, false ) }>close</div>
-                <div className="batch-overlay__inner">
-                    { title() }
-                    { content() }
-                </div>
-            </div>
-        );
     }
 } );
 
