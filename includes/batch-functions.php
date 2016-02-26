@@ -14,6 +14,10 @@ namespace Batch_Process;
  * @throws \Exception Only post & user are accepted $args['type'].
  */
 function register( $args ) {
+	if ( empty( $args['type'] ) ) {
+		$args['type'] = '';
+	}
+
 	switch ( $args['type'] ) {
 		case 'post':
 			$batch_process = new Posts();

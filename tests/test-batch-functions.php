@@ -2,6 +2,7 @@
 
 class BatchFunctionTest extends WP_UnitTestCase {
 	function setUp() { }
+
 	function tearDown() {
 		\Batch_Process\clear_existing_batches();
 	}
@@ -18,6 +19,27 @@ class BatchFunctionTest extends WP_UnitTestCase {
 
 	/**
 	 * Test unsupported type of batch.
+	 *
+	 * @expectedExceptionMessage Type not supported.
+	 */
+	function test_register_empty_type() {
+		$this->setExpectedException( 'Exception' );
+
+		Batch_Process\register( array(
+			'name'     => 'My Test Batch process',
+			'slug'     => 'test-anot22h12er-batch',
+			'callback' => 'my_callback_function',
+			'args'     => array(
+				'posts_per_page' => 10,
+				'post_type'      => 'post',
+			),
+		) );
+	}
+
+	/**
+	 * Test unsupported type of batch.
+	 *
+	 * @expectedExceptionMessage Type not supported.
 	 */
 	function test_register_unsupported_type() {
 		$this->setExpectedException( 'Exception' );
