@@ -102,6 +102,17 @@ class BatchTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Make sure that when a batch process is registered that `currently_registered`
+	 * is an array.
+	 */
+	public function test_empty_currently_registered_is_array_when_new_batch_added() {
+		\Batch_Process\clear_existing_batches();
+
+		$batch_process = new \Batch_Process\Posts();
+		$this->assertTrue( is_array( $batch_process->currently_registered ) );
+	}
+
+	/**
 	 * Helper function to register a successful batch.
 	 *
 	 * @param string $slug Slug of test batch.

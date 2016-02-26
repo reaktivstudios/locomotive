@@ -110,10 +110,6 @@ abstract class Batch {
 	 * Add a batch process to our system.
 	 */
 	private function add() {
-		if ( ! is_array( $this->currently_registered ) ) {
-			$this->currently_registered = array();
-		}
-
 		if ( ! isset( $this->currently_registered[ $this->slug ] ) ) {
 			$this->currently_registered[ $this->slug ] = array(
 				'name' => $this->name,
