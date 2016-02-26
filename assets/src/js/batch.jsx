@@ -73,13 +73,24 @@ var App = React.createClass( {
         }
 
         var self = this,
-            batch_slug = self.state.processing.batch.toString();
+            batch_slug = self.state.processing.batch,
+            batch_name = self.state.processing.batch.toString();
+
+        // If we open the modal and it was previously complete, clear it.
+        if ( 100 === this.state.processing.remote_data.progress ) {
+            this.state.processing.batch = '';
+            this.state.processing.remote_data = {
+                progress: 0
+            };
+
+            this.setState( { processing: this.state.processing } );
+        }
 
         $.ajax( {
             type: 'POST',
             url: batch.ajaxurl,
             data: {
-                batch_process: batch_slug,
+                batch_process: batch_name,
                 nonce:         batch.nonce,
                 step:          current_step,
                 action:        'run_batch',
@@ -87,6 +98,7 @@ var App = React.createClass( {
             dataType: 'json',
             success: function( response ) {
                 // Update our state with the processing status and progress, which will update the modal.
+                self.state.processing.batch = batch_slug;
                 self.state.processing.remote_data = {
                     batch_title:       response.batch,
                     status:            response.status,
@@ -97,8 +109,8 @@ var App = React.createClass( {
                 };
 
                 // Update our batches, which will update the batch listing.
-                self.state.batches[ self.state.processing.batch ].last_run = 'just ran';
-                self.state.batches[ self.state.processing.batch ].status = self.state.processing.remote_data.status;
+                self.state.batches[ batch_slug ].last_run = 'just ran';
+                self.state.batches[ batch_slug ].status = self.state.processing.remote_data.status;
 
                 // Check for errors.
                 if ( response.error ) {
