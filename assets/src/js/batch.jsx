@@ -73,8 +73,7 @@ var App = React.createClass( {
         }
 
         var self = this,
-            batch_slug = self.state.processing.batch,
-            batch_name = self.state.processing.batch.toString();
+            batch_slug = self.state.processing.batch;
 
         // If we open the modal and it was previously complete, clear it.
         if ( 100 === this.state.processing.remote_data.progress ) {
@@ -90,7 +89,7 @@ var App = React.createClass( {
             type: 'POST',
             url: batch.ajaxurl,
             data: {
-                batch_process: batch_name,
+                batch_process: batch_slug,
                 nonce:         batch.nonce,
                 step:          current_step,
                 action:        'run_batch',
