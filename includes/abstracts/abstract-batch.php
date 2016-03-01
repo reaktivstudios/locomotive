@@ -264,6 +264,7 @@ abstract class Batch {
 				call_user_func_array( $this->callback, array( $result ) );
 				$this->update_result_status( $result, $success_status );
 			} catch ( \Exception $e ) {
+				$this->update_status( 'failed' );
 				$this->update_result_status( $result, $failed_status );
 				return $this->format_ajax_details( array(
 					'success' => false,
@@ -291,12 +292,10 @@ abstract class Batch {
 	 *
 	 * @param mixed $result The result we want to get status of.
 	 */
-	public function get_result_status( $result ) {
+	private function get_result_status( $result ) {
 		if ( $result instanceof \WP_Post ) {
 			return get_post_meta( $result->ID, $this->slug . '_status', true );
 		}
-
-		return false;
 	}
 
 	/**
