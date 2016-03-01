@@ -101,8 +101,6 @@ abstract class Batch {
 			if ( ! defined( 'DOING_AJAX' ) ) {
 				$this->add();
 			}
-		} else {
-			return false;
 		}
 	}
 
@@ -296,6 +294,8 @@ abstract class Batch {
 		if ( $result instanceof \WP_Post ) {
 			return get_post_meta( $result->ID, $this->slug . '_status', true );
 		}
+
+		return false;
 	}
 
 	/**

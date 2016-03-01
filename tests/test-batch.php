@@ -206,6 +206,46 @@ class BatchTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that you can clear individual result status.
+	 */
+	public function test_clear_result_status() {
+		$posts = array();
+
+		// Create 5 posts.
+		for ( $x = 0; $x < 5; $x++ ) {
+			$posts[] = $this->factory->post->create();
+		}
+
+		$post_batch = new \Batch_Process\Posts();
+
+		$post_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'post',
+			'callback' => 'my_callback_function_test',
+			'args'     => array(
+				'posts_per_page' => 10,
+				'post_type'      => 'post',
+			),
+		) );
+
+		$run = $post_batch->run( 1 );
+
+		$post_batch->clear_result_status();
+
+		// Loop through each post and make sure our value was set.
+		foreach ( $posts as $post ) {
+			$meta = get_post_meta( $post, 'custom-key', true );
+			$this->assertTrue( ( 'my-value' === $meta ) );
+
+			$status = get_post_meta( $post, $post_batch->slug . '_status', true );
+			$this->assertTrue( ( '' === $status ) );
+		}
+
+		$batches = \Batch_Process\get_all_batches();
+		$this->assertTrue( ( 'reset' === $batches['hey-there']['status'] ) );
+	}
+
+	/**
 	 * Test that batch gets run.
 	 */
 	public function test_running_run() {
@@ -233,6 +273,35 @@ class BatchTest extends WP_UnitTestCase {
 
 		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertTrue( ( 'running' === $batch_status['status'] ) );
+	}
+
+	/**
+	 * Test that batch gets run.
+	 */
+	public function test_offset_run() {
+		// Create 5 posts.
+		for ( $x = 0; $x < 13; $x++ ) {
+			$this->factory->post->create();
+		}
+
+		$post_batch = new \Batch_Process\Posts();
+		$post_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'post',
+			'callback' => 'my_callback_function_test',
+			'args'     => array(
+				'posts_per_page' => 10,
+				'post_type'      => 'post',
+			),
+		) );
+
+		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$this->assertFalse( $batch_status );
+
+		$run = $post_batch->run( 2 );
+
+		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
 	}
 
 	/**

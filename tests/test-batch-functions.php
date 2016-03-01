@@ -1,9 +1,8 @@
 <?php
 
 class BatchFunctionTest extends WP_UnitTestCase {
-	function setUp() { }
-
 	function tearDown() {
+		parent::tearDown();
 		\Batch_Process\clear_existing_batches();
 	}
 
@@ -68,6 +67,22 @@ class BatchFunctionTest extends WP_UnitTestCase {
 
 		$this->assertNotNull( $batches['my-batch']['last_run'] );
 		$this->assertNotNull( $batches['my-batch']['status'] );
+
+		$post_batch = new \Batch_Process\Posts();
+		$post_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'post',
+			'callback' => 'my_callback_function',
+			'args'     => array(
+				'posts_per_page' => 10,
+				'post_type'      => 'post',
+			),
+		) );
+
+		$post_batch->run( 1 );
+		$batches = \Batch_Process\get_all_batches();
+
+		$this->assertTrue( ( 'no results found' === $batches['hey-there']['status'] ) );
 	}
 
 	/**
