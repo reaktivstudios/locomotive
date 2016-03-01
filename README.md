@@ -54,6 +54,7 @@ function my_batch_processes() {
 		error_log( print_r( $e->getMessage(), true ) );
 	}
 }
+add_action( 'add_batch_processes', 'my_batch_processes' );
 
 /**
  * This is what we want to do with each individual result during a batch routine/
