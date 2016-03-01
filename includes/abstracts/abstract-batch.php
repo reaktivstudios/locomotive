@@ -164,10 +164,19 @@ abstract class Batch {
 
 		$this->currently_registered = get_all_batches();
 
-		add_action( self::BATCH_HOOK_PREFIX . $this->slug, array( $this, 'run' ) );
+		add_action( self::BATCH_HOOK_PREFIX . $this->slug, array( $this, 'run_ajax' ) );
 		add_action( self::BATCH_HOOK_PREFIX . $this->slug . '_reset', array( $this, 'clear_result_status' ) );
 
 		return true;
+	}
+
+	/**
+	 * Return JSON for AJAX requests to run.
+	 *
+	 * @param int $current_step Current step.
+	 */
+	public function run_ajax( $current_step ) {
+		wp_send_json( $this->run( $current_step ) );
 	}
 
 	/**
@@ -182,10 +191,10 @@ abstract class Batch {
 
 		if ( empty( $results ) ) {
 			$this->update_status( 'no results found' );
-			wp_send_json( $this->format_ajax_details( array(
+			return $this->format_ajax_details( array(
 				'success' => true,
 				'error' => __( 'No results found.' ),
-			) ) );
+			) );
 		}
 
 		$this->process_results( $results );
@@ -198,11 +207,11 @@ abstract class Batch {
 		}
 
 		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
-		wp_send_json( $this->format_ajax_details( array(
+		return $this->format_ajax_details( array(
 			'total_steps'   => $total_steps,
 			'query_results' => $results,
 			'progress'      => $progress,
-		) ) );
+		) );
 	}
 
 	/**
@@ -256,11 +265,11 @@ abstract class Batch {
 				$this->update_result_status( $result, $success_status );
 			} catch ( \Exception $e ) {
 				$this->update_result_status( $result, $failed_status );
-				wp_send_json( $this->format_ajax_details( array(
+				return $this->format_ajax_details( array(
 					'success' => false,
 					'status'  => __( 'Failed' ),
 					'error'   => $e->getMessage(),
-				) ) );
+				) );
 			}
 		}
 	}
