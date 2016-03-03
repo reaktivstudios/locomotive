@@ -1,12 +1,14 @@
 <?php
 
-class BatchTest extends WP_UnitTestCase {
+namespace Batch_Process;
+
+class BatchTest extends \WP_UnitTestCase {
 	/**
 	 * Tear down.
 	 */
 	function tearDown() {
 		parent::tearDown();
-		\Batch_Process\clear_existing_batches();
+		clear_existing_batches();
 	}
 
 	/**
@@ -17,7 +19,7 @@ class BatchTest extends WP_UnitTestCase {
 	function test_register_batch_includes_name() {
 		$this->setExpectedException( 'Exception' );
 
-		$batch_process = new \Batch_Process\Posts();
+		$batch_process = new Posts();
 		$batch_process->register( array(
 			'slug'     => 'test-anot22h12er-batch',
 			'type'     => 'post',
@@ -37,7 +39,7 @@ class BatchTest extends WP_UnitTestCase {
 	function test_register_batch_includes_type() {
 		$this->setExpectedException( 'Exception' );
 
-		$batch_process = new \Batch_Process\Posts();
+		$batch_process = new Posts();
 		$batch_process->register( array(
 			'name'     => 'Hey',
 			'slug'     => 'test-anot22h12er-batch',
@@ -57,7 +59,7 @@ class BatchTest extends WP_UnitTestCase {
 	function test_register_batch_includes_callback() {
 		$this->setExpectedException( 'Exception' );
 
-		$batch_process = new \Batch_Process\Posts();
+		$batch_process = new Posts();
 		$batch_process->register( array(
 			'name'     => 'Hey',
 			'type'     => 'post',
@@ -77,7 +79,7 @@ class BatchTest extends WP_UnitTestCase {
 	function test_register_batch_includes_args() {
 		$this->setExpectedException( 'Exception' );
 
-		$batch_process = new \Batch_Process\Posts();
+		$batch_process = new Posts();
 		$batch_process->register( array(
 			'name'     => 'Hey',
 			'type'     => 'post',
@@ -90,7 +92,7 @@ class BatchTest extends WP_UnitTestCase {
 	 * Make sure slugs get slashes.
 	 */
 	function test_register_batch_no_slug_gets_name() {
-		$batch_process = new \Batch_Process\Posts();
+		$batch_process = new Posts();
 		$batch_process->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'post',
@@ -110,7 +112,7 @@ class BatchTest extends WP_UnitTestCase {
 	function test_register_overwrites_currently_registered_if_same_slug() {
 		$batch = $this->register_successful_batch( 'hey' );
 
-		$batch = new Batch_Process\Posts();
+		$batch = new Posts();
 		$batch->register( array(
 			'name'     => 'My Test Batch process OVERWRITE',
 			'slug'     => 'hey',
@@ -130,9 +132,9 @@ class BatchTest extends WP_UnitTestCase {
 	 * is an array.
 	 */
 	public function test_empty_currently_registered_is_array_when_new_batch_added() {
-		\Batch_Process\clear_existing_batches();
+		clear_existing_batches();
 
-		$batch_process = new \Batch_Process\Posts();
+		$batch_process = new Posts();
 		$this->assertTrue( is_array( $batch_process->currently_registered ) );
 	}
 
@@ -140,7 +142,7 @@ class BatchTest extends WP_UnitTestCase {
 	 * Test that status gets updated on a batch to no results found.
 	 */
 	public function test_no_results_found() {
-		$post_batch = new \Batch_Process\Posts();
+		$post_batch = new Posts();
 
 		$post_batch->register( array(
 			'name'     => 'Hey there',
@@ -172,12 +174,12 @@ class BatchTest extends WP_UnitTestCase {
 			$posts[] = $this->factory->post->create();
 		}
 
-		$post_batch = new \Batch_Process\Posts();
+		$post_batch = new Posts();
 
 		$post_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'post',
-			'callback' => 'my_callback_function_test',
+			'callback' => __NAMESPACE__ . '\my_callback_function_test',
 			'args'     => array(
 				'posts_per_page' => 10,
 				'post_type'      => 'post',
@@ -216,12 +218,12 @@ class BatchTest extends WP_UnitTestCase {
 			$posts[] = $this->factory->post->create();
 		}
 
-		$post_batch = new \Batch_Process\Posts();
+		$post_batch = new Posts();
 
 		$post_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'post',
-			'callback' => 'my_callback_function_test',
+			'callback' => __NAMESPACE__ . '\my_callback_function_test',
 			'args'     => array(
 				'posts_per_page' => 10,
 				'post_type'      => 'post',
@@ -241,7 +243,7 @@ class BatchTest extends WP_UnitTestCase {
 			$this->assertTrue( ( '' === $status ) );
 		}
 
-		$batches = \Batch_Process\get_all_batches();
+		$batches = get_all_batches();
 		$this->assertTrue( ( 'reset' === $batches['hey-there']['status'] ) );
 	}
 
@@ -254,7 +256,7 @@ class BatchTest extends WP_UnitTestCase {
 			$this->factory->post->create();
 		}
 
-		$post_batch = new \Batch_Process\Posts();
+		$post_batch = new Posts();
 
 		$post_batch->register( array(
 			'name'     => 'Hey there',
@@ -284,7 +286,7 @@ class BatchTest extends WP_UnitTestCase {
 			$this->factory->post->create();
 		}
 
-		$post_batch = new \Batch_Process\Posts();
+		$post_batch = new Posts();
 		$post_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'post',
@@ -315,7 +317,7 @@ class BatchTest extends WP_UnitTestCase {
 			$posts[] = $this->factory->post->create();
 		}
 
-		$post_batch = new \Batch_Process\Posts();
+		$post_batch = new Posts();
 
 		$post_batch->register( array(
 			'name'     => 'Hey there',
@@ -342,7 +344,7 @@ class BatchTest extends WP_UnitTestCase {
 	 * @param string $slug Slug of test batch.
 	 */
 	private function register_successful_batch( $slug = 'test-batch' ) {
-		$batch = new Batch_Process\Posts();
+		$batch = new Posts();
 		$batch->register( array(
 			'name'     => 'My Test Batch process',
 			'slug'     => $slug,
