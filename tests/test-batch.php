@@ -154,12 +154,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 1 );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertTrue( ( 'no results found' === $batch_status['status'] ) );
 	}
 
@@ -186,12 +186,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 1 );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
 
 		// Loop through each post and make sure our value was set.
@@ -268,12 +268,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 1 );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertTrue( ( 'running' === $batch_status['status'] ) );
 	}
 
@@ -297,12 +297,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 2 );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
 	}
 
@@ -329,12 +329,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 1 );
 
-		$batch_status = get_site_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
 		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
 	}
 
