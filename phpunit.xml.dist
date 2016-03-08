@@ -11,4 +11,10 @@
 			<directory prefix="test-" suffix=".php">./tests/</directory>
 		</testsuite>
 	</testsuites>
+	<filter>
+		<whitelist>
+			<directory>./includes</directory>
+			<file>batch-processing.php</file>
+		</whitelist>
+	</filter>
 </phpunit>

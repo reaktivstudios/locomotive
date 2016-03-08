@@ -14,6 +14,10 @@ namespace Batch_Process;
  * @throws \Exception Only post & user are accepted $args['type'].
  */
 function register( $args ) {
+	if ( empty( $args['type'] ) ) {
+		$args['type'] = '';
+	}
+
 	switch ( $args['type'] ) {
 		case 'post':
 			$batch_process = new Posts();
@@ -32,10 +36,10 @@ function register( $args ) {
  * @return array
  */
 function get_all_batches() {
-	$batches = get_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	$batches = get_option( Batch::REGISTERED_BATCHES_KEY, array() );
 
 	foreach ( $batches as $k => $batch ) {
-		if ( $batch_status = get_site_option( Batch::BATCH_HOOK_PREFIX . $k ) ) {
+		if ( $batch_status = get_option( Batch::BATCH_HOOK_PREFIX . $k ) ) {
 			$last_run = time_ago( $batch_status['timestamp'] );
 			$status = $batch_status['status'];
 		} else {
