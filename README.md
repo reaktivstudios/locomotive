@@ -64,3 +64,12 @@ function my_callback_function( $result ) {
 	error_log( print_r( $result->post_title, true ) );
 }
 ```
+
+## Running Unit Tests
+
+In order to run the unit tests you'll want to `vagrant ssh` into your Virtual machine (assuming you're using one) and `cd` to the directory where the plugin is. From there:
+ 
+ * Run `bin/install-wp-tests.sh` to install the test database.
+ * Run `phpunit` to run the tests.
+
+You should see the tests run and complete with 0 errors!
