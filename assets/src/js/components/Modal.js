@@ -4,6 +4,16 @@ import React from 'react';
  * Modal component.
  */
 var Modal = React.createClass( {
+    mixins: [
+        require( 'react-onclickoutside' )
+    ],
+
+    handleClickOutside : function() {
+        if ( this.props.isOpen ) {
+            this.props.toggleProcessing( false );
+        }
+    },
+
     render : function() {
         var classes        = 'batch-processing-overlay',
             batch_info     = this.props.batchInfo,
