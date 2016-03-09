@@ -14,64 +14,48 @@
 	margin-right: 12px;
 }
 
-/**
- * Overlay that contains info about current batch process.
- */
-.batch-processing-overlay {
-	transition: all .5s ease-in-out;
-	-webkit-transition: all .5s ease-in-out;
-	opacity: 0;
-	display: table;
-
-	padding: 48px 24px;
-	width: 75%;
-
-	margin: auto;
-	position: absolute;
-	top: -650px;
-	left: 0; bottom: 0; right: 0;
-
-	background: white;
-	box-shadow: 0 0 10px #ccc;
+.process-container {
+	width: 100%;
 }
-	.batch-overlay__inner {
-		display: table-cell;
-		vertical-align: middle;
-	}
-	.batch-processing-overlay.is-open {
-		top: 0;
-		opacity: 1;
-	}
-	.batch-processing-overlay .close {
-		position: absolute;
-		top: 8px;
-		right: 12px;
-		cursor: pointer;
-	}
-	.batch-processing-overlay h2 {
-		margin-top: 0;
-		margin-bottom: 12px;
-	}
-	.batch-info {
-		margin-bottom: 6px;
-	}
-	.progress-bar {
-        background: #f0f0f0;
-		color: white;
-		line-height: 35px;
-		padding-left: 12px;
-        position: relative;
-	}
-    .progress-bar__text {
-        display: block;
-        position: relative;
-        z-index: 10;
-    }
-    .progress-bar__visual {
-        background: #81b01f;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 5;
-    }
+
+.batch-overlay__inner {
+	display: table-cell;
+	vertical-align: middle;
+}
+.batch-processing-overlay.is-open {
+	top: 0;
+	opacity: 1;
+}
+.batch-processing-overlay .close {
+	position: absolute;
+	top: 8px;
+	right: 12px;
+	cursor: pointer;
+}
+.batch-processing-overlay h2 {
+	margin-top: 0;
+	margin-bottom: 12px;
+}
+.batch-info {
+	margin-bottom: 6px;
+}
+.progress-bar {
+	background: #f0f0f0;
+	color: white;
+	line-height: 35px;
+	padding-left: 12px;
+	position: relative;
+}
+.progress-bar__text {
+	display: block;
+	position: relative;
+	z-index: 10;
+}
+.progress-bar__visual {
+	background: #81b01f;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 5;
+}

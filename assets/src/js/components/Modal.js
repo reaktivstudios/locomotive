@@ -15,7 +15,7 @@ var Modal = React.createClass( {
     },
 
     render : function() {
-        var classes        = 'batch-processing-overlay',
+        var classes        = 'process-container',
             batch_info     = this.props.batchInfo,
             batch_title    = ( batch_info.batch_title ) ? batch_info.batch_title : this.props.selectedBatch,
             status         = ( batch_info.status ) ? batch_info.status : '',
@@ -48,7 +48,7 @@ var Modal = React.createClass( {
         var content = function() {
             if ( batch_info.error ) {
                 return (
-                    <div className="batch-error">
+                    <div className="process-error">
                         { batch_info.error }
                     </div>
                 );
@@ -64,8 +64,7 @@ var Modal = React.createClass( {
 
         return (
             <div className={ classes }>
-                <div className="close" onClick={ this.props.toggleProcessing.bind( null, false ) }>close</div>
-                <div className="batch-overlay__inner">
+                <div className="process__content">
                     { title() }
                     { content() }
                 </div>
