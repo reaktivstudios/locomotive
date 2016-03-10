@@ -15,7 +15,12 @@
 }
 
 .process-container {
+	display: table;
 	width: 100%;
+	padding: 24px;
+	padding-top: 6px;
+	background-color: white;
+	border: 1px solid #ccc;
 }
 
 .batch-overlay__inner {

@@ -220,19 +220,20 @@ var App = React.createClass( {
         return (
             <div className="wrap">
                 <h2>{ this.state.page_title }</h2>
-                <BatchPicker
-                    batches={ this.state.batches }
-                    canInteractWithBatch={ this.canInteractWithBatch() }
-                    updateSelectedBatch={ this.updateSelectedBatch }
-                    runBatch={ this.runBatch }
-                    resetBatch={ this.resetBatch }
-                />
 
                 <Modal
                     isOpen={ this.state.processing.active }
                     selectedBatch={ selectedBatch }
                     batchInfo={ this.state.processing.remote_data }
                     toggleProcessing={ this.toggleProcessing }
+                />
+
+                <BatchPicker
+                    batches={ this.state.batches }
+                    canInteractWithBatch={ this.canInteractWithBatch() }
+                    updateSelectedBatch={ this.updateSelectedBatch }
+                    runBatch={ this.runBatch }
+                    resetBatch={ this.resetBatch }
                 />
             </div>
         )
