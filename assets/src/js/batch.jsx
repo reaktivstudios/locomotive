@@ -198,8 +198,8 @@ var App = React.createClass( {
             canRun = false;
         }
 
-        // If we are currently processing a batch.
-        if ( s_processing.remote_data.current_step !== s_processing.remote_data.total_steps ) {
+        // If we are currently processing a batch and there are results.
+        if ( s_processing.remote_data.current_step !== s_processing.remote_data.total_steps && s_processing.remote_data.total_num_results !== 0 ) {
             canRun = false;
         }
 
