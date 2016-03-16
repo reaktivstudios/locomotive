@@ -317,12 +317,15 @@ abstract class Batch {
 	 * Clear the result status for a batch.
 	 */
 	public function clear_result_status() {
-		if ( 'post' === $this->type ) {
-			delete_post_meta_by_key( $this->slug . '_status' );
-		}
-
-		if ( 'user' === $this->type ) {
-			delete_metadata( 'user', null, $this->slug . '_status', '', true );
+		switch ( $this->type ) {
+			case 'post':
+				delete_post_meta_by_key( $this->slug . '_status' );
+				break;
+			case 'user':
+				delete_metadata( 'user', null, $this->slug . '_status', '', true );
+				break;
+			default:
+				break;
 		}
 
 		$this->update_status( 'reset' );
