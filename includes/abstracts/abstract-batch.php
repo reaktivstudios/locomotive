@@ -195,13 +195,15 @@ abstract class Batch {
 			) );
 		}
 
+		$this->process_results( $results );
+
 		$per_page = get_option( 'posts_per_page' );
 		if ( isset( $this->args['posts_per_page'] ) ) {
 			$per_page = $this->args['posts_per_page'];
 		} else if ( $this->args['number'] ) {
 			$per_page = $this->args['number'];
 		}
-		
+
 		$total_steps = ceil( $this->total_num_results / $per_page );
 		if ( (int) $this->current_step === (int) $total_steps ) {
 			$this->update_status( 'finished' );
