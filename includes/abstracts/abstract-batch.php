@@ -87,7 +87,7 @@ abstract class Batch {
 	 *
 	 * @since 0.1
 	 *
-	 * @return mixed                 An array of data to be processed in bulk fashion.
+	 * @return mixed An array of data to be processed in bulk fashion.
 	 */
 	abstract function get_results();
 
