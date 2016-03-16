@@ -290,6 +290,10 @@ abstract class Batch {
 		if ( $result instanceof \WP_Post ) {
 			update_post_meta( $result->ID, $this->slug . '_status', $status );
 		}
+
+		if ( $result instanceof \WP_User ) {
+			update_user_meta( $result->data->ID, $this->slug . '_status', $status );
+		}
 	}
 
 	/**
@@ -302,6 +306,10 @@ abstract class Batch {
 			return get_post_meta( $result->ID, $this->slug . '_status', true );
 		}
 
+		if ( $result instanceof \WP_User ) {
+			return get_user_meta( $result->data->ID, $this->slug . '_status', true );
+		}
+
 		return false;
 	}
 
@@ -311,6 +319,10 @@ abstract class Batch {
 	public function clear_result_status() {
 		if ( 'post' === $this->type ) {
 			delete_post_meta_by_key( $this->slug . '_status' );
+		}
+
+		if ( 'user' === $this->type ) {
+			delete_metadata( 'user', null, $this->slug . '_status', '', true );
 		}
 
 		$this->update_status( 'reset' );
