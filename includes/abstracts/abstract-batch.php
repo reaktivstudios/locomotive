@@ -322,7 +322,7 @@ abstract class Batch {
 	 */
 	private function get_result_status( $result ) {
 		/**
-		 * Action so you can hook into when a result is being checked for whether or not
+		 * Action to hook into when a result is being checked for whether or not
 		 * it was updated.
 		 *
 		 * @param mixed $result The current result.
@@ -345,7 +345,7 @@ abstract class Batch {
 	 */
 	public function clear_result_status() {
 		/**
-		 * Action so you can hook into when the 'reset' button is clicked in the admin UI.
+		 * Action to hook into when the 'reset' button is clicked in the admin UI.
 		 *
 		 * @param Batch $this The current batch object.
 		 */
