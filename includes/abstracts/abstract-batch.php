@@ -336,17 +336,19 @@ abstract class Batch {
 		 *
 		 * @param mixed $result The current result.
 		 */
-		do_action( self::BATCH_HOOK_PREFIX . $this->slug. '_update_result_status', $result );
+		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_update_result_status', $result );
+		
+		$result_status = '';
 
 		if ( $result instanceof \WP_Post ) {
-			return get_post_meta( $result->ID, $this->slug . '_status', true );
+			$result_status = get_post_meta( $result->ID, $this->slug . '_status', true );
 		}
 
 		if ( $result instanceof \WP_User ) {
-			return get_user_meta( $result->data->ID, $this->slug . '_status', true );
+			$result_status = get_user_meta( $result->data->ID, $this->slug . '_status', true );
 		}
 
-		return false;
+		return $result_status;
 	}
 
 	/**
@@ -366,8 +368,6 @@ abstract class Batch {
 				break;
 			case 'user':
 				delete_metadata( 'user', null, $this->slug . '_status', '', true );
-				break;
-			default:
 				break;
 		}
 

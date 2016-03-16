@@ -16,6 +16,18 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 
 		$all_batches = get_all_batches();
 		$this->assertCount( 1, $all_batches );
+
+		register( array(
+			'name'     => 'My Test Batch process',
+			'type'     => 'user',
+			'callback' => __NAMESPACE__ . 'my_callback_function',
+			'args'     => array(
+				'number' => 10,
+			),
+		) );
+
+		$all_batches = get_all_batches();
+		$this->assertCount( 2, $all_batches );
 	}
 
 	/**

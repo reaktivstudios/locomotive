@@ -218,7 +218,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$user_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'user',
-			'callback' => __NAMESPACE__ . '\my_callback_function_test',
+			'callback' => __NAMESPACE__ . '\my_user_callback_function_test',
 			'args'     => array(
 				'number' => 10,
 			),
@@ -234,7 +234,7 @@ class BatchTest extends \WP_UnitTestCase {
 
 		// Loop through each post and make sure our value was set.
 		foreach ( $users as $user ) {
-			$meta = get_post_meta( $user, 'custom-key', true );
+			$meta = get_user_meta( $user, 'custom-key', true );
 			$this->assertTrue( ( 'my-value' === $meta ) );
 
 			$status = get_user_meta( $user, $user_batch->slug . '_status', true );
@@ -278,6 +278,40 @@ class BatchTest extends \WP_UnitTestCase {
 			$this->assertTrue( ( 'my-value' === $meta ) );
 
 			$status = get_post_meta( $post, $post_batch->slug . '_status', true );
+			$this->assertTrue( ( '' === $status ) );
+		}
+
+		$batches = get_all_batches();
+		$this->assertTrue( ( 'reset' === $batches['hey-there']['status'] ) );
+	}
+
+	/**
+	 * Test that you can clear individual result status.
+	 */
+	public function test_clear_user_result_status() {
+		$users = $this->factory->user->create_many( 5 );
+
+		$user_batch = new Users();
+
+		$user_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'user',
+			'callback' => __NAMESPACE__ . '\my_user_callback_function_test',
+			'args'     => array(
+				'number' => 7,
+			),
+		) );
+
+		$run = $user_batch->run( 1 );
+
+		$user_batch->clear_result_status();
+
+		// Loop through each post and make sure our value was set.
+		foreach ( $users as $user ) {
+			$meta = get_user_meta( $user, 'custom-key', true );
+			$this->assertTrue( ( 'my-value' === $meta ) );
+
+			$status = get_user_meta( $user, $user_batch->slug . '_status', true );
 			$this->assertTrue( ( '' === $status ) );
 		}
 
@@ -431,6 +465,15 @@ class BatchTest extends \WP_UnitTestCase {
  */
 function my_callback_function_test( $result ) {
 	update_post_meta( $result->ID, 'custom-key', 'my-value' );
+}
+
+/**
+ * My callback function test.
+ *
+ * @param WP_Post $result Result item.
+ */
+function my_user_callback_function_test( $result ) {
+	update_user_meta( $result->data->ID, 'custom-key', 'my-value' );
 }
 
 /**
