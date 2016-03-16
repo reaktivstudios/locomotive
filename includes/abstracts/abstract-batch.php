@@ -289,7 +289,7 @@ abstract class Batch {
 				call_user_func_array( $this->callback, array( $result ) );
 				$this->update_result_status( $result, $success_status );
 			} catch ( \Exception $e ) {
-				$this->update_status( 'failed' );
+				$this->update_status( $failed_status );
 				$this->update_result_status( $result, $failed_status );
 				return $this->format_ajax_details( array(
 					'success' => false,
