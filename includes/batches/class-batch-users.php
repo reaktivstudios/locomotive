@@ -29,8 +29,8 @@ class Users extends Batch {
 		$query = new \WP_User_Query( $this->args );
 
 		// Update the batch object with the total num of results found.
-		$this->total_num_results = $query->found_posts;
+		$this->total_num_results = $query->total_users();
 
-		return $query->get_users();
+		return $query->get_results();
 	}
 }

@@ -57,6 +57,7 @@ final class Loader {
 	public function load_includes() {
 		require_once( BATCH_PLUGIN_DIR . 'includes/abstracts/abstract-batch.php' );
 		require_once( BATCH_PLUGIN_DIR . 'includes/batches/class-batch-posts.php' );
+		require_once( BATCH_PLUGIN_DIR . 'includes/batches/class-batch-users.php' );
 		require_once( BATCH_PLUGIN_DIR . 'includes/batch-functions.php' );
 	}
 
