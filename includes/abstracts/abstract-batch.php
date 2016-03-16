@@ -204,6 +204,15 @@ abstract class Batch {
 			$per_page = $this->args['number'];
 		}
 
+		/**
+		 * Filter the per_page number used to calculate total number of steps. You would get use
+		 * out of this if you had a custom $wpdb query that didn't paginate in one of the default
+		 * ways supported by the plugin.
+		 *
+		 * @param int $per_page The number of results per page.
+		 */
+		$per_page = apply_filters( self::BATCH_HOOK_PREFIX . $this->slug . '_per_page', $per_page );
+
 		$total_steps = ceil( $this->total_num_results / $per_page );
 		if ( (int) $this->current_step === (int) $total_steps ) {
 			$this->update_status( 'finished' );
