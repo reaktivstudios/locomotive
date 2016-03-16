@@ -256,8 +256,19 @@ abstract class Batch {
 	 * @param array $results Array of results from the query.
 	 */
 	public function process_results( $results ) {
-		$success_status = 'success';
-		$failed_status = 'failed';
+		/**
+		 * The key used to define the status of whether or not a result was processed successfully.
+		 *
+		 * @param string $string_text 'success'
+		 */
+		$success_status = apply_filters( self::BATCH_HOOK_PREFIX . '_success_status', 'success' );
+
+		/**
+		 * The key used to define the status of whether or not a result was not able to be processed.
+		 *
+		 * @param string $string_text 'failed'
+		 */
+		$failed_status = apply_filters( self::BATCH_HOOK_PREFIX . '_failed_status', 'failed' );
 
 		foreach ( $results as $result ) {
 			// If this result item has been processed already, skip it.
@@ -287,6 +298,14 @@ abstract class Batch {
 	 * @param string $status  Status of this result in the batch.
 	 */
 	public function update_result_status( $result, $status ) {
+		/**
+		 * Action to hook into when a result gets processed and it's status is updated.
+		 *
+		 * @param mixed  $result The current result.
+		 * @param string $status The status to set on a result.
+		 */
+		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_update_result_status', $result, $status );
+
 		if ( $result instanceof \WP_Post ) {
 			update_post_meta( $result->ID, $this->slug . '_status', $status );
 		}
@@ -297,11 +316,19 @@ abstract class Batch {
 	}
 
 	/**
-	 * Update the meta info on a result.
+	 * Get the status of a result.
 	 *
 	 * @param mixed $result The result we want to get status of.
 	 */
 	private function get_result_status( $result ) {
+		/**
+		 * Action so you can hook into when a result is being checked for whether or not
+		 * it was updated.
+		 *
+		 * @param mixed $result The current result.
+		 */
+		do_action( self::BATCH_HOOK_PREFIX . $this->slug. '_update_result_status', $result );
+
 		if ( $result instanceof \WP_Post ) {
 			return get_post_meta( $result->ID, $this->slug . '_status', true );
 		}
@@ -317,6 +344,13 @@ abstract class Batch {
 	 * Clear the result status for a batch.
 	 */
 	public function clear_result_status() {
+		/**
+		 * Action so you can hook into when the 'reset' button is clicked in the admin UI.
+		 *
+		 * @param Batch $this The current batch object.
+		 */
+		do_action( self::BATCH_HOOK_PREFIX . $this->slug. '_clear', $this );
+
 		switch ( $this->type ) {
 			case 'post':
 				delete_post_meta_by_key( $this->slug . '_status' );
