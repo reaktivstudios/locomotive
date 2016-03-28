@@ -124,7 +124,7 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$this->assertTrue( ( 'My Test Batch process OVERWRITE' === $batch->currently_registered['hey']['name'] ) );
+		$this->assertEquals( 'My Test Batch process OVERWRITE', $batch->currently_registered['hey']['name'] );
 	}
 
 	/**
@@ -160,7 +160,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 1 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'no results found' === $batch_status['status'] ) );
+		$this->assertEquals( 'no results found', $batch_status['status'] );
 	}
 
 	/**
@@ -192,15 +192,15 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 1 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
+		$this->assertEquals( 'finished', $batch_status['status'] );
 
 		// Loop through each post and make sure our value was set.
 		foreach ( $posts as $post ) {
 			$meta = get_post_meta( $post, 'custom-key', true );
-			$this->assertTrue( ( 'my-value' === $meta ) );
+			$this->assertEquals( 'my-value', $meta );
 
 			$status = get_post_meta( $post, $post_batch->slug . '_status', true );
-			$this->assertTrue( ( 'success' === $status ) );
+			$this->assertEquals( 'success', $status );
 		}
 
 		// Run again so it skips some.
@@ -230,15 +230,15 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $user_batch->run( 1 );
 
 		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
-		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
+		$this->assertEquals( 'finished', $batch_status['status'] );
 
 		// Loop through each post and make sure our value was set.
 		foreach ( $users as $user ) {
 			$meta = get_user_meta( $user, 'custom-key', true );
-			$this->assertTrue( ( 'my-value' === $meta ) );
+			$this->assertEquals( 'my-value', $meta );
 
 			$status = get_user_meta( $user, $user_batch->slug . '_status', true );
-			$this->assertTrue( ( 'success' === $status ) );
+			$this->assertEquals( 'success', $status );
 		}
 
 		// Run again so it skips some.
@@ -275,14 +275,14 @@ class BatchTest extends \WP_UnitTestCase {
 		// Loop through each post and make sure our value was set.
 		foreach ( $posts as $post ) {
 			$meta = get_post_meta( $post, 'custom-key', true );
-			$this->assertTrue( ( 'my-value' === $meta ) );
+			$this->assertEquals( 'my-value', $meta );
 
 			$status = get_post_meta( $post, $post_batch->slug . '_status', true );
-			$this->assertTrue( ( '' === $status ) );
+			$this->assertEquals( '', $status );
 		}
 
 		$batches = get_all_batches();
-		$this->assertTrue( ( 'reset' === $batches['hey-there']['status'] ) );
+		$this->assertEquals( 'reset', $batches['hey-there']['status'] );
 	}
 
 	/**
@@ -309,14 +309,14 @@ class BatchTest extends \WP_UnitTestCase {
 		// Loop through each post and make sure our value was set.
 		foreach ( $users as $user ) {
 			$meta = get_user_meta( $user, 'custom-key', true );
-			$this->assertTrue( ( 'my-value' === $meta ) );
+			$this->assertEquals( 'my-value', $meta );
 
 			$status = get_user_meta( $user, $user_batch->slug . '_status', true );
-			$this->assertTrue( ( '' === $status ) );
+			$this->assertEquals( '', $status );
 		}
 
 		$batches = get_all_batches();
-		$this->assertTrue( ( 'reset' === $batches['hey-there']['status'] ) );
+		$this->assertEquals( 'reset', $batches['hey-there']['status'] );
 	}
 
 	/**
@@ -346,7 +346,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 1 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'running' === $batch_status['status'] ) );
+		$this->assertEquals ( 'running', $batch_status['status'] );
 	}
 
 	/**
@@ -375,7 +375,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 2 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
+		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
 	/**
@@ -401,7 +401,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $user_batch->run( 2 );
 
 		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
-		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
+		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
 	/**
@@ -433,7 +433,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 1 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
+		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
 	/**
