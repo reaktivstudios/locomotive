@@ -1,5 +1,7 @@
 # Batch Processing
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/reaktivstudios/batch-processing/badges/quality-score.png?b=master&s=86399ae1ed8459dbcaa0c4a5d5e34947d7454cf8)](https://scrutinizer-ci.com/g/reaktivstudios/batch-processing/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/reaktivstudios/batch-processing/badges/coverage.png?b=master&s=656ebaea7636b3882b1834f7226c53327e826bb2)](https://scrutinizer-ci.com/g/reaktivstudios/batch-processing/?branch=master)
+
 Creating batch processes in WordPress has never been so easy
 
 ## Example Implementation
