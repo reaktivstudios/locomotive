@@ -2,3 +2,8 @@ build:
     tests:
         override:
             - ./bin/install-wp-tests.sh
+            -
+                command: 'phpunit --coverage-clover=processing-coverage'
+                coverage:
+                    file: 'processing-coverage'
+                    format: 'php-clover'
