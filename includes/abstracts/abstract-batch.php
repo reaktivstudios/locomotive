@@ -87,7 +87,7 @@ abstract class Batch {
 	 *
 	 * @since 0.1
 	 *
-	 * @return mixed                 An array of data to be processed in bulk fashion.
+	 * @return mixed An array of data to be processed in bulk fashion.
 	 */
 	abstract function get_results();
 
@@ -197,7 +197,23 @@ abstract class Batch {
 
 		$this->process_results( $results );
 
-		$total_steps = ceil( $this->total_num_results / $this->args['posts_per_page'] );
+		$per_page = get_option( 'posts_per_page' );
+		if ( isset( $this->args['posts_per_page'] ) ) {
+			$per_page = $this->args['posts_per_page'];
+		} else if ( $this->args['number'] ) {
+			$per_page = $this->args['number'];
+		}
+
+		/**
+		 * Filter the per_page number used to calculate total number of steps. You would get use
+		 * out of this if you had a custom $wpdb query that didn't paginate in one of the default
+		 * ways supported by the plugin.
+		 *
+		 * @param int $per_page The number of results per page.
+		 */
+		$per_page = apply_filters( self::BATCH_HOOK_PREFIX . $this->slug . '_per_page', $per_page );
+
+		$total_steps = ceil( $this->total_num_results / $per_page );
 		if ( (int) $this->current_step === (int) $total_steps ) {
 			$this->update_status( 'finished' );
 		} else {
@@ -249,8 +265,19 @@ abstract class Batch {
 	 * @param array $results Array of results from the query.
 	 */
 	public function process_results( $results ) {
-		$success_status = 'success';
-		$failed_status = 'failed';
+		/**
+		 * The key used to define the status of whether or not a result was processed successfully.
+		 *
+		 * @param string $string_text 'success'
+		 */
+		$success_status = apply_filters( self::BATCH_HOOK_PREFIX . '_success_status', 'success' );
+
+		/**
+		 * The key used to define the status of whether or not a result was not able to be processed.
+		 *
+		 * @param string $string_text 'failed'
+		 */
+		$failed_status = apply_filters( self::BATCH_HOOK_PREFIX . '_failed_status', 'failed' );
 
 		foreach ( $results as $result ) {
 			// If this result item has been processed already, skip it.
@@ -262,7 +289,7 @@ abstract class Batch {
 				call_user_func_array( $this->callback, array( $result ) );
 				$this->update_result_status( $result, $success_status );
 			} catch ( \Exception $e ) {
-				$this->update_status( 'failed' );
+				$this->update_status( $failed_status );
 				$this->update_result_status( $result, $failed_status );
 				return $this->format_ajax_details( array(
 					'success' => false,
@@ -280,30 +307,68 @@ abstract class Batch {
 	 * @param string $status  Status of this result in the batch.
 	 */
 	public function update_result_status( $result, $status ) {
+		/**
+		 * Action to hook into when a result gets processed and it's status is updated.
+		 *
+		 * @param mixed  $result The current result.
+		 * @param string $status The status to set on a result.
+		 */
+		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_update_result_status', $result, $status );
+
 		if ( $result instanceof \WP_Post ) {
 			update_post_meta( $result->ID, $this->slug . '_status', $status );
+		}
+
+		if ( $result instanceof \WP_User ) {
+			update_user_meta( $result->data->ID, $this->slug . '_status', $status );
 		}
 	}
 
 	/**
-	 * Update the meta info on a result.
+	 * Get the status of a result.
 	 *
 	 * @param mixed $result The result we want to get status of.
 	 */
 	private function get_result_status( $result ) {
+		/**
+		 * Action to hook into when a result is being checked for whether or not
+		 * it was updated.
+		 *
+		 * @param mixed $result The current result.
+		 */
+		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_update_result_status', $result );
+		
+		$result_status = '';
+
 		if ( $result instanceof \WP_Post ) {
-			return get_post_meta( $result->ID, $this->slug . '_status', true );
+			$result_status = get_post_meta( $result->ID, $this->slug . '_status', true );
 		}
 
-		return false;
+		if ( $result instanceof \WP_User ) {
+			$result_status = get_user_meta( $result->data->ID, $this->slug . '_status', true );
+		}
+
+		return $result_status;
 	}
 
 	/**
 	 * Clear the result status for a batch.
 	 */
 	public function clear_result_status() {
-		if ( 'post' === $this->type ) {
-			delete_post_meta_by_key( $this->slug . '_status' );
+		/**
+		 * Action to hook into when the 'reset' button is clicked in the admin UI.
+		 *
+		 * @param Batch $this The current batch object.
+		 */
+		do_action( self::BATCH_HOOK_PREFIX . $this->slug. '_clear', $this );
+
+		switch ( $this->type ) {
+			case 'post':
+				delete_post_meta_by_key( $this->slug . '_status' );
+				break;
+			case 'user':
+				delete_metadata( 'user', null, $this->slug . '_status', '', true );
+				break;
 		}
 
 		$this->update_status( 'reset' );

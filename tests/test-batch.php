@@ -124,7 +124,7 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$this->assertTrue( ( 'My Test Batch process OVERWRITE' === $batch->currently_registered['hey']['name'] ) );
+		$this->assertEquals( 'My Test Batch process OVERWRITE', $batch->currently_registered['hey']['name'] );
 	}
 
 	/**
@@ -160,13 +160,13 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 1 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'no results found' === $batch_status['status'] ) );
+		$this->assertEquals( 'no results found', $batch_status['status'] );
 	}
 
 	/**
-	 * Test that batch gets run.
+	 * Test that post batch gets run.
 	 */
-	public function test_finished_run() {
+	public function test_post_finished_run() {
 		$posts = array();
 
 		// Create 5 posts.
@@ -192,19 +192,57 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 1 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
+		$this->assertEquals( 'finished', $batch_status['status'] );
 
 		// Loop through each post and make sure our value was set.
 		foreach ( $posts as $post ) {
 			$meta = get_post_meta( $post, 'custom-key', true );
-			$this->assertTrue( ( 'my-value' === $meta ) );
+			$this->assertEquals( 'my-value', $meta );
 
 			$status = get_post_meta( $post, $post_batch->slug . '_status', true );
-			$this->assertTrue( ( 'success' === $status ) );
+			$this->assertEquals( 'success', $status );
 		}
 
 		// Run again so it skips some.
 		$run = $post_batch->run( 1 );
+	}
+
+	/**
+	 * Test that user batch gets run.
+	 */
+	public function test_user_finished_run() {
+		$users = $this->factory->user->create_many( 5 );
+
+		$user_batch = new Users();
+
+		$user_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'user',
+			'callback' => __NAMESPACE__ . '\my_user_callback_function_test',
+			'args'     => array(
+				'number' => 10,
+			),
+		) );
+
+		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
+		$this->assertFalse( $batch_status );
+
+		$run = $user_batch->run( 1 );
+
+		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
+		$this->assertEquals( 'finished', $batch_status['status'] );
+
+		// Loop through each post and make sure our value was set.
+		foreach ( $users as $user ) {
+			$meta = get_user_meta( $user, 'custom-key', true );
+			$this->assertEquals( 'my-value', $meta );
+
+			$status = get_user_meta( $user, $user_batch->slug . '_status', true );
+			$this->assertEquals( 'success', $status );
+		}
+
+		// Run again so it skips some.
+		$run = $user_batch->run( 1 );
 	}
 
 	/**
@@ -237,14 +275,48 @@ class BatchTest extends \WP_UnitTestCase {
 		// Loop through each post and make sure our value was set.
 		foreach ( $posts as $post ) {
 			$meta = get_post_meta( $post, 'custom-key', true );
-			$this->assertTrue( ( 'my-value' === $meta ) );
+			$this->assertEquals( 'my-value', $meta );
 
 			$status = get_post_meta( $post, $post_batch->slug . '_status', true );
-			$this->assertTrue( ( '' === $status ) );
+			$this->assertEquals( '', $status );
 		}
 
 		$batches = get_all_batches();
-		$this->assertTrue( ( 'reset' === $batches['hey-there']['status'] ) );
+		$this->assertEquals( 'reset', $batches['hey-there']['status'] );
+	}
+
+	/**
+	 * Test that you can clear individual result status.
+	 */
+	public function test_clear_user_result_status() {
+		$users = $this->factory->user->create_many( 5 );
+
+		$user_batch = new Users();
+
+		$user_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'user',
+			'callback' => __NAMESPACE__ . '\my_user_callback_function_test',
+			'args'     => array(
+				'number' => 7,
+			),
+		) );
+
+		$run = $user_batch->run( 1 );
+
+		$user_batch->clear_result_status();
+
+		// Loop through each post and make sure our value was set.
+		foreach ( $users as $user ) {
+			$meta = get_user_meta( $user, 'custom-key', true );
+			$this->assertEquals( 'my-value', $meta );
+
+			$status = get_user_meta( $user, $user_batch->slug . '_status', true );
+			$this->assertEquals( '', $status );
+		}
+
+		$batches = get_all_batches();
+		$this->assertEquals( 'reset', $batches['hey-there']['status'] );
 	}
 
 	/**
@@ -274,7 +346,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 1 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'running' === $batch_status['status'] ) );
+		$this->assertEquals ( 'running', $batch_status['status'] );
 	}
 
 	/**
@@ -303,7 +375,33 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 2 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
+		$this->assertEquals( 'finished', $batch_status['status'] );
+	}
+
+	/**
+	 * Test that users offset batch gets run.
+	 */
+	public function test_users_offset_run() {
+		$users = $this->factory->user->create_many( 8 );
+
+		$user_batch = new Users();
+		$user_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'user',
+			'callback' => 'my_callback_function_test',
+			'args'     => array(
+				'number' => 5,
+				'offset' => 5,
+			),
+		) );
+
+		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
+		$this->assertFalse( $batch_status );
+
+		$run = $user_batch->run( 2 );
+
+		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
+		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
 	/**
@@ -335,7 +433,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$run = $post_batch->run( 1 );
 
 		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
-		$this->assertTrue( ( 'finished' === $batch_status['status'] ) );
+		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
 	/**
@@ -367,6 +465,15 @@ class BatchTest extends \WP_UnitTestCase {
  */
 function my_callback_function_test( $result ) {
 	update_post_meta( $result->ID, 'custom-key', 'my-value' );
+}
+
+/**
+ * My callback function test.
+ *
+ * @param WP_Post $result Result item.
+ */
+function my_user_callback_function_test( $result ) {
+	update_user_meta( $result->data->ID, 'custom-key', 'my-value' );
 }
 
 /**

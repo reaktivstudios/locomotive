@@ -24,6 +24,11 @@ function register( $args ) {
 			$batch_process->register( $args );
 			break;
 
+		case 'user':
+			$batch_process = new Users();
+			$batch_process->register( $args );
+			break;
+
 		default:
 			throw new \Exception( 'Type not supported.' );
 			break;
