@@ -1,7 +1,7 @@
 build:
   cache:
         directories:
-            - node_modules/  # Without prefix, the path is relative to your repository root.
+            - node_modules/
 
     tests:
         override:
