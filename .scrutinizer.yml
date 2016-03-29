@@ -1,0 +1,4 @@
+build:
+    tests:
+        override:
+            - ./bin/install-wp-tests.sh
