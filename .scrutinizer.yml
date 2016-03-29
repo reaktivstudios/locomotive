@@ -1,5 +1,5 @@
 build:
-  cache:
+    cache:
         directories:
             - node_modules/
 
