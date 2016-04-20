@@ -334,9 +334,9 @@ abstract class Batch {
 		 * Action to hook into when a result is being checked for whether or not
 		 * it was updated.
 		 *
-		 * @param mixed $result The current result.
+		 * @param mixed $result The current result which is getting it's status checked.
 		 */
-		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_update_result_status', $result );
+		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_get_result_status', $result );
 		
 		$result_status = '';
 
