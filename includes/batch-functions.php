@@ -41,10 +41,10 @@ function register( $args ) {
  * @return array
  */
 function get_all_batches() {
-	$batches = get_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	$batches = get_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
 
 	foreach ( $batches as $k => $batch ) {
-		if ( $batch_status = get_option( Batch::BATCH_HOOK_PREFIX . $k ) ) {
+		if ( $batch_status = get_site_option( Batch::BATCH_HOOK_PREFIX . $k ) ) {
 			$last_run = time_ago( $batch_status['timestamp'] );
 			$status = $batch_status['status'];
 		} else {
