@@ -142,5 +142,5 @@ gulp.task( 'phpunit', function() {
 
 // Run full build and test.
 gulp.task( 'test', function() {
-    runSequence( 'default', 'lint', 'phpunit' );
+    runSequence( 'build', 'lint', 'phpunit' );
 } );
