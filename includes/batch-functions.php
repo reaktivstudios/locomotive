@@ -41,10 +41,10 @@ function register( $args ) {
  * @return array
  */
 function get_all_batches() {
-	$batches = get_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	$batches = get_option( Batch::REGISTERED_BATCHES_KEY, array() );
 
 	foreach ( $batches as $k => $batch ) {
-		if ( $batch_status = get_site_option( Batch::BATCH_HOOK_PREFIX . $k ) ) {
+		if ( $batch_status = get_option( Batch::BATCH_HOOK_PREFIX . $k ) ) {
 			$last_run = time_ago( $batch_status['timestamp'] );
 			$status = $batch_status['status'];
 		} else {
@@ -65,7 +65,7 @@ function get_all_batches() {
  * @param array $batches Batches you want to register.
  */
 function update_registered_batches( $batches ) {
-	return update_site_option( Batch::REGISTERED_BATCHES_KEY, $batches );
+	return update_option( Batch::REGISTERED_BATCHES_KEY, $batches );
 }
 
 /**
@@ -83,5 +83,5 @@ function time_ago( $time ) {
  * Clear all existing batches.
  */
 function clear_existing_batches() {
-	return update_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	return update_option( Batch::REGISTERED_BATCHES_KEY, array() );
 }

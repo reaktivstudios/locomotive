@@ -250,7 +250,7 @@ abstract class Batch {
 	 * @param  string $status Status of batch process.
 	 */
 	private function update_status( $status ) {
-		update_site_option( self::BATCH_HOOK_PREFIX . $this->slug, array(
+		update_option( self::BATCH_HOOK_PREFIX . $this->slug, array(
 			'status' => $status,
 			'timestamp' => current_time( 'timestamp' ),
 		) );
