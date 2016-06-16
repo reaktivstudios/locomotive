@@ -69,8 +69,8 @@ function bundle( bundler ) {
     return bundler
         .bundle()
         .on( 'error', function( err ) {
- console.error( err ); this.emit( 'end' );
- })
+            console.error( err ); this.emit( 'end' );
+         })
         .pipe( source( 'batch.jsx' ) ) // Set source name.
         .pipe( buffer() ) // Convert to gulp pipeline.
         .pipe( rename( config.js.outputFile ) ) // Rename the output file.
