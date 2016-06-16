@@ -65,7 +65,7 @@ function get_all_batches() {
  * @param array $batches Batches you want to register.
  */
 function update_registered_batches( $batches ) {
-	return update_site_option( Batch::REGISTERED_BATCHES_KEY, $batches );
+	return update_option( Batch::REGISTERED_BATCHES_KEY, $batches );
 }
 
 /**
@@ -83,5 +83,5 @@ function time_ago( $time ) {
  * Clear all existing batches.
  */
 function clear_existing_batches() {
-	return update_site_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	return update_option( Batch::REGISTERED_BATCHES_KEY, array() );
 }
