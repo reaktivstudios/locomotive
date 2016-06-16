@@ -337,7 +337,7 @@ abstract class Batch {
 		 * @param mixed $result The current result which is getting it's status checked.
 		 */
 		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_get_result_status', $result );
-		
+
 		$result_status = '';
 
 		if ( $result instanceof \WP_Post ) {

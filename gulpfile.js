@@ -16,6 +16,10 @@ var watchify = require( 'watchify' ); // Watchify for source changes.
 var merge = require( 'utils-merge' ); // Object merge tool.
 var duration = require( 'gulp-duration' ); // Time aspects of your gulp process.
 var uglify = require( 'gulp-uglify' ); // Minify the JS.
+var phpcs = require( 'gulp-phpcs' ); // Verify the PHP Coding Standards
+var phplint = require( 'phplint' ).lint; // Lint PHP.
+var shell = require( 'gulp-shell' ); // Run shell commands.
+var runSequence = require( 'run-sequence' ); // Run tasks in series.
 
 // Configuration for Gulp.
 var config = {
@@ -85,5 +89,58 @@ function bundle( bundler ) {
         .pipe( livereload() ); // Reload the view in the browser.
 }
 
+// Verify PHP Coding Standards.
+gulp.task( 'phpcs', function() {
+    return gulp.src( [
+            '**/*.php',
+            '!node_modules/**/*.*',
+            '!tests/**/*.*',
+            '!vendor/**/*.*'
+        ] )
+        .pipe( phpcs( {
+            bin: 'vendor/bin/phpcs',
+            standard: 'ruleset.xml'
+        } ) )
+        .pipe( phpcs.reporter( 'log' ) );
+} );
+
+// Lint PHP.
+gulp.task( 'phplint', function( cb ) {
+    phplint( [
+        '**/*.php',
+        '!node_modules/**/*.*',
+        '!tests/**/*.*',
+        '!vendor/**/*.*'
+    ], { limit: 10 }, function( err, stdout, stderr ) {
+        if ( err ) {
+            cb( err );
+            process.exit( 1 );
+        }
+        cb();
+    } );
+} );
+
+// Run single site PHPUnit tests.
+gulp.task( 'phpunit-single', shell.task( [ 'vendor/bin/phpunit -c phpunit.xml.dist' ] ) );
+
+// Run multisite PHPUnit tests.
+gulp.task( 'phpunit-multisite', shell.task( [ 'vendor/bin/phpunit -c multisite.xml.dist' ] ) );
+
+// Run single site PHPUnit tests with code coverage.
+gulp.task( 'phpunit-codecoverage', shell.task( [ 'vendor/bin/phpunit -c codecoverage.xml.dist' ] ) );
+
 // Gulp task for build
 gulp.task( 'default', [ 'build' ] );
+
+// Lint files.
+gulp.task( 'lint', [ 'phplint', 'phpcs' ] );
+
+// Run PHP tests.
+gulp.task( 'phpunit', function() {
+    runSequence( 'phpunit-single', 'phpunit-multisite' );
+} );
+
+// Run full build and test.
+gulp.task( 'test', function() {
+    runSequence( 'default', 'lint', 'phpunit' );
+} );
