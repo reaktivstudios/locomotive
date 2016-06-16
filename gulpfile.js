@@ -30,7 +30,20 @@ var config = {
 /**
  * Task to handle the JavaScript building and sourcemap generating.
  */
-gulp.task( 'javascript', function() {
+gulp.task( 'build', function() {
+    var args = { debug: true };
+    var bundler = browserify( config.js.src, args )
+        .transform( babelify, {
+            presets: ['es2015', 'react']
+        } );
+
+    bundle( bundler );
+} );
+
+/**
+ * Task to handle the JavaScript building and sourcemap generating.
+ */
+gulp.task( 'watch', function() {
     var args = merge( watchify.args, { debug: true } ); // Merge in default watchify args with browserify arguments.
     var bundler = browserify( config.js.src, args ) // Browserify.
         .plugin( watchify, {
@@ -73,4 +86,4 @@ function bundle( bundler ) {
 }
 
 // Gulp task for build
-gulp.task( 'default', [ 'javascript' ] );
+gulp.task( 'default', [ 'build' ] );
