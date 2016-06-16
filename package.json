@@ -31,6 +31,7 @@
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-onclickoutside": "^4.5.0",
+    "run-sequence": "^1.2.1",
     "utils-merge": "^1.0.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
