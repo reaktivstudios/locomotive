@@ -1,4 +1,7 @@
 build:
+    environment:
+        php:
+            version: 5.5.36
     cache:
         directories:
             - node_modules/
