@@ -65,10 +65,12 @@ final class Loader {
 	 * Handle hooks.
 	 */
 	public function attach_hooks() {
-		add_action( 'admin_menu', array( $this, 'add_dashboard' ) );
-		add_action( 'after_setup_theme', array( $this, 'loaded' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+		if ( ! defined( 'BATCH_PROCESSING_PRO' ) ) {
+			add_action( 'admin_menu', array( $this, 'add_dashboard' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+		}
 
+		add_action( 'after_setup_theme', array( $this, 'loaded' ) );
 		add_action( 'wp_ajax_run_batch', array( $this, 'run' ) );
 		add_action( 'wp_ajax_reset_batch', array( $this, 'reset' ) );
 	}
