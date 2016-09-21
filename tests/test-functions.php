@@ -123,6 +123,24 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	}
 
 	/**
+	 * Confirm our assets are only loading where applicable.
+	 */
+	function test_asset_loading() {
+
+		// First make sure our assets aren't loaded.
+		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
+		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
+
+		// Now set my admin page and call the scripts function.
+		$this->admin_page = new Loader;
+		$this->admin_page->scripts( 'toplevel_page_locomotive' );
+
+		// Check that the items are enquened.
+		$this->assertTrue( wp_style_is( 'batch-process-styles', 'enqueued' ) );
+		$this->assertTrue( wp_script_is( 'batch-js', 'enqueued' ) );
+	}
+
+	/**
 	 * Helper function to register a successful batch.
 	 *
 	 * @param string $slug Slug of test batch.
