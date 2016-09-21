@@ -14,6 +14,18 @@
 	margin-right: 12px;
 }
 
+.batch-processes {
+	margin: 10px 0 20px;
+}
+
+.batch-processes li {
+	margin-bottom: 10px;
+}
+
+.batch-processes li input[type="radio"] {
+	margin-top: 0;
+}
+
 /**
  * Overlay that contains info about current batch process.
  */

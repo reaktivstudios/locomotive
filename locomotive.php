@@ -76,7 +76,13 @@ final class Loader {
 	/**
 	 * Plugin stylesheet and JavaScript.
 	 */
-	public function scripts() {
+	public function scripts( $hook ) {
+
+		// Exclude our scripts and CSS files from loading globally.
+		if ( 'toplevel_page_locomotive' !== $hook ) {
+			return;
+		}
+
 		wp_enqueue_style( 'batch-process-styles', LOCO_PLUGIN_URL . 'assets/main.css' );
 		wp_enqueue_script( 'batch-js', LOCO_PLUGIN_URL . 'assets/dist/batch.min.js', array( 'jquery' ), '0.1.0', true );
 
