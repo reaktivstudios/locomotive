@@ -15,7 +15,7 @@ var Modal = React.createClass( {
     },
 
     render : function() {
-        var classes        = 'batch-processing-overlay',
+        var classes        = 'locomotive-overlay',
             batch_info     = this.props.batchInfo,
             batch_title    = ( batch_info.batch_title ) ? batch_info.batch_title : this.props.selectedBatch,
             status         = ( batch_info.status ) ? batch_info.status : '',

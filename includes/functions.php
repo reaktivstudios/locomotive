@@ -1,11 +1,11 @@
 <?php
 /**
- * Functions to simplify interacting with the Batch Processing utility.
+ * Functions to simplify interacting with the Locomotive utility.
  *
- * @package Batch_Processing
+ * @package Locomotive
  */
 
-namespace Batch_Process;
+namespace RKV\Locomotive;
 
 /**
  * Register a new batch process.
@@ -44,7 +44,7 @@ function get_all_batches() {
 	$batches = get_option( Batch::REGISTERED_BATCHES_KEY, array() );
 
 	foreach ( $batches as $k => $batch ) {
-		if ( $batch_status = get_option( Batch::BATCH_HOOK_PREFIX . $k ) ) {
+		if ( $batch_status = get_option( Batch::LOCO_HOOK_PREFIX . $k ) ) {
 			$last_run = time_ago( $batch_status['timestamp'] );
 			$status = $batch_status['status'];
 		} else {

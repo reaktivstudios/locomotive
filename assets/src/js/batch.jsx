@@ -9,7 +9,7 @@ import BatchPicker from './components/BatchPicker';
 import Modal from './components/Modal';
 
 /**
- * Our Batch Processing App.
+ * Our Locomotive App.
  */
 var App = React.createClass( {
     getInitialState : function() {

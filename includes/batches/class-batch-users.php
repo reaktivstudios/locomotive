@@ -2,10 +2,10 @@
 /**
  * Users batch class.
  *
- * @package Batch_Process/Batch
+ * @package Locomotive/Batch
  */
 
-namespace Batch_Process;
+namespace RKV\Locomotive;
 
 /**
  * Batch Users class.

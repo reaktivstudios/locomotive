@@ -1,21 +1,21 @@
 {
-  "name": "batch-processing",
+  "name": "locomotive",
   "version": "0.0.1",
-  "description": "Batch processing WordPress plugin from Reaktiv Studios",
+  "description": "Batch Processing WordPress plugin from Reaktiv Studios",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reaktivstudios/batch-processing.git"
+    "url": "git+https://github.com/reaktivstudios/locomotive.git"
   },
   "author": "Reaktiv Studios, Zach Wills",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/reaktivstudios/batch-processing/issues"
+    "url": "https://github.com/reaktivstudios/locomotive/issues"
   },
-  "homepage": "https://github.com/reaktivstudios/batch-processing#readme",
+  "homepage": "https://github.com/reaktivstudios/locomotive#readme",
   "dependencies": {
     "babel-preset-es2015": "^6.1.2",
     "babel-preset-react": "^6.1.2",

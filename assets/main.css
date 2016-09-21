@@ -1,5 +1,5 @@
 /**
- * Styles for the batch processing plugin.
+ * Styles for the Locomotive plugin.
  */
 
 * {
@@ -10,14 +10,14 @@
 	text-transform: lowercase;
 }
 
-.batch-processing-form #submit {
+.locomotive-form #submit {
 	margin-right: 12px;
 }
 
 /**
  * Overlay that contains info about current batch process.
  */
-.batch-processing-overlay {
+.locomotive-overlay {
 	transition: all .5s ease-in-out;
 	-webkit-transition: all .5s ease-in-out;
 	opacity: 0;
@@ -38,17 +38,17 @@
 		display: table-cell;
 		vertical-align: middle;
 	}
-	.batch-processing-overlay.is-open {
+	.locomotive-overlay.is-open {
 		top: 0;
 		opacity: 1;
 	}
-	.batch-processing-overlay .close {
+	.locomotive-overlay .close {
 		position: absolute;
 		top: 8px;
 		right: 12px;
 		cursor: pointer;
 	}
-	.batch-processing-overlay h2 {
+	.locomotive-overlay h2 {
 		margin-top: 0;
 		margin-bottom: 12px;
 	}

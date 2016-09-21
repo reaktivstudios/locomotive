@@ -2,10 +2,10 @@
 /**
  * Abstract batch class.
  *
- * @package Batch_Process/Batch
+ * @package Locomotive/Batch
  */
 
-namespace Batch_Process;
+namespace RKV\Locomotive;
 
 /**
  * Abstract batch class.
@@ -16,7 +16,7 @@ abstract class Batch {
 	 *
 	 * @var string
 	 */
-	const BATCH_HOOK_PREFIX = '_rkv_batch_';
+	const LOCO_HOOK_PREFIX = '_rkv_batch_';
 
 	/**
 	 * Meta key for the option that holds all of the batch hooks that a dev
@@ -162,8 +162,8 @@ abstract class Batch {
 
 		$this->currently_registered = get_all_batches();
 
-		add_action( self::BATCH_HOOK_PREFIX . $this->slug, array( $this, 'run_ajax' ) );
-		add_action( self::BATCH_HOOK_PREFIX . $this->slug . '_reset', array( $this, 'clear_result_status' ) );
+		add_action( self::LOCO_HOOK_PREFIX . $this->slug, array( $this, 'run_ajax' ) );
+		add_action( self::LOCO_HOOK_PREFIX . $this->slug . '_reset', array( $this, 'clear_result_status' ) );
 
 		return true;
 	}
@@ -211,7 +211,7 @@ abstract class Batch {
 		 *
 		 * @param int $per_page The number of results per page.
 		 */
-		$per_page = apply_filters( self::BATCH_HOOK_PREFIX . $this->slug . '_per_page', $per_page );
+		$per_page = apply_filters( self::LOCO_HOOK_PREFIX . $this->slug . '_per_page', $per_page );
 
 		$total_steps = ceil( $this->total_num_results / $per_page );
 		if ( (int) $this->current_step === (int) $total_steps ) {
@@ -250,7 +250,7 @@ abstract class Batch {
 	 * @param  string $status Status of batch process.
 	 */
 	private function update_status( $status ) {
-		update_option( self::BATCH_HOOK_PREFIX . $this->slug, array(
+		update_option( self::LOCO_HOOK_PREFIX . $this->slug, array(
 			'status' => $status,
 			'timestamp' => current_time( 'timestamp' ),
 		) );
@@ -270,14 +270,14 @@ abstract class Batch {
 		 *
 		 * @param string $string_text 'success'
 		 */
-		$success_status = apply_filters( self::BATCH_HOOK_PREFIX . '_success_status', 'success' );
+		$success_status = apply_filters( self::LOCO_HOOK_PREFIX . '_success_status', 'success' );
 
 		/**
 		 * The key used to define the status of whether or not a result was not able to be processed.
 		 *
 		 * @param string $string_text 'failed'
 		 */
-		$failed_status = apply_filters( self::BATCH_HOOK_PREFIX . '_failed_status', 'failed' );
+		$failed_status = apply_filters( self::LOCO_HOOK_PREFIX . '_failed_status', 'failed' );
 
 		foreach ( $results as $result ) {
 			// If this result item has been processed already, skip it.
@@ -313,7 +313,7 @@ abstract class Batch {
 		 * @param mixed  $result The current result.
 		 * @param string $status The status to set on a result.
 		 */
-		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_update_result_status', $result, $status );
+		do_action( self::LOCO_HOOK_PREFIX . $this->slug . '_update_result_status', $result, $status );
 
 		if ( $result instanceof \WP_Post ) {
 			update_post_meta( $result->ID, $this->slug . '_status', $status );
@@ -336,7 +336,7 @@ abstract class Batch {
 		 *
 		 * @param mixed $result The current result which is getting it's status checked.
 		 */
-		do_action( self::BATCH_HOOK_PREFIX . $this->slug . '_get_result_status', $result );
+		do_action( self::LOCO_HOOK_PREFIX . $this->slug . '_get_result_status', $result );
 
 		$result_status = '';
 
@@ -360,7 +360,7 @@ abstract class Batch {
 		 *
 		 * @param Batch $this The current batch object.
 		 */
-		do_action( self::BATCH_HOOK_PREFIX . $this->slug. '_clear', $this );
+		do_action( self::LOCO_HOOK_PREFIX . $this->slug. '_clear', $this );
 
 		switch ( $this->type ) {
 			case 'post':
