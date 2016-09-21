@@ -5,7 +5,7 @@
  * @package Locomotive/Batch
  */
 
-namespace RKV\Locomotive;
+namespace Rkv\Locomotive;
 
 /**
  * Abstract batch class.

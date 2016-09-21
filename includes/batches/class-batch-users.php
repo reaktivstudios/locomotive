@@ -5,7 +5,7 @@
  * @package Locomotive/Batch
  */
 
-namespace RKV\Locomotive;
+namespace Rkv\Locomotive;
 
 /**
  * Batch Users class.

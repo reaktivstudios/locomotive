@@ -5,7 +5,7 @@
  * @package Locomotive
  */
 
-namespace RKV\Locomotive;
+namespace Rkv\Locomotive;
 
 /**
  * Register a new batch process.

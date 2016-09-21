@@ -13,7 +13,7 @@ Creating batch processes in WordPress has never been so easy
 function my_batch_processes() {
 	// Example post query.
 	try {
-		RKV\Locomotive\register( array(
+		Rkv\Locomotive\register( array(
 			'name'     => 'Just another batch',
 			'type'     => 'post',
 			'callback' => 'my_callback_function',
@@ -28,7 +28,7 @@ function my_batch_processes() {
 	
 	// Example non existant post type query.
 	try {
-		RKV\Locomotive\register( array(
+		Rkv\Locomotive\register( array(
 			'name'     => 'Not existing post type',
 			'type'     => 'post',
 			'callback' => 'my_callback_function',
@@ -43,7 +43,7 @@ function my_batch_processes() {
 	
 	// Example page batch.
 	try {
-		RKV\Locomotive\register( array(
+		Rkv\Locomotive\register( array(
 			'name'     => 'Pages Batch',
 			'type'     => 'post',
 			'callback' => 'my_callback_function',

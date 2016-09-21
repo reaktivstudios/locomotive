@@ -1,6 +1,6 @@
 <?php
 
-namespace RKV\Locomotive;
+namespace Rkv\Locomotive;
 
 class BatchTest extends \WP_UnitTestCase {
 	/**

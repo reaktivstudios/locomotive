@@ -10,7 +10,7 @@
  * @package Locomotive
  */
 
-namespace RKV\Locomotive;
+namespace Rkv\Locomotive;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

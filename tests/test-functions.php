@@ -1,6 +1,6 @@
 <?php
 
-namespace RKV\Locomotive;
+namespace Rkv\Locomotive;
 
 class BatchFunctionTest extends \WP_UnitTestCase {
 	function tearDown() {
