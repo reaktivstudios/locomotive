@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name: Batch Processing
+ * Plugin Name: Locomotive
  * Version: 0.1.0
- * Description: Enables developers to utilize an abstract class to achieve easy batch processes that can be run through WP Admin or (if installed) WP CLI.
+ * Description: Run custom batch processes from the WP admin.
  * Author: Reaktiv Studios
  * Author URI: http://reaktivstudios.com/
  * License: GPL
  *
- * @package Batch_Process
+ * @package Locomotive
  */
 
-namespace Batch_Process;
+namespace Rkv\Locomotive;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,10 +24,10 @@ final class Loader {
 	 * Define all the constants we need
 	 */
 	public function define_constants() {
-		define( 'BATCH_VERSION', '0.1.0-dev' );
-		define( 'BATCH_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-		define( 'BATCH_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-		define( 'BATCH_PLUGIN_FILE', __FILE__ );
+		define( 'LOCO_VERSION', '0.1.0-dev' );
+		define( 'LOCO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+		define( 'LOCO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+		define( 'LOCO_PLUGIN_FILE', __FILE__ );
 	}
 
 	/**
@@ -35,10 +35,10 @@ final class Loader {
 	 */
 	public function add_dashboard() {
 		add_menu_page(
-			'Batch Processes',
-			'Batch Processes',
+			'Locomotive',
+			'Locomotive',
 			'manage_options',
-			'batch-processes',
+			'locomotive',
 			array( $this, 'dashboard_display' )
 		);
 	}
@@ -48,17 +48,17 @@ final class Loader {
 	 */
 	public function dashboard_display() {
 		$registered_batches = get_all_batches();
-		include BATCH_PLUGIN_DIR . 'templates/dashboard.php';
+		include LOCO_PLUGIN_DIR . 'templates/dashboard.php';
 	}
 
 	/**
 	 * Load in all the files we need.
 	 */
 	public function load_includes() {
-		require_once( BATCH_PLUGIN_DIR . 'includes/abstracts/abstract-batch.php' );
-		require_once( BATCH_PLUGIN_DIR . 'includes/batches/class-batch-posts.php' );
-		require_once( BATCH_PLUGIN_DIR . 'includes/batches/class-batch-users.php' );
-		require_once( BATCH_PLUGIN_DIR . 'includes/batch-functions.php' );
+		require_once( LOCO_PLUGIN_DIR . 'includes/abstracts/abstract-batch.php' );
+		require_once( LOCO_PLUGIN_DIR . 'includes/batches/class-batch-posts.php' );
+		require_once( LOCO_PLUGIN_DIR . 'includes/batches/class-batch-users.php' );
+		require_once( LOCO_PLUGIN_DIR . 'includes/functions.php' );
 	}
 
 	/**
@@ -77,8 +77,8 @@ final class Loader {
 	 * Plugin stylesheet and JavaScript.
 	 */
 	public function scripts() {
-		wp_enqueue_style( 'batch-process-styles', BATCH_PLUGIN_URL . 'assets/main.css' );
-		wp_enqueue_script( 'batch-js', BATCH_PLUGIN_URL . 'assets/dist/batch.min.js', array( 'jquery' ), '0.1.0', true );
+		wp_enqueue_style( 'batch-process-styles', LOCO_PLUGIN_URL . 'assets/main.css' );
+		wp_enqueue_script( 'batch-js', LOCO_PLUGIN_URL . 'assets/dist/batch.min.js', array( 'jquery' ), '0.1.0', true );
 
 		wp_localize_script( 'batch-js', 'batch', array(
 			'nonce' => wp_create_nonce( 'run-batch-process' ),
@@ -126,7 +126,7 @@ final class Loader {
 			) );
 		}
 
-		do_action( Batch::BATCH_HOOK_PREFIX . $batch_process, $step );
+		do_action( Batch::LOCO_HOOK_PREFIX . $batch_process, $step );
 	}
 
 	/**
@@ -151,7 +151,7 @@ final class Loader {
 			) );
 		}
 
-		do_action( Batch::BATCH_HOOK_PREFIX . $batch_process . '_reset' );
+		do_action( Batch::LOCO_HOOK_PREFIX . $batch_process . '_reset' );
 
 		wp_send_json( array( 'success' => true ) );
 	}

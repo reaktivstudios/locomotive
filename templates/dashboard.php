@@ -2,8 +2,8 @@
 /**
  * Admin dashbaord template file.
  *
- * @package Batch_processing/Admin
+ * @package Locomotive/Admin
  */
 
 ?>
-<div id="batch-main" class="batch-processing-form"></div>
+<div id="batch-main" class="locomotive-form"></div>

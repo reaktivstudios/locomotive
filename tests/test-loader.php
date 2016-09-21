@@ -7,10 +7,10 @@ class LoaderTest extends WP_UnitTestCase {
 	 * Make sure our plugin constants are defined.
 	 */
 	function test_constants() {
-		$this->assertNotNull( BATCH_VERSION );
-		$this->assertNotNull( BATCH_PLUGIN_DIR );
-		$this->assertNotNull( BATCH_PLUGIN_URL );
-		$this->assertNotNull( BATCH_PLUGIN_FILE );
+		$this->assertNotNull( LOCO_VERSION );
+		$this->assertNotNull( LOCO_PLUGIN_DIR );
+		$this->assertNotNull( LOCO_PLUGIN_URL );
+		$this->assertNotNull( LOCO_PLUGIN_FILE );
 	}
 }
 

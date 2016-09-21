@@ -1,6 +1,6 @@
 <?php
 
-namespace Batch_Process;
+namespace Rkv\Locomotive;
 
 class BatchTest extends \WP_UnitTestCase {
 	/**
@@ -154,12 +154,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 1 );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertEquals( 'no results found', $batch_status['status'] );
 	}
 
@@ -186,12 +186,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 1 );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
 
 		// Loop through each post and make sure our value was set.
@@ -224,12 +224,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
+		$batch_status = get_option( $user_batch::LOCO_HOOK_PREFIX . $user_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $user_batch->run( 1 );
 
-		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
+		$batch_status = get_option( $user_batch::LOCO_HOOK_PREFIX . $user_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
 
 		// Loop through each post and make sure our value was set.
@@ -340,12 +340,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 1 );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertEquals ( 'running', $batch_status['status'] );
 	}
 
@@ -369,12 +369,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 2 );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
@@ -395,12 +395,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
+		$batch_status = get_option( $user_batch::LOCO_HOOK_PREFIX . $user_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $user_batch->run( 2 );
 
-		$batch_status = get_option( $user_batch::BATCH_HOOK_PREFIX . $user_batch->slug );
+		$batch_status = get_option( $user_batch::LOCO_HOOK_PREFIX . $user_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
@@ -427,12 +427,12 @@ class BatchTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
 		$run = $post_batch->run( 1 );
 
-		$batch_status = get_option( $post_batch::BATCH_HOOK_PREFIX . $post_batch->slug );
+		$batch_status = get_option( $post_batch::LOCO_HOOK_PREFIX . $post_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 

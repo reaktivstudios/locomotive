@@ -17,7 +17,7 @@
 	<filter>
 		<whitelist>
 			<directory>./includes</directory>
-			<file>batch-processing.php</file>
+			<file>locomotive.php</file>
 		</whitelist>
 	</filter>
 </phpunit>

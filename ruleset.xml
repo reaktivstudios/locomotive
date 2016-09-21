@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="batch-processing">
-	<description>Sniffs for the coding standards of the batch-processing plugin</description>
+<ruleset name="locomotive">
+	<description>Sniffs for the coding standards of the locomotive plugin</description>
 
 	<exclude-pattern>./vendor/*</exclude-pattern>
 	<exclude-pattern>./tests/*</exclude-pattern>
