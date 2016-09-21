@@ -12,7 +12,6 @@ Creating batch processes in WordPress has never been so easy
  */
 function my_batch_processes() {
 // Example post query.
-
 register_batch_process( array(
 	'name'     => 'Just another batch',
 	'type'     => 'post',
@@ -24,7 +23,6 @@ register_batch_process( array(
 ) );
 
 // Example non existent post type query.
-
 register_batch_process( array(
 	'name'     => 'Not existing post type',
 	'type'     => 'post',
@@ -36,7 +34,6 @@ register_batch_process( array(
 ) );
 
 // Example page batch.
-
 register_batch_process( array(
 	'name'     => 'Pages Batch',
 	'type'     => 'post',
