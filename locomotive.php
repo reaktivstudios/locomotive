@@ -35,10 +35,10 @@ final class Loader {
 	 */
 	public function add_dashboard() {
 		add_menu_page(
-			'Batch Processes',
-			'Batch Processes',
+			'Locomotive',
+			'Locomotive',
 			'manage_options',
-			'batch-processes',
+			'locomotive',
 			array( $this, 'dashboard_display' )
 		);
 	}
