@@ -116,7 +116,7 @@ abstract class Batch {
 			$this->currently_registered[ $this->slug ]['name'] = $this->name;
 		}
 
-		return update_registered_batches( $this->currently_registered );
+		return locomotive_update_registered_batches( $this->currently_registered );
 	}
 
 	/**
@@ -160,7 +160,7 @@ abstract class Batch {
 			$this->callback = $args['callback'];
 		}
 
-		$this->currently_registered = get_all_batches();
+		$this->currently_registered = locomotive_get_all_batches();
 
 		add_action( self::LOCO_HOOK_PREFIX . $this->slug, array( $this, 'run_ajax' ) );
 		add_action( self::LOCO_HOOK_PREFIX . $this->slug . '_reset', array( $this, 'clear_result_status' ) );

@@ -47,7 +47,7 @@ final class Loader {
 	 * Dashboard display.
 	 */
 	public function dashboard_display() {
-		$registered_batches = get_all_batches();
+		$registered_batches = locomotive_get_all_batches();
 		include LOCO_PLUGIN_DIR . 'templates/dashboard.php';
 	}
 
@@ -83,7 +83,7 @@ final class Loader {
 		wp_localize_script( 'batch-js', 'batch', array(
 			'nonce' => wp_create_nonce( 'run-batch-process' ),
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			'batches' => get_all_batches(),
+			'batches' => locomotive_get_all_batches(),
 			'page_title' => esc_html( get_admin_page_title() ),
 		) );
 	}
@@ -93,7 +93,7 @@ final class Loader {
 	 */
 	public function loaded() {
 		if ( is_admin() ) {
-			clear_existing_batches();
+			locomotive_clear_existing_batches();
 			do_action( 'add_batch_processes' );
 		}
 	}

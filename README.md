@@ -11,51 +11,42 @@ Creating batch processes in WordPress has never been so easy
  * Register our batch process.
  */
 function my_batch_processes() {
-	// Example post query.
-	try {
-		Rkv\Locomotive\register( array(
-			'name'     => 'Just another batch',
-			'type'     => 'post',
-			'callback' => 'my_callback_function',
-			'args'     => array(
-				'posts_per_page' => 1,
-				'post_type'      => 'post',
-			),
-		) );
-	} catch ( Exception $e ) {
-		error_log( print_r( $e->getMessage(), true ) );
-	}
-	
-	// Example non existant post type query.
-	try {
-		Rkv\Locomotive\register( array(
-			'name'     => 'Not existing post type',
-			'type'     => 'post',
-			'callback' => 'my_callback_function',
-			'args'     => array(
-				'posts_per_page' => 1,
-				'post_type'      => 'Not existing post type',
-			),
-		) );
-	} catch ( Exception $e ) {
-		error_log( print_r( $e->getMessage(), true ) );
-	}
-	
-	// Example page batch.
-	try {
-		Rkv\Locomotive\register( array(
-			'name'     => 'Pages Batch',
-			'type'     => 'post',
-			'callback' => 'my_callback_function',
-			'args'     => array(
-				'posts_per_page' => 2,
-				'post_type'      => 'page',
-			),
-		) );
-	} catch ( Exception $e ) {
-		error_log( print_r( $e->getMessage(), true ) );
-	}
-}
+// Example post query.
+
+register_batch_process( array(
+	'name'     => 'Just another batch',
+	'type'     => 'post',
+	'callback' => 'my_callback_function',
+	'args'     => array(
+		'posts_per_page' => 1,
+		'post_type'      => 'post',
+	),
+) );
+
+// Example non existent post type query.
+
+register_batch_process( array(
+	'name'     => 'Not existing post type',
+	'type'     => 'post',
+	'callback' => 'my_callback_function',
+	'args'     => array(
+		'posts_per_page' => 1,
+		'post_type'      => 'Not existing post type',
+	),
+) );
+
+// Example page batch.
+
+register_batch_process( array(
+	'name'     => 'Pages Batch',
+	'type'     => 'post',
+	'callback' => 'my_callback_function',
+	'args'     => array(
+		'posts_per_page' => 2,
+		'post_type'      => 'page',
+	),
+) );
+
 add_action( 'add_batch_processes', 'my_batch_processes' );
 
 /**
