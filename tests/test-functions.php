@@ -123,44 +123,6 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Confirm our assets are only loading where applicable.
-	 */
-	function test_asset_loading() {
-
-		// Check that the items are not enquened before we start.
-		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
-
-		// Call our loader class.
-		$this->admin_page = new Loader;
-
-		// Set the admin hook to the admin dashboard.
-		$this->admin_page->scripts( 'index.php' );
-
-		// Check that our assets aren't enquened.
-		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
-
-		// Now set the hook to the admin page.
-		$this->admin_page->scripts( 'toplevel_page_locomotive' );
-
-		// Check that the items are enquened.
-		$this->assertTrue( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'batch-js', 'enqueued' ) );
-
-		// Manually dequeue the CSS and JS files.
-		wp_dequeue_style( 'batch-process-styles' );
-		wp_dequeue_script( 'batch-js' );
-
-		// Set the admin hook to the general options page.
-		$this->admin_page->scripts( 'options-general.php' );
-
-		// Check that our assets aren't enquened.
-		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
-	}
-
-	/**
 	 * Helper function to register a successful batch.
 	 *
 	 * @param string $slug Slug of test batch.
