@@ -8,7 +8,7 @@ class BatchTest extends \WP_UnitTestCase {
 	 */
 	function tearDown() {
 		parent::tearDown();
-		clear_existing_batches();
+		locomotive_clear_existing_batches();
 	}
 
 	/**
@@ -132,7 +132,7 @@ class BatchTest extends \WP_UnitTestCase {
 	 * is an array.
 	 */
 	public function test_empty_currently_registered_is_array_when_new_batch_added() {
-		clear_existing_batches();
+		locomotive_clear_existing_batches();
 
 		$batch_process = new Posts();
 		$this->assertTrue( is_array( $batch_process->currently_registered ) );
@@ -281,7 +281,7 @@ class BatchTest extends \WP_UnitTestCase {
 			$this->assertEquals( '', $status );
 		}
 
-		$batches = get_all_batches();
+		$batches = locomotive_get_all_batches();
 		$this->assertEquals( 'reset', $batches['hey-there']['status'] );
 	}
 
@@ -315,7 +315,7 @@ class BatchTest extends \WP_UnitTestCase {
 			$this->assertEquals( '', $status );
 		}
 
-		$batches = get_all_batches();
+		$batches = locomotive_get_all_batches();
 		$this->assertEquals( 'reset', $batches['hey-there']['status'] );
 	}
 
