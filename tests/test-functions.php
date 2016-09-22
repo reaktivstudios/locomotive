@@ -132,15 +132,13 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	function test_asset_loading() {
 
 		// Check that the items are not enquened before we start.
-		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
+		$this->assertFalse( $this->are_batch_assets_enqueued() );
 
 		// Call our loader class on the locomotive settings page.
 		$this->load_admin_enqueue_hook( 'toplevel_page_locomotive' );
 
 		// Check that the items are enquened.
-		$this->assertTrue( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'batch-js', 'enqueued' ) );
+		$this->assertTrue( $this->are_batch_assets_enqueued() );
 	}
 
 	/**
@@ -149,15 +147,13 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	function test_asset_not_loading() {
 
 		// Check that the items are not enquened before we start.
-		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
+		$this->assertFalse( $this->are_batch_assets_enqueued() );
 
 		// Call our loader class on the general options page.
 		$this->load_admin_enqueue_hook( 'options-general.php' );
 
 		// Check that our assets aren't enquened.
-		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
+		$this->assertFalse( $this->are_batch_assets_enqueued() );
 	}
 
 	/**
@@ -190,6 +186,17 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 
 		// Set the admin hook to the requested page.
 		$this->admin_page->scripts( $hook );
+	}
+
+	/**
+	 * Helper function to check if the scripts and styles are loaded.
+	 *
+	 * @return bool Whether or not the style and script is enqueued.
+	 */
+	private function are_batch_assets_enqueued() {
+
+		// Call our loader class.
+		return false !== wp_style_is( 'batch-process-styles', 'enqueued' ) && false !== wp_script_is( 'batch-js', 'enqueued' ) ? true : false;
 	}
 }
 
