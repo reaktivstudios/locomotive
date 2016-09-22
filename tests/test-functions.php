@@ -6,6 +6,10 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	function tearDown() {
 		parent::tearDown();
 		clear_existing_batches();
+
+		// Manually dequeue the CSS and JS files.
+		wp_dequeue_style( 'batch-process-styles' );
+		wp_dequeue_script( 'batch-js' );
 	}
 
 	/**
@@ -123,7 +127,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Confirm our assets are only loading where applicable.
+	 * Confirm our CSS and JS assets are loading inside our settings page.
 	 */
 	function test_asset_loading() {
 
@@ -131,29 +135,25 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
 		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
 
-		// Call our loader class.
-		$this->admin_page = new Loader;
-
-		// Set the admin hook to the admin dashboard.
-		$this->admin_page->scripts( 'index.php' );
-
-		// Check that our assets aren't enquened.
-		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
-		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
-
-		// Now set the hook to the admin page.
-		$this->admin_page->scripts( 'toplevel_page_locomotive' );
+		// Call our loader class on the locomotive settings page.
+		$this->load_admin_enqueue_hook( 'toplevel_page_locomotive' );
 
 		// Check that the items are enquened.
 		$this->assertTrue( wp_style_is( 'batch-process-styles', 'enqueued' ) );
 		$this->assertTrue( wp_script_is( 'batch-js', 'enqueued' ) );
+	}
 
-		// Manually dequeue the CSS and JS files.
-		wp_dequeue_style( 'batch-process-styles' );
-		wp_dequeue_script( 'batch-js' );
+	/**
+	 * Confirm our CSS and JS assets are not loading outside our settings page.
+	 */
+	function test_asset_not_loading() {
 
-		// Set the admin hook to the general options page.
-		$this->admin_page->scripts( 'options-general.php' );
+		// Check that the items are not enquened before we start.
+		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
+		$this->assertFalse( wp_script_is( 'batch-js', 'enqueued' ) );
+
+		// Call our loader class on the general options page.
+		$this->load_admin_enqueue_hook( 'options-general.php' );
 
 		// Check that our assets aren't enquened.
 		$this->assertFalse( wp_style_is( 'batch-process-styles', 'enqueued' ) );
@@ -176,6 +176,20 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 				'post_type'      => 'post',
 			),
 		) );
+	}
+
+	/**
+	 * Helper function to call our script loader function.
+	 *
+	 * @param string $hook The hook that is passed to admin_enqueue_scripts.
+	 */
+	private function load_admin_enqueue_hook( $hook = '' ) {
+
+		// Call our loader class.
+		$this->admin_page = new Loader;
+
+		// Set the admin hook to the requested page.
+		$this->admin_page->scripts( $hook );
 	}
 }
 
