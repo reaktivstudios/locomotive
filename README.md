@@ -44,7 +44,7 @@ register_batch_process( array(
 	),
 ) );
 
-add_action( 'add_batch_processes', 'my_batch_processes' );
+add_action( 'locomotive_init', 'my_batch_processes' );
 
 /**
  * This is what we want to do with each individual result during a batch routine/
