@@ -110,7 +110,10 @@ final class Loader {
 	 * @todo Move this to it's own AJAX class.
 	 */
 	public function run() {
+		$batch_process = '';
+		$step = 0;
 		$errors = array();
+
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
@@ -125,7 +128,7 @@ final class Loader {
 			$step = absint( $_POST['step'] );
 		}
 
-		if ( $errors ) {
+		if ( ! empty( $errors ) ) {
 			wp_send_json( array(
 				'success' => false,
 				'errors' => $errors,
@@ -141,7 +144,9 @@ final class Loader {
 	 * @todo Move this to it's own AJAX class.
 	 */
 	public function reset() {
+		$batch_process = '';
 		$errors = array();
+
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
@@ -150,7 +155,7 @@ final class Loader {
 			$batch_process = sanitize_text_field( wp_unslash( $_POST['batch_process'] ) );
 		}
 
-		if ( $errors ) {
+		if ( ! empty( $errors ) ) {
 			wp_send_json( array(
 				'success' => false,
 				'errors' => $errors,
