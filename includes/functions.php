@@ -5,15 +5,17 @@
  * @package Locomotive
  */
 
-namespace Rkv\Locomotive;
+use Rkv\Locomotive\Batch;
+use Rkv\Locomotive\Posts;
+use Rkv\Locomotive\Users;
 
 /**
  * Register a new batch process.
  *
  * @param  array $args Arguments for the batch process.
- * @throws \Exception Only post & user are accepted $args['type'].
+ * @throws Exception Only post & user are accepted $args['type'].
  */
-function register( $args ) {
+function register_batch_process( $args ) {
 	if ( empty( $args['type'] ) ) {
 		$args['type'] = '';
 	}
@@ -30,7 +32,7 @@ function register( $args ) {
 			break;
 
 		default:
-			throw new \Exception( 'Type not supported.' );
+			throw new Exception( 'Type not supported.' );
 			break;
 	}
 }
@@ -40,12 +42,12 @@ function register( $args ) {
  *
  * @return array
  */
-function get_all_batches() {
+function locomotive_get_all_batches() {
 	$batches = get_option( Batch::REGISTERED_BATCHES_KEY, array() );
 
 	foreach ( $batches as $k => $batch ) {
 		if ( $batch_status = get_option( Batch::LOCO_HOOK_PREFIX . $k ) ) {
-			$last_run = time_ago( $batch_status['timestamp'] );
+			$last_run = locomotive_time_ago( $batch_status['timestamp'] );
 			$status = $batch_status['status'];
 		} else {
 			$last_run = 'never';
@@ -64,7 +66,7 @@ function get_all_batches() {
  *
  * @param array $batches Batches you want to register.
  */
-function update_registered_batches( $batches ) {
+function locomotive_update_registered_batches( $batches ) {
 	return update_option( Batch::REGISTERED_BATCHES_KEY, $batches );
 }
 
@@ -75,13 +77,13 @@ function update_registered_batches( $batches ) {
  *
  * @param  timestamp $time Timestamp.
  */
-function time_ago( $time ) {
+function locomotive_time_ago( $time ) {
 	return human_time_diff( $time, current_time( 'timestamp' ) ) . ' ago';
 }
 
 /**
  * Clear all existing batches.
  */
-function clear_existing_batches() {
+function locomotive_clear_existing_batches() {
 	return update_option( Batch::REGISTERED_BATCHES_KEY, array() );
 }
