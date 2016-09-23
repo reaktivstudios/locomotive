@@ -3,15 +3,21 @@
 namespace Rkv\Locomotive;
 
 class BatchFunctionTest extends \WP_UnitTestCase {
-	function tearDown() {
+
+	public function tearDown() {
 		parent::tearDown();
+
 		locomotive_clear_existing_batches();
+
+		// Manually dequeue the CSS and JS files.
+		wp_dequeue_style( 'batch-process-styles' );
+		wp_dequeue_script( 'batch-js' );
 	}
 
 	/**
 	 * Test successful batch registers.
 	 */
-	function test_successful_register_batch() {
+	public function test_successful_register_batch() {
 		$this->register_successful_batch( '1' );
 
 		$all_batches = locomotive_get_all_batches();
@@ -35,7 +41,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	 *
 	 * @expectedExceptionMessage Type not supported.
 	 */
-	function test_register_empty_type() {
+	public function test_register_empty_type() {
 		$this->setExpectedException( 'Exception' );
 
 		register_batch_process( array(
@@ -54,7 +60,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	 *
 	 * @expectedExceptionMessage Type not supported.
 	 */
-	function test_register_unsupported_type() {
+	public function test_register_unsupported_type() {
 		$this->setExpectedException( 'Exception' );
 
 		register_batch_process( array(
@@ -75,7 +81,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Test that we can get all batches with proper data.
 	 */
-	function test_all_batches() {
+	public function test_all_batches() {
 		$this->register_successful_batch( 'my-batch' );
 		$batches = locomotive_get_all_batches();
 
@@ -102,7 +108,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Test that we can clear existing batches.
 	 */
-	function test_clear_batches() {
+	public function test_clear_batches() {
 		$this->register_successful_batch( 'hello' );
 		$batches = locomotive_get_all_batches();
 		$this->assertCount( 1, $batches );
@@ -115,11 +121,41 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Test locomotive_time_ago() returns what we expect;
 	 */
-	function test_time_ago() {
+	public function test_time_ago() {
 		$time = current_time( 'timestamp' );
 		$time_ago = locomotive_time_ago( $time );
 
 		$this->assertEquals( '1 min ago', $time_ago );
+	}
+
+	/**
+	 * Confirm our CSS and JS assets are loading inside our settings page.
+	 */
+	public function test_asset_loading() {
+
+		// Check that the items are not enquened before we start.
+		$this->assertFalse( $this->are_batch_assets_enqueued() );
+
+		// Call our loader class on the locomotive settings page.
+		$this->load_admin_enqueue_hook( 'toplevel_page_locomotive' );
+
+		// Check that the items are enquened.
+		$this->assertTrue( $this->are_batch_assets_enqueued() );
+	}
+
+	/**
+	 * Confirm our CSS and JS assets are not loading outside our settings page.
+	 */
+	public function test_asset_not_loading() {
+
+		// Check that the items are not enquened before we start.
+		$this->assertFalse( $this->are_batch_assets_enqueued() );
+
+		// Call our loader class on the general options page.
+		$this->load_admin_enqueue_hook( 'options-general.php' );
+
+		// Check that our assets aren't enquened.
+		$this->assertFalse( $this->are_batch_assets_enqueued() );
 	}
 
 	/**
@@ -139,5 +175,33 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 			),
 		) );
 	}
-}
 
+	/**
+	 * Helper function to call our script loader function.
+	 *
+	 * @param string $hook The hook that is passed to admin_enqueue_scripts.
+	 */
+	private function load_admin_enqueue_hook( $hook = '' ) {
+
+		// Call our loader class.
+		$this->admin_page = new Loader;
+
+		// Set the admin hook to the requested page.
+		$this->admin_page->scripts( $hook );
+	}
+
+	/**
+	 * Helper function to check if the scripts and styles are loaded.
+	 *
+	 * @return bool Whether or not the style and script is enqueued.
+	 */
+	private function are_batch_assets_enqueued() {
+
+		// Run the check on both the style and script enqueue.
+		if ( false !== wp_style_is( 'batch-process-styles', 'enqueued' ) && false !== wp_script_is( 'batch-js', 'enqueued' ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
