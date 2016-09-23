@@ -130,7 +130,7 @@ final class Loader {
 			$step = absint( $_POST['step'] );
 		}
 
-		if ( $errors ) {
+		if ( ! empty( $errors ) ) {
 			wp_send_json( array(
 				'success' => false,
 				'errors' => $errors,
@@ -159,7 +159,7 @@ final class Loader {
 			$batch_process = sanitize_text_field( wp_unslash( $_POST['batch_process'] ) );
 		}
 
-		if ( $errors ) {
+		if ( ! empty( $errors ) ) {
 			wp_send_json( array(
 				'success' => false,
 				'errors' => $errors,
