@@ -3,7 +3,8 @@
 namespace Rkv\Locomotive;
 
 class BatchFunctionTest extends \WP_UnitTestCase {
-	function tearDown() {
+
+	public function tearDown() {
 		parent::tearDown();
 
 		locomotive_clear_existing_batches();
@@ -16,7 +17,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Test successful batch registers.
 	 */
-	function test_successful_register_batch() {
+	public function test_successful_register_batch() {
 		$this->register_successful_batch( '1' );
 
 		$all_batches = locomotive_get_all_batches();
@@ -40,7 +41,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	 *
 	 * @expectedExceptionMessage Type not supported.
 	 */
-	function test_register_empty_type() {
+	public function test_register_empty_type() {
 		$this->setExpectedException( 'Exception' );
 
 		register_batch_process( array(
@@ -59,7 +60,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	 *
 	 * @expectedExceptionMessage Type not supported.
 	 */
-	function test_register_unsupported_type() {
+	public function test_register_unsupported_type() {
 		$this->setExpectedException( 'Exception' );
 
 		register_batch_process( array(
@@ -80,7 +81,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Test that we can get all batches with proper data.
 	 */
-	function test_all_batches() {
+	public function test_all_batches() {
 		$this->register_successful_batch( 'my-batch' );
 		$batches = locomotive_get_all_batches();
 
@@ -107,7 +108,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Test that we can clear existing batches.
 	 */
-	function test_clear_batches() {
+	public function test_clear_batches() {
 		$this->register_successful_batch( 'hello' );
 		$batches = locomotive_get_all_batches();
 		$this->assertCount( 1, $batches );
@@ -120,7 +121,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Test locomotive_time_ago() returns what we expect;
 	 */
-	function test_time_ago() {
+	public function test_time_ago() {
 		$time = current_time( 'timestamp' );
 		$time_ago = locomotive_time_ago( $time );
 
@@ -130,7 +131,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Confirm our CSS and JS assets are loading inside our settings page.
 	 */
-	function test_asset_loading() {
+	public function test_asset_loading() {
 
 		// Check that the items are not enquened before we start.
 		$this->assertFalse( $this->are_batch_assets_enqueued() );
@@ -145,7 +146,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	/**
 	 * Confirm our CSS and JS assets are not loading outside our settings page.
 	 */
-	function test_asset_not_loading() {
+	public function test_asset_not_loading() {
 
 		// Check that the items are not enquened before we start.
 		$this->assertFalse( $this->are_batch_assets_enqueued() );

@@ -6,7 +6,7 @@ class BatchTest extends \WP_UnitTestCase {
 	/**
 	 * Tear down.
 	 */
-	function tearDown() {
+	public function tearDown() {
 		parent::tearDown();
 		locomotive_clear_existing_batches();
 	}
@@ -16,7 +16,7 @@ class BatchTest extends \WP_UnitTestCase {
 	 *
 	 * @expectedExceptionMessage Batch name must be provided.
 	 */
-	function test_register_batch_includes_name() {
+	public function test_register_batch_includes_name() {
 		$this->setExpectedException( 'Exception' );
 
 		$batch_process = new Posts();
@@ -36,7 +36,7 @@ class BatchTest extends \WP_UnitTestCase {
 	 *
 	 * @expectedExceptionMessage Type of batch must be defined.
 	 */
-	function test_register_batch_includes_type() {
+	public function test_register_batch_includes_type() {
 		$this->setExpectedException( 'Exception' );
 
 		$batch_process = new Posts();
@@ -56,7 +56,7 @@ class BatchTest extends \WP_UnitTestCase {
 	 *
 	 * @expectedExceptionMessage An array of args must be defined.
 	 */
-	function test_register_batch_includes_callback() {
+	public function test_register_batch_includes_callback() {
 		$this->setExpectedException( 'Exception' );
 
 		$batch_process = new Posts();
@@ -76,7 +76,7 @@ class BatchTest extends \WP_UnitTestCase {
 	 *
 	 * @expectedExceptionMessage A callback must be defined.
 	 */
-	function test_register_batch_includes_args() {
+	public function test_register_batch_includes_args() {
 		$this->setExpectedException( 'Exception' );
 
 		$batch_process = new Posts();
@@ -91,7 +91,7 @@ class BatchTest extends \WP_UnitTestCase {
 	/**
 	 * Make sure slugs get slashes.
 	 */
-	function test_register_batch_no_slug_gets_name() {
+	public function test_register_batch_no_slug_gets_name() {
 		$batch_process = new Posts();
 		$batch_process->register( array(
 			'name'     => 'Hey there',
@@ -109,7 +109,7 @@ class BatchTest extends \WP_UnitTestCase {
 	/**
 	 * Make sure adding batch adds to currently registered.
 	 */
-	function test_register_overwrites_currently_registered_if_same_slug() {
+	public function test_register_overwrites_currently_registered_if_same_slug() {
 		$batch = $this->register_successful_batch( 'hey' );
 
 		$batch = new Posts();
