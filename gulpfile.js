@@ -101,7 +101,8 @@ gulp.task( 'phpcs', function() {
             bin: 'vendor/bin/phpcs',
             standard: 'ruleset.xml'
         } ) )
-        .pipe( phpcs.reporter( 'log' ) );
+        .pipe( phpcs.reporter( 'log' ) )
+        .pipe( phpcs.reporter( 'fail' ) );
 } );
 
 // Lint PHP.
