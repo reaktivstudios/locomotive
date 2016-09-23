@@ -195,8 +195,12 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	 */
 	private function are_batch_assets_enqueued() {
 
-		// Call our loader class.
-		return false !== wp_style_is( 'batch-process-styles', 'enqueued' ) && false !== wp_script_is( 'batch-js', 'enqueued' ) ? true : false;
+		// Run the check on both the style and script enqueue.
+		if ( false !== wp_style_is( 'batch-process-styles', 'enqueued' ) && false !== wp_script_is( 'batch-js', 'enqueued' ) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 
