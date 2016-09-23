@@ -1,5 +1,9 @@
 <?php
 
+namespace Rkv\Locomotive\Tests;
+
+use WP_UnitTestCase;
+
 class LoaderTest extends WP_UnitTestCase {
 	public function setUp() { }
 

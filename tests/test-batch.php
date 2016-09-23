@@ -1,8 +1,12 @@
 <?php
 
-namespace Rkv\Locomotive;
+namespace Rkv\Locomotive\Tests;
 
-class BatchTest extends \WP_UnitTestCase {
+use WP_UnitTestCase;
+use Rkv\Locomotive\Batches\Posts;
+use Rkv\Locomotive\Batches\Users;
+
+class BatchTest extends WP_UnitTestCase {
 	/**
 	 * Tear down.
 	 */
@@ -179,7 +183,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$post_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'post',
-			'callback' => __NAMESPACE__ . '\my_callback_function_test',
+			'callback' => __NAMESPACE__ . '\\my_callback_function_test',
 			'args'     => array(
 				'posts_per_page' => 10,
 				'post_type'      => 'post',
@@ -218,7 +222,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$user_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'user',
-			'callback' => __NAMESPACE__ . '\my_user_callback_function_test',
+			'callback' => __NAMESPACE__ . '\\my_user_callback_function_test',
 			'args'     => array(
 				'number' => 10,
 			),
@@ -261,7 +265,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$post_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'post',
-			'callback' => __NAMESPACE__ . '\my_callback_function_test',
+			'callback' => __NAMESPACE__ . '\\my_callback_function_test',
 			'args'     => array(
 				'posts_per_page' => 10,
 				'post_type'      => 'post',
@@ -296,7 +300,7 @@ class BatchTest extends \WP_UnitTestCase {
 		$user_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'user',
-			'callback' => __NAMESPACE__ . '\my_user_callback_function_test',
+			'callback' => __NAMESPACE__ . '\\my_user_callback_function_test',
 			'args'     => array(
 				'number' => 7,
 			),

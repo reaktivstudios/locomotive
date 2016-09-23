@@ -5,7 +5,11 @@
  * @package Locomotive/Batch
  */
 
-namespace Rkv\Locomotive;
+namespace Rkv\Locomotive\Abstracts;
+
+use Exception;
+use WP_Post;
+use WP_User;
 
 /**
  * Abstract batch class.
@@ -126,12 +130,12 @@ abstract class Batch {
 	 * @todo Research the best way to handle exceptions.
 	 *
 	 * @param  array $args Array of args for register.
-	 * @throws \Exception Type must be provided.
+	 * @throws Exception Type must be provided.
 	 * @return true|exception
 	 */
 	private function setup( $args ) {
 		if ( empty( $args['name'] ) ) {
-			throw new \Exception( 'Batch name must be provided.' );
+			throw new Exception( 'Batch name must be provided.' );
 		} else {
 			$this->name = $args['name'];
 		}
@@ -143,19 +147,19 @@ abstract class Batch {
 		}
 
 		if ( empty( $args['type'] ) ) {
-			throw new \Exception( 'Type of batch must be defined.' );
+			throw new Exception( 'Type of batch must be defined.' );
 		} else {
 			$this->type = $args['type'];
 		}
 
 		if ( empty( $args['args'] ) || ! is_array( $args['args'] ) ) {
-			throw new \Exception( 'An array of args must be defined.' );
+			throw new Exception( 'An array of args must be defined.' );
 		} else {
 			$this->args = $args['args'];
 		}
 
 		if ( empty( $args['callback'] ) ) {
-			throw new \Exception( 'A callback must be defined.' );
+			throw new Exception( 'A callback must be defined.' );
 		} else {
 			$this->callback = $args['callback'];
 		}
@@ -288,7 +292,7 @@ abstract class Batch {
 			try {
 				call_user_func_array( $this->callback, array( $result ) );
 				$this->update_result_status( $result, $success_status );
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$this->update_status( $failed_status );
 				$this->update_result_status( $result, $failed_status );
 				return $this->format_ajax_details( array(
@@ -315,11 +319,11 @@ abstract class Batch {
 		 */
 		do_action( self::LOCO_HOOK_PREFIX . $this->slug . '_update_result_status', $result, $status );
 
-		if ( $result instanceof \WP_Post ) {
+		if ( $result instanceof WP_Post ) {
 			update_post_meta( $result->ID, $this->slug . '_status', $status );
 		}
 
-		if ( $result instanceof \WP_User ) {
+		if ( $result instanceof WP_User ) {
 			update_user_meta( $result->data->ID, $this->slug . '_status', $status );
 		}
 	}
@@ -340,11 +344,11 @@ abstract class Batch {
 
 		$result_status = '';
 
-		if ( $result instanceof \WP_Post ) {
+		if ( $result instanceof WP_Post ) {
 			$result_status = get_post_meta( $result->ID, $this->slug . '_status', true );
 		}
 
-		if ( $result instanceof \WP_User ) {
+		if ( $result instanceof WP_User ) {
 			$result_status = get_user_meta( $result->data->ID, $this->slug . '_status', true );
 		}
 

@@ -1,8 +1,12 @@
 <?php
 
-namespace Rkv\Locomotive;
+namespace Rkv\Locomotive\Tests;
 
-class BatchFunctionTest extends \WP_UnitTestCase {
+use WP_UnitTestCase;
+use Rkv\Locomotive\Batches\Posts;
+use Rkv\Locomotive\Loader;
+
+class BatchFunctionTest extends WP_UnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
@@ -26,7 +30,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 		register_batch_process( array(
 			'name'     => 'My Test Batch process',
 			'type'     => 'user',
-			'callback' => __NAMESPACE__ . 'my_callback_function',
+			'callback' => __NAMESPACE__ . '\\my_callback_function',
 			'args'     => array(
 				'number' => 10,
 			),
@@ -50,7 +54,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 		$post_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'post',
-			'callback' => __NAMESPACE__ . 'my_callback_function',
+			'callback' => __NAMESPACE__ . '\\my_callback_function',
 			'args'     => array(
 				'posts_per_page' => 10,
 				'post_type'      => 'post',
@@ -126,7 +130,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 			'name'     => 'My Test Batch process',
 			'slug'     => $slug,
 			'type'     => 'post',
-			'callback' => __NAMESPACE__ . 'my_callback_function',
+			'callback' => __NAMESPACE__ . '\\my_callback_function',
 			'args'     => array(
 				'posts_per_page' => 10,
 				'post_type'      => 'post',
