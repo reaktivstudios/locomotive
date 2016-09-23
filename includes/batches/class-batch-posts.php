@@ -5,7 +5,10 @@
  * @package Locomotive/Batch
  */
 
-namespace Rkv\Locomotive;
+namespace Rkv\Locomotive\Batches;
+
+use WP_Query;
+use Rkv\Locomotive\Abstracts\Batch;
 
 /**
  * Batch Posts class.
@@ -27,7 +30,7 @@ class Posts extends Batch {
 			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args['posts_per_page'] );
 		}
 
-		$query = new \WP_Query( $this->args );
+		$query = new WP_Query( $this->args );
 
 		// Update the batch object with the total num of results found.
 		$this->total_num_results = $query->found_posts;

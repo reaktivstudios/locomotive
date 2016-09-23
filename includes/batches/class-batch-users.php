@@ -5,7 +5,10 @@
  * @package Locomotive/Batch
  */
 
-namespace Rkv\Locomotive;
+namespace Rkv\Locomotive\Batches;
+
+use WP_User_Query;
+use Rkv\Locomotive\Abstracts\Batch;
 
 /**
  * Batch Users class.
@@ -26,7 +29,7 @@ class Users extends Batch {
 			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args['number'] );
 		}
 
-		$query = new \WP_User_Query( $this->args );
+		$query = new WP_User_Query( $this->args );
 
 		// Update the batch object with the total num of results found.
 		$this->total_num_results = $query->get_total();

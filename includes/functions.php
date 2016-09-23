@@ -5,9 +5,9 @@
  * @package Locomotive
  */
 
-use Rkv\Locomotive\Batch;
-use Rkv\Locomotive\Posts;
-use Rkv\Locomotive\Users;
+use Rkv\Locomotive\Abstracts\Batch;
+use Rkv\Locomotive\Batches\Posts;
+use Rkv\Locomotive\Batches\Users;
 
 /**
  * Register a new batch process.

@@ -12,6 +12,8 @@
 
 namespace Rkv\Locomotive;
 
+use Rkv\Locomotive\Abstracts\Batch;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
