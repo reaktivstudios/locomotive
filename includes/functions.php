@@ -74,7 +74,7 @@ function locomotive_update_registered_batches( $batches ) {
  * @param  timestamp $time Timestamp.
  */
 function locomotive_time_ago( $time ) {
-	return human_time_diff( $time, current_time( 'timestamp' ) ) . ' ago';
+	return human_time_diff( $time, current_time( 'timestamp' ) ) . ' ' . __( 'ago', 'locomotive' );
 }
 
 /**

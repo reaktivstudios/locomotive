@@ -5,6 +5,8 @@
  * Description: Run custom batch processes from the WP admin.
  * Author: Reaktiv Studios
  * Author URI: http://reaktivstudios.com/
+ * Text Domain: locomotive
+ * Domain Path: languages
  * License: GPL
  *
  * @package Locomotive
@@ -67,6 +69,7 @@ final class Loader {
 	 * Handle hooks.
 	 */
 	public function attach_hooks() {
+		add_action( 'plugins_loaded', array( $this, 'textdomain' ) );
 		add_action( 'admin_menu', array( $this, 'add_dashboard' ) );
 		add_action( 'after_setup_theme', array( $this, 'loaded' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
@@ -76,7 +79,44 @@ final class Loader {
 	}
 
 	/**
+	 * Loads the plugin language files.
+	 *
+	 * @access public
+	 *
+	 * @since 0.0.1
+	 *
+	 * @return void
+	 */
+	public function textdomain() {
+
+		// Set filter for plugin's languages directory.
+		$loco_lang_dir  = dirname( plugin_basename( LOCO_PLUGIN_FILE ) ) . '/languages/';
+		$loco_lang_dir  = apply_filters( 'locomotive_languages_directory', $loco_lang_dir );
+
+		// Traditional WordPress plugin locale filter.
+		$locale         = apply_filters( 'plugin_locale',  get_locale(), 'locomotive' );
+		$mofile         = sprintf( '%1$s-%2$s.mo', 'locomotive', $locale );
+
+		// Setup paths to current locale file.
+		$mofile_local   = $loco_lang_dir . $mofile;
+		$mofile_global  = WP_LANG_DIR . '/locomotive/' . $mofile;
+
+		if ( file_exists( $mofile_global ) ) {
+			// Look in global /wp-content/languages/locomotive folder.
+			load_textdomain( 'locomotive', $mofile_global );
+		} elseif ( file_exists( $mofile_local ) ) {
+			// Look in local /wp-content/plugins/locomotive/languages/ folder.
+			load_textdomain( 'locomotive', $mofile_local );
+		} else {
+			// Load the default language files.
+			load_plugin_textdomain( 'locomotive', false, $loco_lang_dir );
+		}
+	}
+
+	/**
 	 * Plugin stylesheet and JavaScript.
+	 *
+	 * @param string $hook The current page loaded in the WP admin.
 	 */
 	public function scripts( $hook ) {
 
@@ -119,13 +159,13 @@ final class Loader {
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
-			$errors[] = 'Batch process not specified.';
+			$errors[] = __( 'Batch process not specified.', 'locomotive' );
 		} else {
 			$batch_process = sanitize_text_field( wp_unslash( $_POST['batch_process'] ) );
 		}
 
 		if ( empty( $_POST['step'] ) ) {
-			$errors[] = 'Step must be defined.';
+			$errors[] = __( 'Step must be defined.', 'locomotive' );
 		} else {
 			$step = absint( $_POST['step'] );
 		}
@@ -152,7 +192,7 @@ final class Loader {
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
-			$errors[] = 'Batch process not specified.';
+			$errors[] = __( 'Batch process not specified.', 'locomotive' );
 		} else {
 			$batch_process = sanitize_text_field( wp_unslash( $_POST['batch_process'] ) );
 		}

@@ -135,7 +135,7 @@ abstract class Batch {
 	 */
 	private function setup( $args ) {
 		if ( empty( $args['name'] ) ) {
-			throw new Exception( 'Batch name must be provided.' );
+			throw new Exception( __( 'Batch name must be provided.', 'locomotive' ) );
 		} else {
 			$this->name = $args['name'];
 		}
@@ -147,19 +147,19 @@ abstract class Batch {
 		}
 
 		if ( empty( $args['type'] ) ) {
-			throw new Exception( 'Type of batch must be defined.' );
+			throw new Exception( __( 'Type of batch must be defined.', 'locomotive' ) );
 		} else {
 			$this->type = $args['type'];
 		}
 
 		if ( empty( $args['args'] ) || ! is_array( $args['args'] ) ) {
-			throw new Exception( 'An array of args must be defined.' );
+			throw new Exception( __( 'An array of args must be defined.', 'locomotive' ) );
 		} else {
 			$this->args = $args['args'];
 		}
 
 		if ( empty( $args['callback'] ) ) {
-			throw new Exception( 'A callback must be defined.' );
+			throw new Exception ( __( 'A callback must be defined.', 'locomotive' ) );
 		} else {
 			$this->callback = $args['callback'];
 		}
@@ -195,7 +195,7 @@ abstract class Batch {
 			$this->update_status( 'no results found' );
 			return $this->format_ajax_details( array(
 				'success' => true,
-				'error' => __( 'No results found.' ),
+				'error' => __( 'No results found.', 'locomotive' ),
 			) );
 		}
 
@@ -297,7 +297,7 @@ abstract class Batch {
 				$this->update_result_status( $result, $failed_status );
 				return $this->format_ajax_details( array(
 					'success' => false,
-					'status'  => __( 'Failed' ),
+					'status'  => __( 'Failed', 'locomotive' ),
 					'error'   => $e->getMessage(),
 				) );
 			}
