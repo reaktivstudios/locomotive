@@ -37,48 +37,6 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test unsupported type of batch.
-	 *
-	 * @expectedExceptionMessage Type not supported.
-	 */
-	public function test_register_empty_type() {
-		$this->setExpectedException( 'Exception' );
-
-		register_batch_process( array(
-			'name'     => 'My Test Batch process',
-			'slug'     => 'test-anot22h12er-batch',
-			'callback' => __NAMESPACE__ . 'my_callback_function',
-			'args'     => array(
-				'posts_per_page' => 10,
-				'post_type'      => 'post',
-			),
-		) );
-	}
-
-	/**
-	 * Test unsupported type of batch.
-	 *
-	 * @expectedExceptionMessage Type not supported.
-	 */
-	public function test_register_unsupported_type() {
-		$this->setExpectedException( 'Exception' );
-
-		register_batch_process( array(
-			'name'     => 'My Test Batch process',
-			'slug'     => 'test-anot22h12er-batch',
-			'type'     => 'notTrue',
-			'callback' => __NAMESPACE__ . 'my_callback_function',
-			'args'     => array(
-				'posts_per_page' => 10,
-				'post_type'      => 'post',
-			),
-		) );
-
-		$all_batches = locomotive_get_all_batches();
-		$this->assertCount( 0, $all_batches );
-	}
-
-	/**
 	 * Test that we can get all batches with proper data.
 	 */
 	public function test_all_batches() {
