@@ -5,7 +5,8 @@ namespace Rkv\Locomotive;
 class BatchFunctionTest extends \WP_UnitTestCase {
 	function tearDown() {
 		parent::tearDown();
-		clear_existing_batches();
+
+		locomotive_clear_existing_batches();
 
 		// Manually dequeue the CSS and JS files.
 		wp_dequeue_style( 'batch-process-styles' );
@@ -18,10 +19,10 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	function test_successful_register_batch() {
 		$this->register_successful_batch( '1' );
 
-		$all_batches = get_all_batches();
+		$all_batches = locomotive_get_all_batches();
 		$this->assertCount( 1, $all_batches );
 
-		register( array(
+		register_batch_process( array(
 			'name'     => 'My Test Batch process',
 			'type'     => 'user',
 			'callback' => __NAMESPACE__ . 'my_callback_function',
@@ -30,7 +31,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$all_batches = get_all_batches();
+		$all_batches = locomotive_get_all_batches();
 		$this->assertCount( 2, $all_batches );
 	}
 
@@ -42,7 +43,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	function test_register_empty_type() {
 		$this->setExpectedException( 'Exception' );
 
-		register( array(
+		register_batch_process( array(
 			'name'     => 'My Test Batch process',
 			'slug'     => 'test-anot22h12er-batch',
 			'callback' => __NAMESPACE__ . 'my_callback_function',
@@ -61,7 +62,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	function test_register_unsupported_type() {
 		$this->setExpectedException( 'Exception' );
 
-		register( array(
+		register_batch_process( array(
 			'name'     => 'My Test Batch process',
 			'slug'     => 'test-anot22h12er-batch',
 			'type'     => 'notTrue',
@@ -72,7 +73,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 			),
 		) );
 
-		$all_batches = get_all_batches();
+		$all_batches = locomotive_get_all_batches();
 		$this->assertCount( 0, $all_batches );
 	}
 
@@ -81,7 +82,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	 */
 	function test_all_batches() {
 		$this->register_successful_batch( 'my-batch' );
-		$batches = get_all_batches();
+		$batches = locomotive_get_all_batches();
 
 		$this->assertNotNull( $batches['my-batch']['last_run'] );
 		$this->assertNotNull( $batches['my-batch']['status'] );
@@ -98,7 +99,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 		) );
 
 		$post_batch->run( 1 );
-		$batches = get_all_batches();
+		$batches = locomotive_get_all_batches();
 
 		$this->assertTrue( ( 'no results found' === $batches['hey-there']['status'] ) );
 	}
@@ -108,20 +109,20 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	 */
 	function test_clear_batches() {
 		$this->register_successful_batch( 'hello' );
-		$batches = get_all_batches();
+		$batches = locomotive_get_all_batches();
 		$this->assertCount( 1, $batches );
 
-		clear_existing_batches();
-		$batches = get_all_batches();
+		locomotive_clear_existing_batches();
+		$batches = locomotive_get_all_batches();
 		$this->assertCount( 0, $batches );
 	}
 
 	/**
-	 * Test time_ago() returns what we expect;
+	 * Test locomotive_time_ago() returns what we expect;
 	 */
 	function test_time_ago() {
 		$time = current_time( 'timestamp' );
-		$time_ago = time_ago( $time );
+		$time_ago = locomotive_time_ago( $time );
 
 		$this->assertEquals( '1 min ago', $time_ago );
 	}
@@ -162,7 +163,7 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 	 * @param string $slug Slug of test batch.
 	 */
 	private function register_successful_batch( $slug = 'test-batch' ) {
-		register( array(
+		register_batch_process( array(
 			'name'     => 'My Test Batch process',
 			'slug'     => $slug,
 			'type'     => 'post',
@@ -203,4 +204,3 @@ class BatchFunctionTest extends \WP_UnitTestCase {
 		}
 	}
 }
-
