@@ -30,10 +30,6 @@ function register_batch_process( $args ) {
 			$batch_process = new Users();
 			$batch_process->register( $args );
 			break;
-
-		default:
-			throw new Exception( 'Type not supported.' );
-			break;
 	}
 }
 

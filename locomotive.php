@@ -100,7 +100,7 @@ final class Loader {
 	public function loaded() {
 		if ( is_admin() ) {
 			locomotive_clear_existing_batches();
-			do_action( 'add_batch_processes' );
+			do_action( 'locomotive_init' );
 		}
 	}
 
