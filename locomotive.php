@@ -110,7 +110,12 @@ final class Loader {
 	 * @todo Move this to it's own AJAX class.
 	 */
 	public function run() {
+
+		// Define the variables used.
+		$batch_process = '';
+		$step = 0;
 		$errors = array();
+
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
@@ -141,7 +146,11 @@ final class Loader {
 	 * @todo Move this to it's own AJAX class.
 	 */
 	public function reset() {
+
+		// Define the variables used.
+		$batch_process = '';
 		$errors = array();
+
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
