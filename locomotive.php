@@ -110,8 +110,6 @@ final class Loader {
 	 * @todo Move this to it's own AJAX class.
 	 */
 	public function run() {
-
-		// Define the variables used.
 		$batch_process = '';
 		$step = 0;
 		$errors = array();
@@ -146,8 +144,6 @@ final class Loader {
 	 * @todo Move this to it's own AJAX class.
 	 */
 	public function reset() {
-
-		// Define the variables used.
 		$batch_process = '';
 		$errors = array();
 
