@@ -78,7 +78,7 @@ final class Loader {
 	/**
 	 * Plugin stylesheet and JavaScript.
 	 *
-	 * @param strign $hook WordPress admin page hook.
+	 * @param string $hook WordPress admin page hook.
 	 */
 	public function scripts( $hook ) {
 
