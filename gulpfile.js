@@ -20,6 +20,8 @@ var phpcs = require( 'gulp-phpcs' ); // Verify the PHP Coding Standards
 var phplint = require( 'phplint' ).lint; // Lint PHP.
 var shell = require( 'gulp-shell' ); // Run shell commands.
 var runSequence = require( 'run-sequence' ); // Run tasks in series.
+var wpPot = require( 'gulp-wp-pot' ); // Run our localization setup.
+var sort = require( 'gulp-sort' ); // Run the sorting function used in the localization.
 
 // Configuration for Gulp.
 var config = {
@@ -43,6 +45,23 @@ gulp.task( 'build', function() {
 
     bundle( bundler );
 } );
+
+/**
+ * Task to handle the file creation for localization.
+ */
+gulp.task( 'localize', function() {
+    return gulp.src([ '*.php', 'includes/**/*.php', 'templates/**/*.php' ])
+        .pipe( sort() )
+        .pipe( wpPot( {
+            domain: 'locomotive',
+            destFile:'locomotive.pot',
+            package: 'locomotive',
+            bugReport: 'https://github.com/reaktivstudios/locomotive/issues',
+            lastTranslator: 'Andrew Norcross <norcross@reaktivstudios.com>',
+            team: 'Reaktiv Studios <dev@reaktivstudios.com>'
+        } ))
+        .pipe( gulp.dest( 'languages' ) );
+});
 
 /**
  * Task to handle the JavaScript building and sourcemap generating.

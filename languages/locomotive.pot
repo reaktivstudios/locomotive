@@ -1,0 +1,53 @@
+# Copyright (C) 2016 locomotive
+# This file is distributed under the same license as the locomotive package.
+msgid ""
+msgstr ""
+"Project-Id-Version: locomotive\n"
+"Report-Msgid-Bugs-To: https://github.com/reaktivstudios/locomotive/issues\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Andrew Norcross <norcross@reaktivstudios.com>\n"
+"Language-Team: Reaktiv Studios <dev@reaktivstudios.com>\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: includes/abstracts/abstract-batch.php:138
+msgid "Batch name must be provided."
+msgstr ""
+
+#: includes/abstracts/abstract-batch.php:150
+msgid "Type of batch must be defined."
+msgstr ""
+
+#: includes/abstracts/abstract-batch.php:156
+msgid "An array of args must be defined."
+msgstr ""
+
+#: includes/abstracts/abstract-batch.php:162
+msgid "A callback must be defined."
+msgstr ""
+
+#: includes/abstracts/abstract-batch.php:198
+msgid "No results found."
+msgstr ""
+
+#: includes/abstracts/abstract-batch.php:300
+msgid "Failed"
+msgstr ""
+
+#: includes/functions.php:77
+msgid "ago"
+msgstr ""
+
+#: locomotive.php:162, locomotive.php:195
+msgid "Batch process not specified."
+msgstr ""
+
+#: locomotive.php:168
+msgid "Step must be defined."
+msgstr ""
