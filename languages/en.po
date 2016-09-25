@@ -7,47 +7,51 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Andrew Norcross <norcross@reaktivstudios.com>\n"
+"PO-Revision-Date: 2016-09-25 13:08-0400\n"
 "Language-Team: Reaktiv Studios <dev@reaktivstudios.com>\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: \n"
+"X-Generator: Poedit 1.8.9\n"
+"Last-Translator: \n"
+"Language: en\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: includes/abstracts/abstract-batch.php:138
 msgid "Batch name must be defined."
-msgstr ""
+msgstr "Batch name must be defined."
 
 #: includes/abstracts/abstract-batch.php:150
 msgid "Batch type must be defined."
-msgstr ""
+msgstr "Batch type must be defined."
 
 #: includes/abstracts/abstract-batch.php:156
 msgid "An array of args must be defined."
-msgstr ""
+msgstr "An array of args must be defined."
 
 #: includes/abstracts/abstract-batch.php:162
 msgid "A callback must be defined."
-msgstr ""
+msgstr "A callback must be defined."
 
 #: includes/abstracts/abstract-batch.php:198
 msgid "No results found."
-msgstr ""
+msgstr "No results found."
 
 #: includes/abstracts/abstract-batch.php:300
 msgid "Failed"
-msgstr ""
+msgstr "Failed"
 
 #: includes/functions.php:77
 msgid "ago"
-msgstr ""
+msgstr "ago"
 
 #: locomotive.php:162, locomotive.php:195
 msgid "Batch process not specified."
-msgstr ""
+msgstr "Batch process not specified."
 
 #: locomotive.php:168
 msgid "Step must be defined."
-msgstr ""
+msgstr "Step must be defined."
