@@ -135,7 +135,7 @@ abstract class Batch {
 	 */
 	private function setup( $args ) {
 		if ( empty( $args['name'] ) ) {
-			throw new Exception( __( 'Batch name must be provided.', 'locomotive' ) );
+			throw new Exception( __( 'Batch name must be defined.', 'locomotive' ) );
 		} else {
 			$this->name = $args['name'];
 		}
