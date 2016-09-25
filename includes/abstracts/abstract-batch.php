@@ -147,7 +147,7 @@ abstract class Batch {
 		}
 
 		if ( empty( $args['type'] ) ) {
-			throw new Exception( __( 'Type of batch must be defined.', 'locomotive' ) );
+			throw new Exception( __( 'Batch type must be defined.', 'locomotive' ) );
 		} else {
 			$this->type = $args['type'];
 		}
