@@ -159,7 +159,7 @@ abstract class Batch {
 		}
 
 		if ( empty( $args['callback'] ) ) {
-			throw new Exception ( __( 'A callback must be defined.', 'locomotive' ) );
+			throw new Exception( __( 'A callback must be defined.', 'locomotive' ) );
 		} else {
 			$this->callback = $args['callback'];
 		}
