@@ -69,32 +69,12 @@ final class Loader {
 	 * Handle hooks.
 	 */
 	public function attach_hooks() {
-		add_action( 'plugins_loaded', array( $this, 'textdomain' ) );
 		add_action( 'admin_menu', array( $this, 'add_dashboard' ) );
 		add_action( 'after_setup_theme', array( $this, 'loaded' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
 
 		add_action( 'wp_ajax_run_batch', array( $this, 'run' ) );
 		add_action( 'wp_ajax_reset_batch', array( $this, 'reset' ) );
-	}
-
-	/**
-	 * Loads the plugin language files.
-	 *
-	 * @access public
-	 *
-	 * @since 0.0.1
-	 *
-	 * @return void
-	 */
-	public function textdomain() {
-
-		// Set filter for the plugin's languages directory.
-		$loco_lang_dir = dirname( plugin_basename( LOCO_PLUGIN_FILE ) ) . '/languages/';
-		$loco_lang_dir = apply_filters( 'locomotive_languages_directory', $loco_lang_dir );
-
-		// Load the default language files.
-		load_plugin_textdomain( 'locomotive', false, $loco_lang_dir );
 	}
 
 	/**
