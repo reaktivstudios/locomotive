@@ -5,6 +5,8 @@
  * Description: Run custom batch processes from the WP admin.
  * Author: Reaktiv Studios
  * Author URI: http://reaktivstudios.com/
+ * Text Domain: locomotive
+ * Domain Path: languages
  * License: GPL
  *
  * @package Locomotive
@@ -78,7 +80,7 @@ final class Loader {
 	/**
 	 * Plugin stylesheet and JavaScript.
 	 *
-	 * @param string $hook WordPress admin page hook.
+	 * @param string $hook The current page loaded in the WP admin.
 	 */
 	public function scripts( $hook ) {
 
@@ -121,13 +123,13 @@ final class Loader {
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
-			$errors[] = 'Batch process not specified.';
+			$errors[] = __( 'Batch process not specified.', 'locomotive' );
 		} else {
 			$batch_process = sanitize_text_field( wp_unslash( $_POST['batch_process'] ) );
 		}
 
 		if ( empty( $_POST['step'] ) ) {
-			$errors[] = 'Step must be defined.';
+			$errors[] = __( 'Step must be defined.', 'locomotive' );
 		} else {
 			$step = absint( $_POST['step'] );
 		}
@@ -154,7 +156,7 @@ final class Loader {
 		check_ajax_referer( 'run-batch-process', 'nonce' );
 
 		if ( empty( $_POST['batch_process'] ) ) {
-			$errors[] = 'Batch process not specified.';
+			$errors[] = __( 'Batch process not specified.', 'locomotive' );
 		} else {
 			$batch_process = sanitize_text_field( wp_unslash( $_POST['batch_process'] ) );
 		}

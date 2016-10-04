@@ -121,6 +121,13 @@ class BatchFunctionTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test the time calculation by confirming a string is returned when passing a timestamp.
+	 */
+	public function test_elapsed_time() {
+		$this->assertInternalType( 'string', locomotive_time_ago( 1472852621 ) );
+	}
+
+	/**
 	 * Helper function to register a successful batch.
 	 *
 	 * @param string $slug Slug of test batch.
