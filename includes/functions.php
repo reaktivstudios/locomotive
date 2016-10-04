@@ -71,7 +71,7 @@ function locomotive_update_registered_batches( $batches ) {
  *
  * @todo Move this to a template functions file.
  *
- * @param  timestamp $time Timestamp.
+ * @param  integer $time Timestamp.
  */
 function locomotive_time_ago( $time ) {
 	return sprintf( _x( '%s ago', 'amount of time that has passed', 'locomotive' ), human_time_diff( $time, current_time( 'timestamp' ) ) );
