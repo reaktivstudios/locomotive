@@ -39,7 +39,7 @@ function register_batch_process( $args ) {
  * @return array
  */
 function locomotive_get_all_batches() {
-	$batches = get_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	$batches = get_option( 'loco_batches', array() );
 
 	foreach ( $batches as $k => $batch ) {
 		if ( $batch_status = get_option( 'loco_batch_' . $k ) ) {
@@ -63,7 +63,7 @@ function locomotive_get_all_batches() {
  * @param array $batches Batches you want to register.
  */
 function locomotive_update_registered_batches( $batches ) {
-	return update_option( Batch::REGISTERED_BATCHES_KEY, $batches );
+	return update_option( 'loco_batches', $batches );
 }
 
 /**
@@ -81,5 +81,5 @@ function locomotive_time_ago( $time ) {
  * Clear all existing batches.
  */
 function locomotive_clear_existing_batches() {
-	return update_option( Batch::REGISTERED_BATCHES_KEY, array() );
+	return update_option( 'loco_batches', array() );
 }
