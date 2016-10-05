@@ -42,7 +42,7 @@ function locomotive_get_all_batches() {
 	$batches = get_option( Batch::REGISTERED_BATCHES_KEY, array() );
 
 	foreach ( $batches as $k => $batch ) {
-		if ( $batch_status = get_option( Batch::LOCO_HOOK_PREFIX . $k ) ) {
+		if ( $batch_status = get_option( 'loco_batch_' . $k ) ) {
 			$last_run = locomotive_time_ago( $batch_status['timestamp'] );
 			$status = $batch_status['status'];
 		} else {
