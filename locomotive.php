@@ -141,7 +141,7 @@ final class Loader {
 			) );
 		}
 
-		do_action( Batch::LOCO_HOOK_PREFIX . $batch_process, $step );
+		do_action( 'loco_batch_' . $batch_process, $step );
 	}
 
 	/**
@@ -168,7 +168,7 @@ final class Loader {
 			) );
 		}
 
-		do_action( Batch::LOCO_HOOK_PREFIX . $batch_process . '_reset' );
+		do_action( 'loco_batch_' . $batch_process . '_reset' );
 
 		wp_send_json( array( 'success' => true ) );
 	}
