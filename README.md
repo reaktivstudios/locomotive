@@ -95,7 +95,7 @@ function my_callback_function( $result ) {
 
 ## Changelog
 
-See [CHANGES.md](CHANGES.md).
+See [CHANGELOG.md](CHANGELOG.md).
 
 
 #### [Pull requests](https://github.com/reaktivstudios/locomotive/pulls) are very much welcome and encouraged.
