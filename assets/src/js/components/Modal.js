@@ -46,10 +46,10 @@ var Modal = React.createClass( {
          * @returns {JSX}
          */
         var content = function() {
-            if ( batch_info.error ) {
+            if ( batch_info.message ) {
                 return (
                     <div className="batch-error">
-                        { batch_info.error }
+                        { batch_info.message }
                     </div>
                 );
             } else {

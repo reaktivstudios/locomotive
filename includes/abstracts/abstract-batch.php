@@ -181,7 +181,7 @@ abstract class Batch {
 			$this->update_status( 'no results found' );
 			return $this->format_ajax_details( array(
 				'success' => true,
-				'error' => __( 'No results found.', 'locomotive' ),
+				'message' => __( 'No results found.', 'locomotive' ),
 			) );
 		}
 
@@ -284,7 +284,7 @@ abstract class Batch {
 				return $this->format_ajax_details( array(
 					'success' => false,
 					'status'  => __( 'Failed', 'locomotive' ),
-					'error'   => $e->getMessage(),
+					'message'   => $e->getMessage(),
 				) );
 			}
 		}
