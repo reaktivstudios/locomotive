@@ -23,7 +23,7 @@ class Posts extends Batch {
 	);
 
 	public function individual_get_results() {
-		$query = new \WP_Query( $this->args );
+		$query = new WP_Query( $this->args );
 		$this->total_num_results = $query->found_posts;
 		return $query->get_posts();
 	}

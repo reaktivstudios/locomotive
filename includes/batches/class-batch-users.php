@@ -22,7 +22,7 @@ class Users extends Batch {
 	);
 
 	public function individual_get_results() {
-		$query = new \WP_User_Query( $this->args );
+		$query = new WP_User_Query( $this->args );
 		$this->total_num_results = $query->get_total();
 		return $query->get_results();
 	}

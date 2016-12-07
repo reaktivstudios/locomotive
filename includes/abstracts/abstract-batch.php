@@ -8,8 +8,6 @@
 namespace Rkv\Locomotive\Abstracts;
 
 use Exception;
-use WP_Post;
-use WP_User;
 
 /**
  * Abstract batch class.
