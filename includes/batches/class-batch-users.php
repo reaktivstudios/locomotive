@@ -27,10 +27,10 @@ class Users extends Batch {
 	/**
 	 * Clear the result status for the registered batch process.
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	public function individual_clear_result_status() {
-		delete_metadata( 'user', null, $this->slug . '_status', '', true );
+		return delete_metadata( 'user', null, $this->slug . '_status', '', true );
 	}
 
 	/**
