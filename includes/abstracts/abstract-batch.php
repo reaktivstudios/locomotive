@@ -28,6 +28,15 @@ abstract class Batch {
 	public $slug;
 
 	/**
+	 * The individual batch's parameter for specifying the amount of results to return.
+	 *
+	 * Can / should be overwritten within the class that extends this abstract class.
+	 *
+	 * @var string
+	 */
+	public $per_batch_param = 'posts_per_page';
+
+	/**
 	 * Args for the batch query.
 	 *
 	 * @var array
@@ -241,10 +250,8 @@ abstract class Batch {
 		$this->process_results( $results );
 
 		$per_page = get_option( 'posts_per_page' );
-		if ( isset( $this->args['posts_per_page'] ) ) {
-			$per_page = $this->args['posts_per_page'];
-		} else if ( $this->args['number'] ) {
-			$per_page = $this->args['number'];
+		if ( isset( $this->per_batch_param ) ) {
+			$per_page = $this->args[ $this->per_batch_param ];
 		}
 
 		/**
