@@ -81,6 +81,39 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
+	 * Get results function for the registered batch process.
+	 *
+	 * @return mixed
+	 */
+	abstract public function individual_get_results();
+
+	/**
+	 * Clear the result status for the registered batch process.
+	 *
+	 * @return mixed
+	 */
+	abstract public function individual_clear_result_status();
+
+	/**
+	 * Get the result status for a given result item.
+	 *
+	 * @param mixed $result The result we are requesting status of.
+	 *
+	 * @return mixed
+	 */
+	abstract public function individual_get_result_status( $result );
+
+	/**
+	 * Update the result status for a result item.
+	 *
+	 * @param mixed  $result The result we are updating the status of.
+	 * @param string $status The status to set.
+	 *
+	 * @return mixed
+	 */
+	abstract public function individual_update_result_status( $result, $status );
+
+	/**
 	 * Main plugin method for querying data.
 	 *
 	 * @since 0.1
@@ -90,19 +123,7 @@ abstract class Batch {
 	public function get_results() {
 		$this->args = wp_parse_args( $this->args, $this->default_args );
 		$this->calculate_offset();
-
-		switch ( $this->type ) {
-			case 'user':
-				$query = new \WP_User_Query( $this->args );
-				$this->total_num_results = $query->get_total();
-				return $query->get_results();
-			default:
-				$query = new \WP_Query( $this->args );
-				$this->total_num_results = $query->found_posts;
-				return $query->get_posts();
-		}
-
-		return false;
+		return $this->individual_get_results();
 	}
 
 	/**
@@ -373,30 +394,4 @@ abstract class Batch {
 		$this->individual_clear_result_status();
 		$this->update_status( 'reset' );
 	}
-
-	/**
-	 * Clear the result status for a given batch process.
-	 *
-	 * @return mixed
-	 */
-	abstract public function individual_clear_result_status();
-
-	/**
-	 * Get the result status for a given batch process.
-	 *
-	 * @param mixed $result The result we are requesting status of.
-	 *
-	 * @return mixed
-	 */
-	abstract public function individual_get_result_status( $result );
-
-	/**
-	 * Update the result status for a given batch process.
-	 *
-	 * @param mixed  $result The result we are updating the status of.
-	 * @param string $status The status to set.
-	 *
-	 * @return mixed
-	 */
-	abstract public function individual_update_result_status( $result, $status );
 }

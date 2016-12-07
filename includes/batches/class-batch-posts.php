@@ -22,6 +22,12 @@ class Posts extends Batch {
 		'offset'         => 0,
 	);
 
+	public function individual_get_results() {
+		$query = new \WP_Query( $this->args );
+		$this->total_num_results = $query->found_posts;
+		return $query->get_posts();
+	}
+
 	public function individual_clear_result_status() {
 		return delete_post_meta_by_key( $this->slug . '_status' );
 	}

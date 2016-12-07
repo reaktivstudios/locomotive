@@ -21,6 +21,12 @@ class Users extends Batch {
 		'offset' => 0,
 	);
 
+	public function individual_get_results() {
+		$query = new \WP_User_Query( $this->args );
+		$this->total_num_results = $query->get_total();
+		return $query->get_results();
+	}
+
 	public function individual_clear_result_status() {
 		return delete_metadata( 'user', null, $this->slug . '_status', '', true );
 	}
