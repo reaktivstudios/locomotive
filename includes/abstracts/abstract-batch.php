@@ -112,15 +112,17 @@ abstract class Batch {
 		switch ( $this->type ) {
 			case 'post':
 				$query = new \WP_Query( $this->args );
+				$this->total_num_results = $query->found_posts;
+				return $query->get_posts();
 				break;
 			case 'user':
 				$query = new \WP_User_Query( $this->args );
+				$this->total_num_results = $query->get_total();
+				return $query->get_results();
 				break;
 		}
 
-		$this->total_num_results = $query->get_total();
-
-		return $query->get_results();
+		return false;
 	}
 
 	/**
