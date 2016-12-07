@@ -83,14 +83,44 @@ abstract class Batch {
 
 	/**
 	 * Calculate the offset for the current query.
-	 *
-	 * @param int $offset Offset value.
 	 */
-	public function calculate_offset( $offset ) {
+	public function calculate_offset() {
+		switch ( $this->type ) {
+			case 'user':
+				$per_page_param = 'number';
+				break;
+			default:
+				$per_page_param = 'posts_per_page';
+				break;
+		}
+
 		if ( 1 !== $this->current_step ) {
 			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
-			$this->args['offset'] = ( ( $this->current_step - 1 ) * $offset );
+			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $per_page_param ] );
 		}
+	}
+
+	/**
+	 * Base function for getting results. Relies on a properties set on `$this` to correctly
+	 * calculate query and query options.
+	 *
+	 * @return mixed
+	 */
+	public function base_get_results() {
+		$this->calculate_offset();
+
+		switch ( $this->type ) {
+			case 'post':
+				$query = new \WP_Query( $this->args );
+				break;
+			case 'user':
+				$query = new \WP_User_Query( $this->args );
+				break;
+		}
+
+		$this->total_num_results = $query->get_total();
+
+		return $query->get_results();
 	}
 
 	/**
