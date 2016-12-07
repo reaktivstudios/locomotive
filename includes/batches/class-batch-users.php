@@ -24,10 +24,7 @@ class Users extends Batch {
 			'offset' => 0,
 		) );
 
-		if ( 1 !== $this->current_step ) {
-			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
-			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args['number'] );
-		}
+		$this->calculate_offset( $this->args['number'] );
 
 		$query = new WP_User_Query( $this->args );
 

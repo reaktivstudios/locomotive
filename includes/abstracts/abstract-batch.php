@@ -82,6 +82,18 @@ abstract class Batch {
 	abstract function get_results();
 
 	/**
+	 * Calculate the offset for the current query.
+	 *
+	 * @param int $offset Offset value.
+	 */
+	public function calculate_offset( $offset ) {
+		if ( 1 !== $this->current_step ) {
+			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
+			$this->args['offset'] = ( ( $this->current_step - 1 ) * $offset );
+		}
+	}
+
+	/**
 	 * Register the batch process so we can run it.
 	 *
 	 * @param  array $args Details about the batch you are registering.

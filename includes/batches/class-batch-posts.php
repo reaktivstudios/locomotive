@@ -25,10 +25,7 @@ class Posts extends Batch {
 			'offset'         => 0,
 		) );
 
-		if ( 1 !== $this->current_step ) {
-			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
-			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args['posts_per_page'] );
-		}
+		$this->calculate_offset( $this->args['posts_per_page'] );
 
 		$query = new WP_Query( $this->args );
 
