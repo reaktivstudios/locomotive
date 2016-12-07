@@ -132,7 +132,7 @@ var App = React.createClass( {
                     alert( 'Batch failed.' );
                 }
             }
-        } ).fail( function ( response ) {
+        } ).fail( function () {
             alert( 'Something went wrong.' );
         });
 
@@ -173,7 +173,7 @@ var App = React.createClass( {
                     alert( 'Reset batch failed.' );
                 }
             }
-        } ).fail( function ( response ) {
+        } ).fail( function () {
             alert( 'Something went wrong.' );
         });
     },
@@ -235,7 +235,7 @@ var App = React.createClass( {
                     toggleProcessing={ this.toggleProcessing }
                 />
             </div>
-        )
+        );
     }
 } );
 

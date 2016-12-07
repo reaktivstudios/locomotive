@@ -4,6 +4,17 @@ import React from 'react';
  * Modal component.
  */
 var Modal = React.createClass( {
+    /**
+     * Type Checking
+     * @type {Object}
+     */
+    propTypes: {
+        isOpen: React.PropTypes.bool,
+        toggleProcessing: React.PropTypes.func,
+        batchInfo: React.PropTypes.object,
+        selectedBatch: React.PropTypes.string
+    },
+
     mixins: [
         require( 'react-onclickoutside' )
     ],
@@ -36,9 +47,9 @@ var Modal = React.createClass( {
             if ( status ) {
                 return <h2>{ batch_title }: { status }</h2>;
             } else {
-                return <h2>{ batch_title }</h2>
+                return <h2>{ batch_title }</h2>;
             }
-        }
+        };
 
         /**
          * Return content for the modal.
@@ -60,7 +71,7 @@ var Modal = React.createClass( {
                     </div>
                 );
             }
-        }
+        };
 
         return (
             <div className={ classes }>

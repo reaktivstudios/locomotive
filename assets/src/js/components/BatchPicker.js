@@ -4,6 +4,17 @@ import React from 'react';
  * Potential Batch listings.
  */
 var BatchPicker = React.createClass( {
+  /**
+   * Type Checking
+   * @type {Object}
+   */
+    propTypes: {
+        batches: React.PropTypes.object,
+        updateSelectedBatch: React.PropTypes.func,
+        runBatch: React.PropTypes.func,
+        canInteractWithBatch: React.PropTypes.bool,
+        resetBatch: React.PropTypes.func
+    },
     /**
      * Render an individual batch option.
      *
@@ -20,7 +31,7 @@ var BatchPicker = React.createClass( {
                     { batch.name } <small>last run: { batch.last_run } | status: { batch.status }</small>
                 </label>
             </li>
-        )
+        );
     },
 
     /**
@@ -38,7 +49,7 @@ var BatchPicker = React.createClass( {
                 <button id="submit" className="button button-primary" onClick={ this.props.runBatch.bind( null, 1 ) } disabled={ ! this.props.canInteractWithBatch }>Run Batch Process</button>
                 <button id="reset" className="button button-secondary" onClick={ this.props.resetBatch } disabled={ ! this.props.canInteractWithBatch }>Reset Batch Process</button>
             </div>
-        )
+        );
     }
 } );
 

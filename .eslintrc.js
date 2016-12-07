@@ -16,7 +16,8 @@ module.exports = {
     ],
     "globals": {
       "jQuery": true,
-      "require": true
+      "require": true,
+      "batch": true
     },
     "rules": {
         "indent": [
