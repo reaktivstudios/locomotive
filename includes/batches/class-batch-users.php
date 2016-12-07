@@ -24,7 +24,23 @@ class Users extends Batch {
 		'offset' => 0,
 	);
 
+	/**
+	 * Clear the result status for the registered batch process.
+	 *
+	 * @return mixed
+	 */
 	public function individual_clear_result_status() {
 		delete_metadata( 'user', null, $this->slug . '_status', '', true );
+	}
+
+	/**
+	 * Get the status for an individual result for the registered batch process.
+	 *
+	 * @param mixed $result The result we are requesting status of.
+	 *
+	 * @return mixed
+	 */
+	public function individual_get_result_status( $result ) {
+		return get_user_meta( $result->data->ID, $this->slug . '_status', true );
 	}
 }

@@ -25,7 +25,23 @@ class Posts extends Batch {
 		'offset'         => 0,
 	);
 
+	/**
+	 * Clear the result status for the registered batch process.
+	 *
+	 * @return mixed
+	 */
 	public function individual_clear_result_status() {
 		delete_post_meta_by_key( $this->slug . '_status' );
+	}
+
+	/**
+	 * Get the status for an individual result for the registered batch process.
+	 *
+	 * @param mixed $result The result we are requesting status of.
+	 *
+	 * @return mixed
+	 */
+	public function individual_get_result_status( $result ) {
+		return get_post_meta( $result->ID, $this->slug . '_status', true );
 	}
 }

@@ -371,17 +371,7 @@ abstract class Batch {
 		 */
 		do_action( 'loco_batch_' . $this->slug . '_get_result_status', $result );
 
-		$result_status = '';
-
-		if ( $result instanceof WP_Post ) {
-			$result_status = get_post_meta( $result->ID, $this->slug . '_status', true );
-		}
-
-		if ( $result instanceof WP_User ) {
-			$result_status = get_user_meta( $result->data->ID, $this->slug . '_status', true );
-		}
-
-		return $result_status;
+		return $this->individual_get_result_status( $result );
 	}
 
 	/**
@@ -405,4 +395,13 @@ abstract class Batch {
 	 * @return mixed
 	 */
 	abstract public function individual_clear_result_status();
+
+	/**
+	 * Clear the result status for a given batch process.
+	 *
+	 * @param mixed $result The result we are requesting status of.
+	 *
+	 * @return mixed
+	 */
+	abstract public function individual_get_result_status( $result );
 }
