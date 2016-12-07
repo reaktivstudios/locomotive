@@ -15,7 +15,6 @@ use WP_User;
  * Abstract batch class.
  */
 abstract class Batch {
-
 	/**
 	 * Name of the batch process.
 	 *
@@ -36,6 +35,15 @@ abstract class Batch {
 	 * @var array
 	 */
 	public $args = array();
+
+	/**
+	 * Default args for the query.
+	 *
+	 * Should be implemented on the classes that extend this class.
+	 *
+	 * @var array
+	 */
+	public $default_args = array();
 
 	/**
 	 * Tyoe of batch.
@@ -79,7 +87,23 @@ abstract class Batch {
 	 *
 	 * @return mixed An array of data to be processed in bulk fashion.
 	 */
-	abstract function get_results();
+	public function get_results() {
+		$this->args = wp_parse_args( $this->args, $this->default_args );
+		$this->calculate_offset();
+
+		switch ( $this->type ) {
+			case 'user':
+				$query = new \WP_User_Query( $this->args );
+				$this->total_num_results = $query->get_total();
+				return $query->get_results();
+			default:
+				$query = new \WP_Query( $this->args );
+				$this->total_num_results = $query->found_posts;
+				return $query->get_posts();
+		}
+
+		return false;
+	}
 
 	/**
 	 * Calculate the offset for the current query.
@@ -98,29 +122,6 @@ abstract class Batch {
 			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
 			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $per_page_param ] );
 		}
-	}
-
-	/**
-	 * Base function for getting results. Relies on a properties set on `$this` to correctly
-	 * calculate query and query options.
-	 *
-	 * @return mixed
-	 */
-	public function base_get_results() {
-		$this->calculate_offset();
-
-		switch ( $this->type ) {
-			case 'user':
-				$query = new \WP_User_Query( $this->args );
-				$this->total_num_results = $query->get_total();
-				return $query->get_results();
-			default:
-				$query = new \WP_Query( $this->args );
-				$this->total_num_results = $query->found_posts;
-				return $query->get_posts();
-		}
-
-		return false;
 	}
 
 	/**

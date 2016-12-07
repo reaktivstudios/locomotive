@@ -15,15 +15,13 @@ use Rkv\Locomotive\Abstracts\Batch;
  */
 class Posts extends Batch {
 	/**
-	 * Get the results of the query.
+	 * Default arguments for this batch.
+	 *
+	 * @var array
 	 */
-	public function get_results() {
-		$this->args = wp_parse_args( $this->args, array(
-			'post_type'      => 'post',
-			'posts_per_page' => get_option( 'posts_per_page' ),
-			'offset'         => 0,
-		) );
-
-		return $this->base_get_results();
-	}
+	public $default_args = array(
+		'post_type'      => 'post',
+		'posts_per_page' => 10,
+		'offset'         => 0,
+	);
 }

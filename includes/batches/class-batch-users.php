@@ -15,14 +15,12 @@ use Rkv\Locomotive\Abstracts\Batch;
  */
 class Users extends Batch {
 	/**
-	 * Get the results of the query.
+	 * Default arguments for this batch.
+	 *
+	 * @var array
 	 */
-	public function get_results() {
-		$this->args = wp_parse_args( $this->args, array(
-			'number' => 10,
-			'offset' => 0,
-		) );
-
-		return $this->base_get_results();
-	}
+	public $default_args = array(
+		'number' => 10,
+		'offset' => 0,
+	);
 }
