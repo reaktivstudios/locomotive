@@ -393,17 +393,16 @@ abstract class Batch {
 		 *
 		 * @param Batch $this The current batch object.
 		 */
-		do_action( 'loco_batch_' . $this->slug. '_clear', $this );
+		do_action( 'loco_batch_' . $this->slug . '_clear', $this );
 
-		switch ( $this->type ) {
-			case 'post':
-				delete_post_meta_by_key( $this->slug . '_status' );
-				break;
-			case 'user':
-				delete_metadata( 'user', null, $this->slug . '_status', '', true );
-				break;
-		}
-
+		$this->individual_clear_result_status();
 		$this->update_status( 'reset' );
 	}
+
+	/**
+	 * Clear the result status for a given batch process.
+	 *
+	 * @return mixed
+	 */
+	abstract public function individual_clear_result_status();
 }

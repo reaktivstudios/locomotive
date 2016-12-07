@@ -23,4 +23,8 @@ class Users extends Batch {
 		'number' => 10,
 		'offset' => 0,
 	);
+
+	public function individual_clear_result_status() {
+		delete_metadata( 'user', null, $this->slug . '_status', '', true );
+	}
 }

@@ -24,4 +24,8 @@ class Posts extends Batch {
 		'posts_per_page' => 10,
 		'offset'         => 0,
 	);
+
+	public function individual_clear_result_status() {
+		delete_post_meta_by_key( $this->slug . '_status' );
+	}
 }
