@@ -14,6 +14,8 @@ use Rkv\Locomotive\Abstracts\Batch;
  * Batch Posts class.
  */
 class Posts extends Batch {
+	public $per_batch_param = 'posts_per_page';
+
 	public $default_args = array(
 		'post_type'      => 'post',
 		'posts_per_page' => 10,

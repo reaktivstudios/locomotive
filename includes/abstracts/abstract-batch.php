@@ -109,18 +109,9 @@ abstract class Batch {
 	 * Calculate the offset for the current query.
 	 */
 	public function calculate_offset() {
-		switch ( $this->type ) {
-			case 'user':
-				$per_page_param = 'number';
-				break;
-			default:
-				$per_page_param = 'posts_per_page';
-				break;
-		}
-
 		if ( 1 !== $this->current_step ) {
 			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
-			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $per_page_param ] );
+			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $this->per_batch_param ] );
 		}
 	}
 

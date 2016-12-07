@@ -14,6 +14,8 @@ use Rkv\Locomotive\Abstracts\Batch;
  * Batch Users class.
  */
 class Users extends Batch {
+	public $per_batch_param = 'number';
+
 	public $default_args = array(
 		'number' => 10,
 		'offset' => 0,
