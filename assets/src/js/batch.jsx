@@ -219,7 +219,7 @@ var App = React.createClass( {
 
         return (
             <div className="wrap">
-                <h2>{ this.state.page_title }</h2>
+                <h1>{ this.state.page_title }</h1>
                 <BatchPicker
                     batches={ this.state.batches }
                     canInteractWithBatch={ this.canInteractWithBatch() }
