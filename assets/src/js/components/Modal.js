@@ -47,7 +47,7 @@ var Modal = React.createClass( {
 			}
 
 			return <h2>{ batchTitle }</h2>;
-		};
+		}
 
 		/**
 		 * Return content for the modal.
