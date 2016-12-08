@@ -90,14 +90,14 @@ abstract class Batch {
 	/**
 	 * Get results function for the registered batch process.
 	 *
-	 * @return mixed
+	 * @return array
 	 */
 	abstract public function individual_get_results();
 
 	/**
 	 * Clear the result status for the registered batch process.
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	abstract public function individual_clear_result_status();
 
@@ -116,7 +116,7 @@ abstract class Batch {
 	 * @param mixed  $result The result we are updating the status of.
 	 * @param string $status The status to set.
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	abstract public function individual_update_result_status( $result, $status );
 
