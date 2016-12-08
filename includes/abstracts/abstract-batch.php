@@ -373,7 +373,7 @@ abstract class Batch {
 	 *
 	 * @param mixed $result The result we want to get status of.
 	 */
-	private function get_result_status( $result ) {
+	public function get_result_status( $result ) {
 		/**
 		 * Action to hook into when a result is being checked for whether or not
 		 * it was updated.
