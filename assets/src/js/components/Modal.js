@@ -4,85 +4,83 @@ import React from 'react';
  * Modal component.
  */
 var Modal = React.createClass( {
-    /**
-     * Type Checking
-     * @type {Object}
-     */
-    propTypes: {
-        isOpen: React.PropTypes.bool,
-        toggleProcessing: React.PropTypes.func,
-        batchInfo: React.PropTypes.object,
-        selectedBatch: React.PropTypes.string
-    },
+	/**
+	 * Type Checking
+	 * @type {Object}
+	 */
+	propTypes: {
+		isOpen: React.PropTypes.bool,
+		toggleProcessing: React.PropTypes.func,
+		batchInfo: React.PropTypes.object,
+		selectedBatch: React.PropTypes.string
+	},
 
-    mixins: [
-        require( 'react-onclickoutside' )
-    ],
+	mixins: [
+		require( 'react-onclickoutside' )
+	],
 
-    handleClickOutside : function() {
-        if ( this.props.isOpen ) {
-            this.props.toggleProcessing( false );
-        }
-    },
+	handleClickOutside : function () {
+		if ( this.props.isOpen ) {
+			this.props.toggleProcessing( false );
+		}
+	},
 
-    render : function() {
-        var classes        = 'locomotive-overlay',
-            batch_info     = this.props.batchInfo,
-            batch_title    = ( batch_info.batch_title ) ? batch_info.batch_title : this.props.selectedBatch,
-            status         = ( batch_info.status ) ? batch_info.status : '',
-            progress_style = {
-                width: batch_info.progress + '%'
-            };
+	render : function () {
+		var classes        = 'locomotive-overlay',
+		    batchInfo     = this.props.batchInfo,
+		    batchTitle    = ( batchInfo.batchTitle ) ? batchInfo.batchTitle : this.props.selectedBatch,
+		    status         = ( batchInfo.status ) ? batchInfo.status : '',
+		    progressStyle = { width: batchInfo.progress + '%' };
 
-        if ( this.props.isOpen ) {
-            classes += ' is-open';
-        }
+		if ( this.props.isOpen ) {
+			classes += ' is-open';
+		}
 
-        /**
-         * Return the title for the modal.
-         *
-         * @returns {JSX}
-         */
-        var title = function() {
-            if ( status ) {
-                return <h2>{ batch_title }: { status }</h2>;
-            } else {
-                return <h2>{ batch_title }</h2>;
-            }
-        };
+		/**
+		 * Return the title for the modal.
+		 *
+		 * @returns {JSX}
+		 */
+		var title = function () {
+			if ( status ) {
+				return <h2>{ batchTitle }: { status }</h2>;
+			}
 
-        /**
-         * Return content for the modal.
-         *
-         * @returns {JSX}
-         */
-        var content = function() {
-            if ( batch_info.error ) {
-                return (
-                    <div className="batch-error">
-                        { batch_info.error }
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="progress-bar">
-                        <span className="progress-bar__text">Progress: { batch_info.progress }%</span>
-                        <div className="progress-bar__visual" style={ progress_style }></div>
-                    </div>
-                );
-            }
-        };
+			return <h2>{ batchTitle }</h2>;
+		};
 
-        return (
-            <div className={ classes }>
-                <div className="close" onClick={ this.props.toggleProcessing.bind( null, false ) }>close</div>
-                <div className="batch-overlay__inner">
-                    { title() }
-                    { content() }
-                </div>
-            </div>
-        );
-    }
+		/**
+		 * Return content for the modal.
+		 *
+		 * @returns {JSX}
+		 */
+		var content = function () {
+			if ( batchInfo.error ) {
+				return (
+					<div className="batch-error">
+						{ batchInfo.error }
+					</div>
+				);
+			}
+
+			return (
+				<div className="progress-bar">
+					<span className="progress-bar__text">Progress: { batchInfo.progress }%</span>
+					<div className="progress-bar__visual" style={ progressStyle }></div>
+				</div>
+			);
+		};
+
+		return (
+			<div className={ classes }>
+				<div className="close" onClick={ this.props.toggleProcessing.bind( null, false ) }>close</div>
+				<div className="batch-overlay__inner">
+					{ title() }
+					{ content() }
+				</div>
+			</div>
+		);
+	}
 } );
 
 export default Modal;

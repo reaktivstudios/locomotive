@@ -34,7 +34,6 @@ module.exports = {
         "no-eq-null": "error",
         "no-else-return": "warn",
         "no-mixed-spaces-and-tabs": [1, "smart-tabs"],
-        "no-multi-spaces": "error",
         "no-nested-ternary": "error",
         "no-shadow": "error",
         "no-spaced-func": "error",
