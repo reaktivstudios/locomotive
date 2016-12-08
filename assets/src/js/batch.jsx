@@ -16,7 +16,7 @@ var App = React.createClass( {
 		return {
 			// Batches that can be run. Loaded through `wp_localize_script()`.
 			batches: batch.batches,
-			pageTitle: batch.pageTitle,
+			page_title: batch.page_title,
 
 			// Object to hold data relating to running a migration (in the modal).
 			processing: {
@@ -25,14 +25,14 @@ var App = React.createClass( {
 
 				// Remote data is data that is retrieved via Ajax calls during a
 				// batch process.
-				remoteData: {
-					batchTitle: '',
+				remote_data: {
+					batch_title: '',
 					status: '',
 					error: '',
 					progress: 0,
-					currentStep: 0,
-					totalSteps: 0,
-					totalNumResults: 0
+					current_step: 0,
+					total_steps: 0,
+					total_num_results: 0
 				}
 			}
 		};
@@ -76,9 +76,9 @@ var App = React.createClass( {
 			batchSlug = self.state.processing.batch;
 
 		// If we open the modal and it was previously complete, clear it.
-		if ( 100 === this.state.processing.remoteData.progress ) {
+		if ( 100 === this.state.processing.remote_data.progress ) {
 			this.state.processing.batch = '';
-			this.state.processing.remoteData = {
+			this.state.processing.remote_data = {
 				progress: 0
 			};
 
@@ -89,7 +89,7 @@ var App = React.createClass( {
 			type: 'POST',
 			url: batch.ajaxurl,
 			data: {
-				batchProcess: batchSlug,
+				batch_process: batchSlug,
 				nonce:         batch.nonce,
 				step:          currentStep,
 				action:        'run_batch',
@@ -98,22 +98,22 @@ var App = React.createClass( {
 			success: function ( response ) {
 				// Update our state with the processing status and progress, which will update the modal.
 				self.state.processing.batch = batchSlug;
-				self.state.processing.remoteData = {
-					batchTitle:       response.batch,
+				self.state.processing.remote_data = {
+					batch_title:       response.batch,
 					status:            response.status,
 					progress:          response.progress,
-					currentStep:      response.currentStep,
-					totalSteps:       response.totalSteps,
-					totalNumResults: response.totalNumResults
+					current_step:      response.current_step,
+					total_steps:       response.total_steps,
+					total_num_results: response.total_num_results
 				};
 
 				// Update our batches, which will update the batch listing.
-				self.state.batches[ batchSlug ].lastRun = 'just ran';
-				self.state.batches[ batchSlug ].status = self.state.processing.remoteData.status;
+				self.state.batches[ batchSlug ].last_run = 'just ran';
+				self.state.batches[ batchSlug ].status = self.state.processing.remote_data.status;
 
 				// Check for errors.
 				if ( response.error ) {
-					self.state.processing.remoteData.error = response.error;
+					self.state.processing.remote_data.error = response.error;
 					self.setState( { processing: self.state.processing } );
 				}
 
@@ -125,7 +125,7 @@ var App = React.createClass( {
 				// Determine if we have to run another step in the batch. Checks if there are more steps
 				// that need to run and makes sure the 'status' from the server is still 'running'.
 				if ( response.success ) {
-					if ( response.currentStep !== response.totalSteps && 'running' === response.status.toLowerCase() ) {
+					if ( response.currentStep !== response.total_steps && 'running' === response.status.toLowerCase() ) {
 						self.runBatch( currentStep + 1 );
 					}
 				} else {
@@ -154,7 +154,7 @@ var App = React.createClass( {
 			type: 'POST',
 			url: batch.ajaxurl,
 			data: {
-				batchProcess: batchSlug,
+				batch_process: batchSlug,
 				nonce:         batch.nonce,
 				action:        'reset_batch',
 			},
@@ -162,7 +162,7 @@ var App = React.createClass( {
 			success: function ( response ) {
 				if ( response.success ) {
 					// Update our batches, which will update the batch listing.
-					self.state.batches[ self.state.processing.batch ].lastRun = 'never';
+					self.state.batches[ self.state.processing.batch ].last_run = 'never';
 					self.state.batches[ self.state.processing.batch ].status = 'new';
 
 					self.setState( {
@@ -199,7 +199,7 @@ var App = React.createClass( {
 		}
 
 		// If we are currently processing a batch and there are results.
-		if ( sProcessing.remoteData.currentStep !== sProcessing.remoteData.totalSteps && sProcessing.remoteData.totalNumResults !== 0 ) {
+		if ( sProcessing.remote_data.current_step !== sProcessing.remote_data.total_steps && sProcessing.remote_data.total_num_results !== 0 ) {
 			canRun = false;
 		}
 
@@ -219,7 +219,7 @@ var App = React.createClass( {
 
 		return (
 			<div className="wrap">
-				<h1>{ this.state.pageTitle }</h1>
+				<h1>{ this.state.page_title }</h1>
 				<BatchPicker
 					batches={ this.state.batches }
 					canInteractWithBatch={ this.canInteractWithBatch() }
@@ -231,7 +231,7 @@ var App = React.createClass( {
 				<Modal
 					isOpen={ this.state.processing.active }
 					selectedBatch={ selectedBatch }
-					batchInfo={ this.state.processing.remoteData }
+					batchInfo={ this.state.processing.remote_data }
 					toggleProcessing={ this.toggleProcessing }
 				/>
 			</div>
