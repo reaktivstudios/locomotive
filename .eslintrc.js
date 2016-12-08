@@ -22,7 +22,7 @@ module.exports = {
     "rules": {
         "array-bracket-spacing": [ "error", "always" ],
         "brace-style" : [ "error", "1tbs" ],
-        "camelcase": "error",
+        "camelcase": [ "error", { "properties": "always" } ],
         "computed-property-spacing": [ "error", "always" ],
         "curly" : "error",
         "eol-last": "error",
