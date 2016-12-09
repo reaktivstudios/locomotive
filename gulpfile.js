@@ -163,7 +163,7 @@ gulp.task( 'phpunit-codecoverage', shell.task( [ 'vendor/bin/phpunit -c codecove
 gulp.task( 'default', [ 'eslint', 'build' ] );
 
 // Lint files.
-gulp.task( 'lint', [ 'phplint', 'phpcs' ] );
+gulp.task( 'lint', [ 'phplint', 'phpcs', 'eslint' ] );
 
 // Run PHP tests.
 gulp.task( 'phpunit', function() {
