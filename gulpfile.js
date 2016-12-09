@@ -22,6 +22,7 @@ var shell = require( 'gulp-shell' ); // Run shell commands.
 var runSequence = require( 'run-sequence' ); // Run tasks in series.
 var wpPot = require( 'gulp-wp-pot' ); // Run our localization setup.
 var sort = require( 'gulp-sort' ); // Run the sorting function used in the localization.
+var eslint = require( 'gulp-eslint' );
 
 // Configuration for Gulp.
 var config = {
@@ -45,6 +46,15 @@ gulp.task( 'build', function() {
 
     bundle( bundler );
 } );
+
+/**
+ * Task to handle linting Javascript
+ */
+gulp.task( 'eslint', function() {
+    return gulp.src([ 'assets/src/**/*.js', 'assets/src/**/*.jsx' ])
+              .pipe( eslint() )
+              .pipe( eslint.format() )
+});
 
 /**
  * Task to handle the file creation for localization.
@@ -150,10 +160,10 @@ gulp.task( 'phpunit-multisite', shell.task( [ 'vendor/bin/phpunit -c multisite.x
 gulp.task( 'phpunit-codecoverage', shell.task( [ 'vendor/bin/phpunit -c codecoverage.xml.dist' ] ) );
 
 // Gulp task for build
-gulp.task( 'default', [ 'build' ] );
+gulp.task( 'default', [ 'eslint', 'build' ] );
 
 // Lint files.
-gulp.task( 'lint', [ 'phplint', 'phpcs' ] );
+gulp.task( 'lint', [ 'phplint', 'phpcs', 'eslint' ] );
 
 // Run PHP tests.
 gulp.task( 'phpunit', function() {
