@@ -73,6 +73,13 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
+	 * Errors from results
+	 *
+	 * @var array
+	 */
+	public $result_errors = array();
+
+	/**
 	 * Main plugin method for querying data.
 	 *
 	 * @since 0.1
@@ -211,6 +218,15 @@ abstract class Batch {
 		}
 
 		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
+
+		// If there are errors, return success false.
+		// Next step would be to pass the errors down and display them with JS.
+		if ( is_array( $this->result_errors ) && count( $this->result_errors ) > 0  ) {
+			return $this->format_ajax_details( array(
+				'success' => false,
+			) );
+		}
+
 		return $this->format_ajax_details( array(
 			'total_steps'   => $total_steps,
 			'query_results' => $results,
@@ -249,6 +265,15 @@ abstract class Batch {
 	}
 
 	/**
+	 * Update errors option
+	 *
+	 * Log errors caught in an option
+	 */
+	public function update_errors() {
+		update_option( 'loco_batch_' . $this->slug . '_errors', $this->result_errors );
+	}
+
+	/**
 	 * Loop over an array of results (posts, pages, etc) and run the callback
 	 * function that was passed through when this batch was registered.
 	 *
@@ -269,7 +294,7 @@ abstract class Batch {
 		 */
 		$failed_status = apply_filters( 'loco_batch_failed_status', 'failed' );
 
-		foreach ( $results as $result ) {
+		foreach ( $results as $i => $result ) {
 			// If this result item has been processed already, skip it.
 			if ( $success_status === $this->get_result_status( $result ) ) {
 				continue;
@@ -281,13 +306,15 @@ abstract class Batch {
 			} catch ( Exception $e ) {
 				$this->update_status( $failed_status );
 				$this->update_result_status( $result, $failed_status );
-				return $this->format_ajax_details( array(
-					'success' => false,
-					'status'  => __( 'Failed', 'locomotive' ),
-					'message'   => $e->getMessage(),
-				) );
+				$this->result_errors[] = array(
+					'item' => $i,
+					'message' => $e->getMessage(),
+				);
+
 			}
 		}
+
+		$this->update_errors( $this->result_errors );
 	}
 
 	/**
