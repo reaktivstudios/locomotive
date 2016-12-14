@@ -92,14 +92,14 @@ abstract class Batch {
 	 *
 	 * @return array
 	 */
-	abstract public function individual_get_results();
+	abstract public function batch_get_results();
 
 	/**
 	 * Clear the result status for the registered batch process.
 	 *
 	 * @return bool
 	 */
-	abstract public function individual_clear_result_status();
+	abstract public function batch_clear_result_status();
 
 	/**
 	 * Get the result status for a given result item.
@@ -108,7 +108,7 @@ abstract class Batch {
 	 *
 	 * @return mixed
 	 */
-	abstract public function individual_get_result_status( $result );
+	abstract public function get_result_item_status( $result );
 
 	/**
 	 * Update the result status for a result item.
@@ -118,7 +118,7 @@ abstract class Batch {
 	 *
 	 * @return bool
 	 */
-	abstract public function individual_update_result_status( $result, $status );
+	abstract public function update_result_item_status( $result, $status );
 
 	/**
 	 * Main plugin method for querying data.
@@ -130,7 +130,7 @@ abstract class Batch {
 	public function get_results() {
 		$this->args = wp_parse_args( $this->args, $this->default_args );
 		$this->calculate_offset();
-		return $this->individual_get_results();
+		return $this->batch_get_results();
 	}
 
 	/**
@@ -365,7 +365,7 @@ abstract class Batch {
 		 */
 		do_action( 'loco_batch_' . $this->slug . '_update_result_status', $result, $status );
 
-		return $this->individual_update_result_status( $result, $status );
+		return $this->update_result_item_status( $result, $status );
 	}
 
 	/**
@@ -382,7 +382,7 @@ abstract class Batch {
 		 */
 		do_action( 'loco_batch_' . $this->slug . '_get_result_status', $result );
 
-		return $this->individual_get_result_status( $result );
+		return $this->get_result_item_status( $result );
 	}
 
 	/**
@@ -396,7 +396,7 @@ abstract class Batch {
 		 */
 		do_action( 'loco_batch_' . $this->slug . '_clear', $this );
 
-		$this->individual_clear_result_status();
+		$this->batch_clear_result_status();
 		$this->update_status( 'reset' );
 	}
 }
