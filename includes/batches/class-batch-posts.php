@@ -15,26 +15,59 @@ use Rkv\Locomotive\Abstracts\Batch;
  */
 class Posts extends Batch {
 	/**
-	 * Get the results of the query.
+	 * The individual batch's parameter for specifying the amount of results to return.
+	 *
+	 * @var string
 	 */
-	public function get_results() {
-		// Set some defaults.
-		$this->args = wp_parse_args( $this->args, array(
-			'post_type'      => 'post',
-			'posts_per_page' => get_option( 'posts_per_page' ),
-			'offset'         => 0,
-		) );
+	public $per_batch_param = 'posts_per_page';
 
-		if ( 1 !== $this->current_step ) {
-			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
-			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args['posts_per_page'] );
-		}
+	/**
+	 * Default args for the query.
+	 *
+	 * @var array
+	 */
+	public $default_args = array(
+		'post_type'      => 'post',
+		'posts_per_page' => 10,
+		'offset'         => 0,
+	);
 
+	/**
+	 * Get results function for the registered batch process.
+	 *
+	 * @return array \WP_Query->get_posts() result.
+	 */
+	public function batch_get_results() {
 		$query = new WP_Query( $this->args );
-
-		// Update the batch object with the total num of results found.
 		$this->total_num_results = $query->found_posts;
-
 		return $query->get_posts();
+	}
+
+	/**
+	 * Clear the result status for a batch.
+	 *
+	 * @return bool
+	 */
+	public function batch_clear_result_status() {
+		return delete_post_meta_by_key( $this->slug . '_status' );
+	}
+
+	/**
+	 * Get the status of a result.
+	 *
+	 * @param \WP_Post $result The result we want to get status of.
+	 */
+	public function get_result_item_status( $result ) {
+		return get_post_meta( $result->ID, $this->slug . '_status', true );
+	}
+
+	/**
+	 * Update the meta info on a result.
+	 *
+	 * @param \WP_Post $result  The result we want to track meta data on.
+	 * @param string   $status  Status of this result in the batch.
+	 */
+	public function update_result_item_status( $result, $status ) {
+		return update_post_meta( $result->ID, $this->slug . '_status', $status );
 	}
 }

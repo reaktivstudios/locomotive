@@ -8,14 +8,11 @@
 namespace Rkv\Locomotive\Abstracts;
 
 use Exception;
-use WP_Post;
-use WP_User;
 
 /**
  * Abstract batch class.
  */
 abstract class Batch {
-
 	/**
 	 * Name of the batch process.
 	 *
@@ -31,11 +28,29 @@ abstract class Batch {
 	public $slug;
 
 	/**
+	 * The individual batch's parameter for specifying the amount of results to return.
+	 *
+	 * Can / should be overwritten within the class that extends this abstract class.
+	 *
+	 * @var string
+	 */
+	public $per_batch_param = 'posts_per_page';
+
+	/**
 	 * Args for the batch query.
 	 *
 	 * @var array
 	 */
 	public $args = array();
+
+	/**
+	 * Default args for the query.
+	 *
+	 * Should be implemented on the classes that extend this class.
+	 *
+	 * @var array
+	 */
+	public $default_args = array();
 
 	/**
 	 * Tyoe of batch.
@@ -73,13 +88,60 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
+	 * Get results function for the registered batch process.
+	 *
+	 * @return array
+	 */
+	abstract public function batch_get_results();
+
+	/**
+	 * Clear the result status for the registered batch process.
+	 *
+	 * @return bool
+	 */
+	abstract public function batch_clear_result_status();
+
+	/**
+	 * Get the result status for a given result item.
+	 *
+	 * @param mixed $result The result we are requesting status of.
+	 *
+	 * @return mixed
+	 */
+	abstract public function get_result_item_status( $result );
+
+	/**
+	 * Update the result status for a result item.
+	 *
+	 * @param mixed  $result The result we are updating the status of.
+	 * @param string $status The status to set.
+	 *
+	 * @return bool
+	 */
+	abstract public function update_result_item_status( $result, $status );
+
+	/**
 	 * Main plugin method for querying data.
 	 *
 	 * @since 0.1
 	 *
 	 * @return mixed An array of data to be processed in bulk fashion.
 	 */
-	abstract function get_results();
+	public function get_results() {
+		$this->args = wp_parse_args( $this->args, $this->default_args );
+		$this->calculate_offset();
+		return $this->batch_get_results();
+	}
+
+	/**
+	 * Calculate the offset for the current query.
+	 */
+	public function calculate_offset() {
+		if ( 1 !== $this->current_step ) {
+			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
+			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $this->per_batch_param ] );
+		}
+	}
 
 	/**
 	 * Register the batch process so we can run it.
@@ -188,10 +250,8 @@ abstract class Batch {
 		$this->process_results( $results );
 
 		$per_page = get_option( 'posts_per_page' );
-		if ( isset( $this->args['posts_per_page'] ) ) {
-			$per_page = $this->args['posts_per_page'];
-		} else if ( $this->args['number'] ) {
-			$per_page = $this->args['number'];
+		if ( isset( $this->per_batch_param ) ) {
+			$per_page = $this->args[ $this->per_batch_param ];
 		}
 
 		/**
@@ -305,13 +365,7 @@ abstract class Batch {
 		 */
 		do_action( 'loco_batch_' . $this->slug . '_update_result_status', $result, $status );
 
-		if ( $result instanceof WP_Post ) {
-			update_post_meta( $result->ID, $this->slug . '_status', $status );
-		}
-
-		if ( $result instanceof WP_User ) {
-			update_user_meta( $result->data->ID, $this->slug . '_status', $status );
-		}
+		return $this->update_result_item_status( $result, $status );
 	}
 
 	/**
@@ -319,7 +373,7 @@ abstract class Batch {
 	 *
 	 * @param mixed $result The result we want to get status of.
 	 */
-	private function get_result_status( $result ) {
+	public function get_result_status( $result ) {
 		/**
 		 * Action to hook into when a result is being checked for whether or not
 		 * it was updated.
@@ -328,17 +382,7 @@ abstract class Batch {
 		 */
 		do_action( 'loco_batch_' . $this->slug . '_get_result_status', $result );
 
-		$result_status = '';
-
-		if ( $result instanceof WP_Post ) {
-			$result_status = get_post_meta( $result->ID, $this->slug . '_status', true );
-		}
-
-		if ( $result instanceof WP_User ) {
-			$result_status = get_user_meta( $result->data->ID, $this->slug . '_status', true );
-		}
-
-		return $result_status;
+		return $this->get_result_item_status( $result );
 	}
 
 	/**
@@ -350,17 +394,9 @@ abstract class Batch {
 		 *
 		 * @param Batch $this The current batch object.
 		 */
-		do_action( 'loco_batch_' . $this->slug. '_clear', $this );
+		do_action( 'loco_batch_' . $this->slug . '_clear', $this );
 
-		switch ( $this->type ) {
-			case 'post':
-				delete_post_meta_by_key( $this->slug . '_status' );
-				break;
-			case 'user':
-				delete_metadata( 'user', null, $this->slug . '_status', '', true );
-				break;
-		}
-
+		$this->batch_clear_result_status();
 		$this->update_status( 'reset' );
 	}
 }
