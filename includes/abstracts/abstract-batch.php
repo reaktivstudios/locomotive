@@ -283,7 +283,7 @@ abstract class Batch {
 		// Next step would be to pass the errors down and display them with JS.
 		if ( is_array( $this->result_errors ) && count( $this->result_errors ) > 0  ) {
 			return $this->format_ajax_details( array(
-				'success' => false,
+				'error' => true,
 				'errors' => $this->result_errors,
 				'total_steps'   => $total_steps,
 				'query_results' => $results,
@@ -362,7 +362,7 @@ abstract class Batch {
 				$this->update_status( $failed_status );
 				$this->update_result_status( $result, $failed_status );
 				$this->result_errors[] = array(
-					'item' => $i,
+					'item' => $result->ID,
 					'message' => $e->getMessage(),
 				);
 

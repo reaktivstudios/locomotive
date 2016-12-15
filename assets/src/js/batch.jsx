@@ -33,9 +33,9 @@ var App = React.createClass( {
 					current_step: 0,
 					total_steps: 0,
 					total_num_results: 0
-				},
-				errors: [],
-			}
+				}
+			},
+			errors: [],
 		};
 	},
 
@@ -83,7 +83,7 @@ var App = React.createClass( {
 				progress: 0
 			};
 
-			this.setState( { processing: this.state.processing } );
+			this.setState( { processing: this.state.processing, errors: [] } );
 		}
 
 		$.ajax( {
@@ -97,7 +97,6 @@ var App = React.createClass( {
 			},
 			dataType: 'json',
 			success: function ( response ) {
-				console.log( response );
 				// Update our state with the processing status and progress, which will update the modal.
 				self.state.processing.batch = batchSlug;
 				self.state.processing.remote_data = {
@@ -106,7 +105,8 @@ var App = React.createClass( {
 					progress:          response.progress,
 					current_step:      response.current_step,
 					total_steps:       response.total_steps,
-					total_num_results: response.total_num_results
+					total_num_results: response.total_num_results,
+					error: response.error
 				};
 
 				// Update our batches, which will update the batch listing.
@@ -114,9 +114,8 @@ var App = React.createClass( {
 				self.state.batches[ batchSlug ].status = self.state.processing.remote_data.status;
 
 				// Check for errors.
-				if ( !response.success ) {
-					self.state.processing.remote_data.error = true;
-					self.state.processing.errors = response.errors;
+				if ( response.error ) {
+					self.setState( { errors: self.state.errors.concat( response.errors ) } );
 					self.setState( { processing: self.state.processing } );
 				}
 
@@ -124,15 +123,10 @@ var App = React.createClass( {
 					processing: self.state.processing,
 					batches: self.state.batches
 				} );
-
 				// Determine if we have to run another step in the batch. Checks if there are more steps
 				// that need to run and makes sure the 'status' from the server is still 'running'.
-				if ( response.success ) {
-					if ( response.currentStep !== response.total_steps && 'running' === response.status.toLowerCase() ) {
-						self.runBatch( currentStep + 1 );
-					}
-				} else {
-					// console.log( response );
+				if ( response.currentStep !== response.total_steps && 'running' === response.status.toLowerCase() ) {
+					self.runBatch( currentStep + 1 );
 				}
 			}
 		} ).fail( function () {
@@ -235,7 +229,7 @@ var App = React.createClass( {
 					isOpen={ this.state.processing.active }
 					selectedBatch={ selectedBatch }
 					batchInfo={ this.state.processing.remote_data }
-					batchErrors={ this.state.processing.errors }
+					batchErrors={ this.state.errors }
 					toggleProcessing={ this.toggleProcessing }
 				/>
 			</div>
