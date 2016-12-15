@@ -284,6 +284,7 @@ abstract class Batch {
 		if ( is_array( $this->result_errors ) && count( $this->result_errors ) > 0  ) {
 			return $this->format_ajax_details( array(
 				'success' => false,
+				'errors' => $this->result_errors,
 			) );
 		}
 
@@ -322,15 +323,6 @@ abstract class Batch {
 		) );
 
 		$this->status = __( ucfirst( $status ) );
-	}
-
-	/**
-	 * Update errors option
-	 *
-	 * Log errors caught in an option
-	 */
-	public function update_errors() {
-		update_option( 'loco_batch_' . $this->slug . '_errors', $this->result_errors );
 	}
 
 	/**
@@ -373,8 +365,6 @@ abstract class Batch {
 
 			}
 		}
-
-		$this->update_errors( $this->result_errors );
 	}
 
 	/**
