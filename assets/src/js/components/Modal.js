@@ -12,7 +12,14 @@ var Modal = React.createClass( {
 		isOpen: React.PropTypes.bool,
 		toggleProcessing: React.PropTypes.func,
 		batchInfo: React.PropTypes.object,
+		batchErrors: React.PropTypes.array,
 		selectedBatch: React.PropTypes.string
+	},
+
+	getInitialState: function() {
+		return {
+			showErrors: false
+		}
 	},
 
 	mixins: [
@@ -25,12 +32,20 @@ var Modal = React.createClass( {
 		}
 	},
 
+	onErrorClick: function() {
+		this.setState( { showErrors: !this.state.showErrors } );
+	},
+
 	render : function () {
 		var classes        = 'locomotive-overlay',
 		    batchInfo     = this.props.batchInfo,
+				errorClick = this.onErrorClick,
 		    batchTitle    = ( batchInfo.batchTitle ) ? batchInfo.batchTitle : this.props.selectedBatch,
+				batchErrors = this.props.batchErrors,
+				numErrors = batchErrors.length,
 		    status         = ( batchInfo.status ) ? batchInfo.status : '',
-		    progressStyle = { width: batchInfo.progress + '%' };
+		    progressStyle = { width: batchInfo.progress + '%' },
+				showErrors = this.state.showErrors;
 
 		if ( this.props.isOpen ) {
 			classes += ' is-open';
@@ -49,6 +64,23 @@ var Modal = React.createClass( {
 			return <h2>{ batchTitle }</h2>;
 		}
 
+		var errorItems = batchErrors.map(function(item, index) {
+			return (
+				<li key={index} className="batch-error__item">{ item.item } failed with the message: { item.message }</li>
+			)
+
+		});
+
+		var errorList = function() {
+			if( showErrors ) {
+				return (
+					<ul>
+						{errorItems}
+					</ul>
+				)
+			}
+		}
+
 		/**
 		 * Return content for the modal.
 		 *
@@ -58,7 +90,10 @@ var Modal = React.createClass( {
 			if ( batchInfo.error ) {
 				return (
 					<div className="batch-error">
-						{ batchInfo.error }
+						<h3 className="batch-error-title">Status: Failed</h3>
+						<h4>There were <span className="red">{ numErrors } failed items</span> in your batch.</h4>
+						<button className="batch-error__link" onClick={errorClick}>Details</button>
+						{  errorList() }
 					</div>
 				);
 			}

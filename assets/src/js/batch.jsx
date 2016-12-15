@@ -28,12 +28,13 @@ var App = React.createClass( {
 				remote_data: {
 					batch_title: '',
 					status: '',
-					error: '',
+					error: false,
 					progress: 0,
 					current_step: 0,
 					total_steps: 0,
 					total_num_results: 0
-				}
+				},
+				errors: [],
 			}
 		};
 	},
@@ -96,6 +97,7 @@ var App = React.createClass( {
 			},
 			dataType: 'json',
 			success: function ( response ) {
+				console.log( response );
 				// Update our state with the processing status and progress, which will update the modal.
 				self.state.processing.batch = batchSlug;
 				self.state.processing.remote_data = {
@@ -112,8 +114,9 @@ var App = React.createClass( {
 				self.state.batches[ batchSlug ].status = self.state.processing.remote_data.status;
 
 				// Check for errors.
-				if ( response.error ) {
-					self.state.processing.remote_data.error = response.error;
+				if ( !response.success ) {
+					self.state.processing.remote_data.error = true;
+					self.state.processing.errors = response.errors;
 					self.setState( { processing: self.state.processing } );
 				}
 
@@ -129,7 +132,7 @@ var App = React.createClass( {
 						self.runBatch( currentStep + 1 );
 					}
 				} else {
-					alert( 'Batch failed.' );
+					// console.log( response );
 				}
 			}
 		} ).fail( function () {
@@ -232,6 +235,7 @@ var App = React.createClass( {
 					isOpen={ this.state.processing.active }
 					selectedBatch={ selectedBatch }
 					batchInfo={ this.state.processing.remote_data }
+					batchErrors={ this.state.processing.errors }
 					toggleProcessing={ this.toggleProcessing }
 				/>
 			</div>

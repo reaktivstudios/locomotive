@@ -285,6 +285,9 @@ abstract class Batch {
 			return $this->format_ajax_details( array(
 				'success' => false,
 				'errors' => $this->result_errors,
+				'total_steps'   => $total_steps,
+				'query_results' => $results,
+				'progress'      => $progress,
 			) );
 		}
 
