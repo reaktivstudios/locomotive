@@ -6,6 +6,8 @@ Locomotive
 ## About
 Creating batch processes in WordPress has never been so easy. Locomotive allows developers to write a single function (or set of functions) to process actions across a large data set. These registered batch processes can be run from the WP admin as needed.
 
+[Documentation](https://github.com/reaktivstudios/locomotive/wiki)
+
 ## Contributors
 * [Josh Eaton](https://github.com/jjeaton)
 * [Zach Wills](https://github.com/zachwills)
