@@ -437,6 +437,9 @@ class BatchTest extends WP_UnitTestCase {
 
 		$run = $post_batch->run( 1 );
 
+		$this->assertArrayHasKey( 'errors', $run );
+		$this->assertCount( 5, $run['errors'] );
+
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
@@ -489,4 +492,3 @@ function my_user_callback_function_test( $result ) {
 function my_callback_function_test_false() {
 	throw new Exception( 'Not working' );
 }
-
