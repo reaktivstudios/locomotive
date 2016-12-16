@@ -106,7 +106,7 @@ var App = React.createClass( {
 					current_step:      response.current_step,
 					total_steps:       response.total_steps,
 					total_num_results: response.total_num_results,
-					error: response.error
+					error:             response.error
 				};
 
 				// Update our batches, which will update the batch listing.

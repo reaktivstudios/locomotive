@@ -279,12 +279,11 @@ abstract class Batch {
 
 		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
 
-		// If there are errors, return success false.
-		// Next step would be to pass the errors down and display them with JS.
+		// If there are errors, return the error variable as true so front-end can handle.
 		if ( is_array( $this->result_errors ) && count( $this->result_errors ) > 0  ) {
 			return $this->format_ajax_details( array(
-				'error' => true,
-				'errors' => $this->result_errors,
+				'error'         => true,
+				'errors'        => $this->result_errors,
 				'total_steps'   => $total_steps,
 				'query_results' => $results,
 				'progress'      => $progress,
@@ -349,7 +348,7 @@ abstract class Batch {
 		 */
 		$failed_status = apply_filters( 'loco_batch_failed_status', 'failed' );
 
-		foreach ( $results as $i => $result ) {
+		foreach ( $results as $result ) {
 			// If this result item has been processed already, skip it.
 			if ( $success_status === $this->get_result_status( $result ) ) {
 				continue;

@@ -37,17 +37,17 @@ var Modal = React.createClass( {
 	},
 
 	render : function () {
-		var classes        = 'locomotive-overlay',
-			batchInfo     = this.props.batchInfo,
-			errorClick = this.onErrorClick,
-			batchTitle    = ( batchInfo.batch_title ) ? batchInfo.batch_title : this.props.selectedBatch,
-			batchErrors = this.props.batchErrors,
-			numErrors = batchErrors.length,
-			totalResults = parseInt( batchInfo.total_num_results ),
-			numSuccess =  ( ( totalResults / batchInfo.total_steps ) * batchInfo.current_step ) - numErrors,
-			status         = ( batchInfo.status ) ? batchInfo.status : '',
-			progressStyle = { width: batchInfo.progress + '%' },
-			showErrors = this.state.showErrors;
+		var classes      = 'locomotive-overlay',
+			batchInfo	     = this.props.batchInfo,
+			errorClick     = this.onErrorClick,
+			batchTitle	   = ( batchInfo.batch_title ) ? batchInfo.batch_title : this.props.selectedBatch,
+			batchErrors	   = this.props.batchErrors,
+			numErrors	     = batchErrors.length,
+			totalResults	 = parseInt( batchInfo.total_num_results ),
+			numSuccess	   =  ( ( totalResults / batchInfo.total_steps ) * batchInfo.current_step ) - numErrors,
+			status	       = ( batchInfo.status ) ? batchInfo.status : '',
+			progressStyle	 = { width: batchInfo.progress + '%' },
+			showErrors	   = this.state.showErrors;
 
 		if ( this.props.isOpen ) {
 			classes += ' is-open';
@@ -70,7 +70,6 @@ var Modal = React.createClass( {
 			return (
 				<li key={ item.item } className="batch-error__item">{ item.item } failed with the message:  { item.message }</li>
 			);
-
 		} );
 
 		var errorList = function () {
