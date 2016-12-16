@@ -113,7 +113,7 @@ var Modal = React.createClass( {
 		 */
 		var content = function () {
 			return (
-				<div className="batch-overaly__content">
+				<div className="batch-overlay__content">
 					<div className="progress-bar">
 						<span className="progress-bar__text">Progress: { batchInfo.progress }%</span>
 						<div className="progress-bar__visual" style={ progressStyle }></div>

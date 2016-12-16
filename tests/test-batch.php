@@ -393,7 +393,7 @@ class BatchTest extends WP_UnitTestCase {
 		$user_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'user',
-			'callback' => 'my_callback_function_test',
+			'callback' => __NAMESPACE__ . '\\my_callback_function_test',
 			'args'     => array(
 				'number' => 5,
 				'offset' => 5,
@@ -425,7 +425,7 @@ class BatchTest extends WP_UnitTestCase {
 		$post_batch->register( array(
 			'name'     => 'Hey there',
 			'type'     => 'post',
-			'callback' => 'my_callback_function_test_false',
+			'callback' => __NAMESPACE__ . '\\my_callback_function_test_false',
 			'args'     => array(
 				'posts_per_page' => 10,
 				'post_type'      => 'post',
@@ -437,12 +437,20 @@ class BatchTest extends WP_UnitTestCase {
 
 		$run = $post_batch->run( 1 );
 
+		// Error is returned.
 		$this->assertArrayHasKey( 'errors', $run );
+
+		// Errors return matches class errors object.
 		$this->assertCount( 5, $run['errors'] );
+		$this->assertCount( 5, $post_batch->result_errors );
+
+		// Sample message is returned properly.
+		$this->assertEquals( 'Not working', $run['errors'][0]['message'] );
 
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
+
 
 	/**
 	 * Helper function to register a successful batch.
@@ -464,6 +472,7 @@ class BatchTest extends WP_UnitTestCase {
 
 		return $batch;
 	}
+
 }
 
 /**
@@ -489,6 +498,6 @@ function my_user_callback_function_test( $result ) {
  *
  * @throws Exception Not worknig.
  */
-function my_callback_function_test_false() {
-	throw new Exception( 'Not working' );
+function my_callback_function_test_false( $result ) {
+	throw new \Exception( 'Not working' );
 }
