@@ -8,6 +8,7 @@
 use Rkv\Locomotive\Abstracts\Batch;
 use Rkv\Locomotive\Batches\Posts;
 use Rkv\Locomotive\Batches\Users;
+use Rkv\Locomotive\Batches\Sites;
 
 /**
  * Register a new batch process.
@@ -30,6 +31,14 @@ function register_batch_process( $args ) {
 			$batch_process = new Users();
 			$batch_process->register( $args );
 			break;
+
+		case 'site':
+			if ( is_multisite() ) {
+				$batch_process = new Sites();
+				$batch_process->register( $args );
+			}
+			break;
+
 	}
 }
 

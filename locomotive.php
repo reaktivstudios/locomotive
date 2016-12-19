@@ -62,6 +62,7 @@ final class Loader {
 		require_once( LOCO_PLUGIN_DIR . 'includes/abstracts/abstract-batch.php' );
 		require_once( LOCO_PLUGIN_DIR . 'includes/batches/class-batch-posts.php' );
 		require_once( LOCO_PLUGIN_DIR . 'includes/batches/class-batch-users.php' );
+		require_once( LOCO_PLUGIN_DIR . 'includes/batches/class-batch-sites.php' );
 		require_once( LOCO_PLUGIN_DIR . 'includes/functions.php' );
 	}
 
