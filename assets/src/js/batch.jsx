@@ -28,13 +28,14 @@ var App = React.createClass( {
 				remote_data: {
 					batch_title: '',
 					status: '',
-					error: '',
+					error: false,
 					progress: 0,
 					current_step: 0,
 					total_steps: 0,
 					total_num_results: 0
 				}
-			}
+			},
+			errors: [],
 		};
 	},
 
@@ -82,7 +83,7 @@ var App = React.createClass( {
 				progress: 0
 			};
 
-			this.setState( { processing: this.state.processing } );
+			this.setState( { processing: this.state.processing, errors: [] } );
 		}
 
 		$.ajax( {
@@ -104,7 +105,8 @@ var App = React.createClass( {
 					progress:          response.progress,
 					current_step:      response.current_step,
 					total_steps:       response.total_steps,
-					total_num_results: response.total_num_results
+					total_num_results: response.total_num_results,
+					error:             response.error
 				};
 
 				// Update our batches, which will update the batch listing.
@@ -113,7 +115,7 @@ var App = React.createClass( {
 
 				// Check for errors.
 				if ( response.error ) {
-					self.state.processing.remote_data.error = response.error;
+					self.setState( { errors: self.state.errors.concat( response.errors ) } );
 					self.setState( { processing: self.state.processing } );
 				}
 
@@ -121,15 +123,10 @@ var App = React.createClass( {
 					processing: self.state.processing,
 					batches: self.state.batches
 				} );
-
 				// Determine if we have to run another step in the batch. Checks if there are more steps
 				// that need to run and makes sure the 'status' from the server is still 'running'.
-				if ( response.success ) {
-					if ( response.currentStep !== response.total_steps && 'running' === response.status.toLowerCase() ) {
-						self.runBatch( currentStep + 1 );
-					}
-				} else {
-					alert( 'Batch failed.' );
+				if ( response.currentStep !== response.total_steps && 'running' === response.status.toLowerCase() ) {
+					self.runBatch( currentStep + 1 );
 				}
 			}
 		} ).fail( function () {
@@ -232,6 +229,7 @@ var App = React.createClass( {
 					isOpen={ this.state.processing.active }
 					selectedBatch={ selectedBatch }
 					batchInfo={ this.state.processing.remote_data }
+					batchErrors={ this.state.errors }
 					toggleProcessing={ this.toggleProcessing }
 				/>
 			</div>

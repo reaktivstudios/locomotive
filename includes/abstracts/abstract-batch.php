@@ -88,6 +88,13 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
+	 * Errors from results
+	 *
+	 * @var array
+	 */
+	public $result_errors = array();
+
+	/**
 	 * Get results function for the registered batch process.
 	 *
 	 * @return array
@@ -271,6 +278,18 @@ abstract class Batch {
 		}
 
 		$progress = ( 0 === (int) $total_steps ) ? 100 : round( ( $this->current_step / $total_steps ) * 100 );
+
+		// If there are errors, return the error variable as true so front-end can handle.
+		if ( is_array( $this->result_errors ) && count( $this->result_errors ) > 0  ) {
+			return $this->format_ajax_details( array(
+				'error'         => true,
+				'errors'        => $this->result_errors,
+				'total_steps'   => $total_steps,
+				'query_results' => $results,
+				'progress'      => $progress,
+			) );
+		}
+
 		return $this->format_ajax_details( array(
 			'total_steps'   => $total_steps,
 			'query_results' => $results,
@@ -341,11 +360,11 @@ abstract class Batch {
 			} catch ( Exception $e ) {
 				$this->update_status( $failed_status );
 				$this->update_result_status( $result, $failed_status );
-				return $this->format_ajax_details( array(
-					'success' => false,
-					'status'  => __( 'Failed', 'locomotive' ),
-					'message'   => $e->getMessage(),
-				) );
+				$this->result_errors[] = array(
+					'item' => $result->ID,
+					'message' => $e->getMessage(),
+				);
+
 			}
 		}
 	}

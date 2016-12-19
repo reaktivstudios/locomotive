@@ -68,22 +68,63 @@
 		margin-bottom: 6px;
 	}
 	.progress-bar {
-        background: #f0f0f0;
+		background: #f0f0f0;
 		color: white;
 		line-height: 35px;
 		padding-left: 12px;
-        position: relative;
+		position: relative;
 	}
-    .progress-bar__text {
-        display: block;
-        position: relative;
-        z-index: 10;
-    }
-    .progress-bar__visual {
-        background: #81b01f;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 5;
-    }
+		.progress-bar__text {
+			display: block;
+			position: relative;
+			z-index: 10;
+		}
+		.progress-bar__visual {
+			background: #27ae60;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 5;
+		}
+
+		.batch-success__title {
+			color: #27ae60;
+		}
+
+		.batch-success__title:before {
+			margin-right: 5px;
+		}
+
+.batch-error .red {
+	color: #e74c3c;
+}
+.batch-error .green {
+	color: #2ecc71;
+}
+	.batch-error__title {
+		color: #e74c3c;
+	}
+	.batch-error__title:before {
+		margin-right: 5px;
+	}
+	.batch-error__list {
+		max-height: 250px;
+		overflow: scroll;
+		background: #eee;
+		padding: 1em;
+		font-family: monospace;
+	}
+	.batch-error__btn {
+		background: none;
+		border: none;
+		font-size: 12px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	.batch-error__btn:before {
+		width: 15px;
+		height: 15px;
+		line-height: 16px;
+		margin-right: 3px;
+	}
