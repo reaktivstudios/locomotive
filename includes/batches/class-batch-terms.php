@@ -1,6 +1,6 @@
 <?php
 /**
- * Users batch class.
+ * Terms batch class.
  *
  * @package Locomotive/Batch
  */
@@ -11,7 +11,7 @@ use WP_Term_Query;
 use Rkv\Locomotive\Abstracts\Batch;
 
 /**
- * Batch Users class.
+ * Batch Term class.
  */
 class Terms extends Batch {
 	/**
