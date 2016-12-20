@@ -29,7 +29,7 @@ class Sites extends Batch {
 	public $default_args = array(
 		'number' => 10,
 		'offset' => 0,
-		'no_found_rows' => false
+		'no_found_rows' => false,
 	);
 
 	/**
