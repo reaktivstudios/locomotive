@@ -79,7 +79,7 @@ class BatchTest extends WP_UnitTestCase {
 	/**
 	 * Test without arguments
 	 */
-	public function test_register_batch_no_args() {
+	public function test_register_batch_doesnt_require_args() {
 		$batch_process = new Posts();
 		$batch_process->register( array(
 			'name'     => 'Hey there',
@@ -87,7 +87,7 @@ class BatchTest extends WP_UnitTestCase {
 			'callback' => 'my_callback_function',
 		) );
 
-			$this->assertNotNull( $batch_process->currently_registered['hey-there'] );
+		$this->assertNotNull( $batch_process->currently_registered['hey-there'] );
 	}
 
 	/**
