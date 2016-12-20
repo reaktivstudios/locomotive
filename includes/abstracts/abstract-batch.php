@@ -141,6 +141,28 @@ abstract class Batch {
 	}
 
 	/**
+	 * Set the total number of results
+	 *
+	 * Uses a number passed from the client to the server and compares it to the total objects
+	 * pulled by the latest query. If the dataset is larger, we increase the total_num_results number.
+	 * Otherwise, keep it at the original (to acount for deletion / changes).
+	 *
+	 * @param int $modified_total Total number of results from latest query.
+	 */
+	public function set_total_num_results( $modified_total ) {
+		// If this is past step 1, the client is passing back the total number of results.
+		// This accounts for deletion / descructive actions to the data.
+		$original_total = isset( $_POST['total_num_results'] ) ? absint( $_POST['total_num_results'] ) : 0; // Input var okay.
+
+		// We need to check to see if there is any new data that has been added.
+		if ( $modified_total > $original_total ) {
+			$this->total_num_results = $modified_total;
+		} else {
+			$this->total_num_results = $original_total;
+		}
+
+	}
+	/**
 	 * Calculate the offset for the current query.
 	 */
 	public function calculate_offset() {
