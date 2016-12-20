@@ -8,6 +8,7 @@
 use Rkv\Locomotive\Abstracts\Batch;
 use Rkv\Locomotive\Batches\Posts;
 use Rkv\Locomotive\Batches\Users;
+use Rkv\Locomotive\Batches\Sites;
 use Rkv\Locomotive\Batches\Terms;
 use Rkv\Locomotive\Batches\Comments;
 
@@ -31,6 +32,12 @@ function register_batch_process( $args ) {
 		case 'user':
 			$batch_process = new Users();
 			$batch_process->register( $args );
+			break;
+		case 'site':
+			if ( is_multisite() ) {
+				$batch_process = new Sites();
+				$batch_process->register( $args );
+			}
 			break;
 
 		case 'term':
