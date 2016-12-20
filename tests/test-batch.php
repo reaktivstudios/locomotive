@@ -5,6 +5,7 @@ namespace Rkv\Locomotive\Tests;
 use WP_UnitTestCase;
 use Rkv\Locomotive\Batches\Posts;
 use Rkv\Locomotive\Batches\Users;
+use Rkv\Locomotive\Batches\Terms;
 
 class BatchTest extends WP_UnitTestCase {
 	/**
@@ -251,6 +252,46 @@ class BatchTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that term batch gets run.
+	 */
+	public function test_term_finished_run() {
+		$terms = $this->factory->category->create_many( 5 );
+
+		$term_batch = new Terms();
+
+		$term_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'term',
+			'callback' => __NAMESPACE__ . '\\my_term_callback_function_test',
+			'args'     => array(
+				'number' => 10,
+				'taxonomy' => 'category',
+				'hide_empty' => false,
+			),
+		) );
+
+		$batch_status = get_option( 'loco_batch_' . $term_batch->slug );
+		$this->assertFalse( $batch_status );
+
+		$run = $term_batch->run( 1 );
+
+		$batch_status = get_option( 'loco_batch_' . $term_batch->slug );
+		$this->assertEquals( 'finished', $batch_status['status'] );
+
+		// Loop through each post and make sure our value was set.
+		foreach ( $terms as $term ) {
+			$meta = get_term_meta( $term, 'custom-key', true );
+			$this->assertEquals( 'my-value', $meta );
+
+			$status = get_term_meta( $term, $term_batch->slug . '_status', true );
+			$this->assertEquals( 'success', $status );
+		}
+
+		// Run again so it skips some.
+		$run = $term_batch->run( 1 );
+	}
+
+	/**
 	 * Test that you can clear individual result status.
 	 */
 	public function test_clear_result_status() {
@@ -325,6 +366,42 @@ class BatchTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that you can clear individual result status.
+	 */
+	public function test_clear_term_result_status() {
+		$terms = $this->factory->tag->create_many( 5 );
+
+		$term_batch = new Terms();
+
+		$term_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'term',
+			'callback' => __NAMESPACE__ . '\\my_term_callback_function_test',
+			'args'     => array(
+				'number' => 7,
+				'taxonomy' => 'post_tag',
+				'hide_empty' => false,
+			),
+		) );
+
+		$run = $term_batch->run( 1 );
+
+		$term_batch->clear_result_status();
+
+		// Loop through each post and make sure our value was set.
+		foreach ( $terms as $term ) {
+			$meta = get_term_meta( $term, 'custom-key', true );
+			$this->assertEquals( 'my-value', $meta );
+
+			$status = get_term_meta( $term, $term_batch->slug . '_status', true );
+			$this->assertEquals( '', $status );
+		}
+
+		$batches = locomotive_get_all_batches();
+		$this->assertEquals( 'reset', $batches['hey-there']['status'] );
+	}
+
+	/**
 	 * Test that batch gets run.
 	 */
 	public function test_running_run() {
@@ -380,6 +457,34 @@ class BatchTest extends WP_UnitTestCase {
 		$run = $post_batch->run( 2 );
 
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
+		$this->assertEquals( 'finished', $batch_status['status'] );
+	}
+
+	/**
+	 * Test that terms offset batch gets run.
+	 */
+	public function test_terms_offset_run() {
+		$users = $this->factory->category->create_many( 8 );
+
+		$term_batch = new Terms();
+		$term_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'term',
+			'callback' => 'my_callback_function_test',
+			'args'     => array(
+				'number' => 5,
+				'offset' => 5,
+				'taxonomy' => 'category',
+				'hide_empty' => false,
+			),
+		) );
+
+		$batch_status = get_option( 'loco_batch_' . $term_batch->slug );
+		$this->assertFalse( $batch_status );
+
+		$run = $term_batch->run( 2 );
+
+		$batch_status = get_option( 'loco_batch_' . $term_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
@@ -491,6 +596,15 @@ function my_callback_function_test( $result ) {
  */
 function my_user_callback_function_test( $result ) {
 	update_user_meta( $result->data->ID, 'custom-key', 'my-value' );
+}
+
+/**
+ * My callback function test for terms.
+ *
+ * @param WP_Term $result Result item.
+ */
+function my_term_callback_function_test( $result ) {
+	update_term_meta( $result->data->term_id, 'custom-key', 'my-value' );
 }
 
 /**
