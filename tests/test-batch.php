@@ -3,9 +3,11 @@
 namespace Rkv\Locomotive\Tests;
 
 use WP_UnitTestCase;
+use Exception;
 use Rkv\Locomotive\Batches\Posts;
 use Rkv\Locomotive\Batches\Users;
 use Rkv\Locomotive\Batches\Terms;
+
 
 class BatchTest extends WP_UnitTestCase {
 	/**
@@ -18,79 +20,74 @@ class BatchTest extends WP_UnitTestCase {
 
 	/**
 	 * Test name is included.
-	 *
-	 * @expectedExceptionMessage Batch name must be provided.
 	 */
 	public function test_register_batch_includes_name() {
-		$this->setExpectedException( 'Exception' );
+		try {
+			$batch_process = new Posts();
+			$batch_process->register( array(
+				'slug'     => 'test-anot22h12er-batch',
+				'type'     => 'post',
+				'callback' => 'my_callback_function',
+				'args'     => array(
+					'posts_per_page' => 10,
+					'post_type'      => 'post',
+				),
+			) );
+		} catch ( Exception $e ) {
+			$this->assertEquals( 'Batch name must be defined.', $e->getMessage() );
+		}
 
-		$batch_process = new Posts();
-		$batch_process->register( array(
-			'slug'     => 'test-anot22h12er-batch',
-			'type'     => 'post',
-			'callback' => 'my_callback_function',
-			'args'     => array(
-				'posts_per_page' => 10,
-				'post_type'      => 'post',
-			),
-		) );
 	}
 
 	/**
-	 * Test name is included.
-	 *
-	 * @expectedExceptionMessage Type of batch must be defined.
+	 * Test type is included.
 	 */
 	public function test_register_batch_includes_type() {
-		$this->setExpectedException( 'Exception' );
-
-		$batch_process = new Posts();
-		$batch_process->register( array(
-			'name'     => 'Hey',
-			'slug'     => 'test-anot22h12er-batch',
-			'callback' => 'my_callback_function',
-			'args'     => array(
-				'posts_per_page' => 10,
-				'post_type'      => 'post',
-			),
-		) );
-	}
-
-	/**
-	 * Test array args is included.
-	 *
-	 * @expectedExceptionMessage An array of args must be defined.
-	 */
-	public function test_register_batch_includes_callback() {
-		$this->setExpectedException( 'Exception' );
-
-		$batch_process = new Posts();
-		$batch_process->register( array(
-			'name'     => 'Hey',
-			'type'     => 'post',
-			'slug'     => 'test-anot22h12er-batch',
-			'args'     => array(
-				'posts_per_page' => 10,
-				'post_type'      => 'post',
-			),
-		) );
+		try {
+			$batch_process = new Posts();
+			$batch_process->register( array(
+				'name'     => 'Hey',
+				'slug'     => 'test-anot22h12er-batch',
+				'callback' => 'my_callback_function',
+				'args'     => array(
+					'posts_per_page' => 10,
+					'post_type'      => 'post',
+				),
+			) );
+		} catch ( Exception $e ) {
+			$this->assertEquals( 'Batch type must be defined.', $e->getMessage() );
+		}
 	}
 
 	/**
 	 * Test callback defined
-	 *
-	 * @expectedExceptionMessage A callback must be defined.
 	 */
-	public function test_register_batch_includes_args() {
-		$this->setExpectedException( 'Exception' );
+	public function test_register_batch_includes_callback() {
+		try {
+			$batch_process = new Posts();
+			$batch_process->register( array(
+				'name'     => 'Hey',
+				'type'     => 'post',
+				'slug'     => 'test-anot22h12er-batch',
+				'args'     => 0,
+			) );
+		} catch ( Exception $e ) {
+			$this->assertEquals( 'A callback must be defined.', $e->getMessage() );
+		}
+	}
 
+	/**
+	 * Test without arguments
+	 */
+	public function test_register_batch_no_args() {
 		$batch_process = new Posts();
 		$batch_process->register( array(
-			'name'     => 'Hey',
+			'name'     => 'Hey there',
 			'type'     => 'post',
-			'slug'     => 'test-anot22h12er-batch',
-			'args'     => 0,
+			'callback' => 'my_callback_function',
 		) );
+
+			$this->assertNotNull( $batch_process->currently_registered['hey-there'] );
 	}
 
 	/**
