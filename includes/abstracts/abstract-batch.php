@@ -311,14 +311,14 @@ abstract class Batch {
 		if ( (int) $this->current_step === (int) $total_steps ) {
 
 			// Need to really check to make sure there were no results added while processing.
-			// In the case of destructive actions (i.e. deletion) there will be 1 result left.
+			// In the case of destructive actions (i.e. deletion) there will be a gap equal to the per_page param.
 			// In all other cases, the difference in totals should equal total number of results.
 			// If neither of these are true, we need to run the last step over again.
 			$difference = $this->total_num_results - $this->results_changed;
-			if ( 1 === $difference || $difference = $this->total_num_results ) {
+			if ( $difference <= $per_page || $difference === $this->total_num_results ) {
 				$this->update_status( 'finished' );
 			} else {
-				$this->run( $this->current_step - 1 );
+				$this->current_step = $this->current_step - 1;
 				$this->update_status( 'running' );
 			}
 		} else {
