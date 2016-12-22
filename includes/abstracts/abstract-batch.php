@@ -88,6 +88,13 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
+	 * Difference in number of results between steps
+	 *
+	 * @var int
+	 */
+	public $results_changed = 0;
+
+	/**
 	 * Errors from results
 	 *
 	 * @var array
@@ -136,8 +143,9 @@ abstract class Batch {
 	 */
 	public function get_results() {
 		$this->args = wp_parse_args( $this->args, $this->default_args );
+		$results = $this->batch_get_results();
 		$this->calculate_offset();
-		return $this->batch_get_results();
+		return $results;
 	}
 
 	/**
@@ -155,10 +163,15 @@ abstract class Batch {
 		$original_total = isset( $_POST['total_num_results'] ) ? absint( $_POST['total_num_results'] ) : 0; // Input var okay.
 
 		// We need to check to see if there is any new data that has been added.
+		// Record the difference if one is found.
 		if ( $modified_total > $original_total ) {
 			$this->total_num_results = $modified_total;
 		} else {
 			$this->total_num_results = $original_total;
+		}
+
+		if( $modified_total !== $original_total ) {
+			$this->results_changed = $original_total - $modified_total;
 		}
 
 	}
@@ -168,7 +181,8 @@ abstract class Batch {
 	public function calculate_offset() {
 		if ( 1 !== $this->current_step ) {
 			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
-			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $this->per_batch_param ] );
+			// Also subtracting by results changed to account for deleted and added objects.
+			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $this->per_batch_param ] ) - $this->results_changed;
 		}
 	}
 
@@ -293,8 +307,20 @@ abstract class Batch {
 		$per_page = apply_filters( 'loco_batch_' . $this->slug . '_per_page', $per_page );
 
 		$total_steps = ceil( $this->total_num_results / $per_page );
+
 		if ( (int) $this->current_step === (int) $total_steps ) {
-			$this->update_status( 'finished' );
+
+			// Need to really check to make sure there were no results added while processing.
+			// In the case of destructive actions (i.e. deletion) there will be 1 result left.
+			// In all other cases, the difference in totals should equal total number of results.
+			// If neither of these are true, we need to run the last step over again.
+			$difference = $this->total_num_results - $this->results_changed;
+			if ( 1 === $difference || $difference = $this->total_num_results ) {
+				$this->update_status( 'finished' );
+			} else {
+				$this->run( $this->current_step - 1 );
+				$this->update_status( 'running' );
+			}
 		} else {
 			$this->update_status( 'running' );
 		}
@@ -332,6 +358,7 @@ abstract class Batch {
 			'status'            => $this->status,
 			'batch'             => $this->name,
 			'total_num_results' => $this->total_num_results,
+			'results_changed' => $this->results_changed,
 		) );
 	}
 

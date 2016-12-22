@@ -133,7 +133,7 @@ var App = React.createClass( {
 				// Determine if we have to run another step in the batch. Checks if there are more steps
 				// that need to run and makes sure the 'status' from the server is still 'running'.
 				if ( response.currentStep !== response.total_steps && 'running' === response.status.toLowerCase() ) {
-					self.runBatch( currentStep + 1 );
+					self.runBatch( response.current_step + 1 );
 				}
 			}
 		} ).fail( function () {
