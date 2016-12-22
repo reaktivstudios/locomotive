@@ -208,7 +208,7 @@ abstract class Batch {
 		}
 
 		if ( empty( $args['args'] ) || ! is_array( $args['args'] ) ) {
-			throw new Exception( __( 'An array of args must be defined.', 'locomotive' ) );
+			$this->args = array();
 		} else {
 			$this->args = $args['args'];
 		}
