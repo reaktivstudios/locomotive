@@ -114,7 +114,7 @@ class SiteBatchTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test that users offset batch gets run.
+	 * Test that sites offset batch gets run.
 	 *
 	 * @requires Multisite
 	 */
@@ -142,6 +142,11 @@ class SiteBatchTest extends WP_UnitTestCase {
 
 }
 
+/**
+ * My callback function test for sites.
+ *
+ * @param WP_Site $result Result item.
+ */
 function my_site_callback_function_test( $result ) {
 	update_metadata( 'site', $result->blog_id, 'custom-key', 'my-value' );
 }
