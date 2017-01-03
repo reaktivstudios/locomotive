@@ -155,23 +155,23 @@ abstract class Batch {
 	 * pulled by the latest query. If the dataset is larger, we increase the total_num_results number.
 	 * Otherwise, keep it at the original (to acount for deletion / changes).
 	 *
-	 * @param int $modified_total Total number of results from latest query.
+	 * @param int $total_from_query Total number of results from latest query.
 	 */
-	public function set_total_num_results( $modified_total ) {
+	public function set_total_num_results( $total_from_query ) {
 		// If this is past step 1, the client is passing back the total number of results.
 		// This accounts for deletion / descructive actions to the data.
-		$original_total = isset( $_POST['total_num_results'] ) ? absint( $_POST['total_num_results'] ) : 0; // Input var okay.
+		$total_from_get = isset( $_POST['total_num_results'] ) ? absint( $_POST['total_num_results'] ) : 0; // Input var okay.
 
 		// We need to check to see if there is any new data that has been added.
 		// Record the difference if one is found.
-		if ( $modified_total > $original_total ) {
-			$this->total_num_results = $modified_total;
+		if ( $total_from_query >= $total_from_get ) {
+			$this->total_num_results = (int) $total_from_query;
 		} else {
-			$this->total_num_results = $original_total;
+			$this->total_num_results = (int) $total_from_get;
 		}
 
-		if( $modified_total !== $original_total ) {
-			$this->results_changed = $original_total - $modified_total;
+		if ( $total_from_query !== $total_from_get && $total_from_get > 0 ) {
+			$this->results_changed = $total_from_get - $total_from_query;
 		}
 
 	}

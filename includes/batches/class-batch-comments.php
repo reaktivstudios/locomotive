@@ -41,7 +41,8 @@ class Comments extends Batch {
 		$query = new WP_Comment_Query( $this->args );
 		$total_comments = $query->found_comments;
 		$this->set_total_num_results( $total_comments );
-		return $query->get_comments();	}
+		return $query->get_comments();
+	}
 
 	/**
 	 * Clear the result status for a batch.

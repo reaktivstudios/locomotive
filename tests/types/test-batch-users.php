@@ -19,7 +19,7 @@ class UserBatchTest extends WP_UnitTestCase {
 	 */
 	public function setUp() {
 		parent::setUp();
-		$this->users = $this->factory->user->create_many( 5 );
+		$this->users = $this->factory->user->create_many( 9 );
 	}
 
 
@@ -70,7 +70,7 @@ class UserBatchTest extends WP_UnitTestCase {
 			'type'     => 'user',
 			'callback' => __NAMESPACE__ . '\\my_user_callback_function_test',
 			'args'     => array(
-				'number' => 7,
+				'number' => 10,
 			),
 		) );
 

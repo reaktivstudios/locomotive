@@ -110,7 +110,7 @@ class TermBatchTest extends WP_UnitTestCase {
 			'type'     => 'term',
 			'callback' => __NAMESPACE__ . '\\my_term_callback_function_test',
 			'args'     => array(
-				'number' => 5,
+				'number' => 3,
 				'offset' => 5,
 				'taxonomy' => 'category',
 				'hide_empty' => false,
