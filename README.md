@@ -37,7 +37,7 @@ add_action( 'locomotive_init', 'my_post_query_batch_process' );
 #### Hook In Callback Function
 ``` php
 /**
- * This is what we want to do with each individual result during a batch routine/
+ * This is what we want to do with each individual result during a batch routine.
  *
  * @param  array $result Individual result from batch query.
  */
