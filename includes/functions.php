@@ -10,6 +10,7 @@ use Rkv\Locomotive\Batches\Posts;
 use Rkv\Locomotive\Batches\Users;
 use Rkv\Locomotive\Batches\Sites;
 use Rkv\Locomotive\Batches\Terms;
+use Rkv\Locomotive\Batches\Comments;
 
 /**
  * Register a new batch process.
@@ -41,6 +42,11 @@ function register_batch_process( $args ) {
 
 		case 'term':
 			$batch_process = new Terms();
+			$batch_process->register( $args );
+			break;
+
+		case 'comment':
+			$batch_process = new Comments();
 			$batch_process->register( $args );
 			break;
 	}
