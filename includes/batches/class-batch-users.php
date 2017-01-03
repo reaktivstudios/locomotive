@@ -38,7 +38,8 @@ class Users extends Batch {
 	 */
 	public function batch_get_results() {
 		$query = new WP_User_Query( $this->args );
-		$this->total_num_results = $query->get_total();
+		$total_users = $query->get_total();
+		$this->set_total_num_results( $total_users );
 		return $query->get_results();
 	}
 

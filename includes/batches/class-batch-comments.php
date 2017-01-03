@@ -39,9 +39,9 @@ class Comments extends Batch {
 	 */
 	public function batch_get_results() {
 		$query = new WP_Comment_Query( $this->args );
-		$this->total_num_results = $query->found_comments;
-		return $query->get_comments();
-	}
+		$total_comments = $query->found_comments;
+		$this->set_total_num_results( $total_comments );
+		return $query->get_comments();	}
 
 	/**
 	 * Clear the result status for a batch.

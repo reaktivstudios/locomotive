@@ -38,12 +38,10 @@ class Terms extends Batch {
 	 */
 	public function batch_get_results() {
 		$query = new WP_Term_Query( $this->args );
-
 		// Need to do a count query in order to get all possible terms as an integer.
 		$count_args = wp_parse_args( array( 'fields' => 'count', 'offset' => 0 ), $this->args );
 		$count = new WP_Term_Query( $count_args );
-		$this->total_num_results = $count->get_terms();
-
+		$this->set_total_num_results( $count->get_terms() );
 		return $query->get_terms();
 	}
 

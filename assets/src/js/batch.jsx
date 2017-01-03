@@ -75,9 +75,7 @@ var App = React.createClass( {
 
 		var self = this,
 			batchSlug = self.state.processing.batch,
-			total_num_results = self.state.processing.remote_data.total_num_results;
-
-		console.log( total_num_results );
+			totalResults = self.state.processing.remote_data.total_num_results;
 
 		// If we open the modal and it was previously complete, clear it.
 		if ( 100 === this.state.processing.remote_data.progress ) {
@@ -98,12 +96,11 @@ var App = React.createClass( {
 				batch_process: batchSlug,
 				nonce:         batch.nonce,
 				step:          currentStep,
-				total_num_results: total_num_results,
+				total_num_results: totalResults,
 				action:        'run_batch',
 			},
 			dataType: 'json',
 			success: function ( response ) {
-				console.log(response);
 				// Update our state with the processing status and progress, which will update the modal.
 				self.state.processing.batch = batchSlug;
 				self.state.processing.remote_data = {
