@@ -5,7 +5,7 @@ Locomotive
 
 ## About
 
-![Locomotive Menu](/screenshot.png "Locomotive Menu")
+![Locomotive Menu](screenshot.png?raw=true "Locomotive Menu")
 
 Creating batch processes in WordPress has never been so easy. If you've ever wanted to query a large dataset and perform simple and repeatable actions, then Locomotive is for you.
 
