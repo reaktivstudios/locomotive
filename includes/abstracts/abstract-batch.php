@@ -88,11 +88,11 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
-	 * Difference in number of results between steps
+	 * Holds difference between total from client and total from query, if one exists.
 	 *
 	 * @var int
 	 */
-	public $results_changed = 0;
+	public $difference_in_result_totals = 0;
 
 	/**
 	 * Errors from results
@@ -160,21 +160,32 @@ abstract class Batch {
 	public function set_total_num_results( $total_from_query ) {
 		// If this is past step 1, the client is passing back the total number of results.
 		// This accounts for deletion / descructive actions to the data.
-		$total_from_get = isset( $_POST['total_num_results'] ) ? absint( $_POST['total_num_results'] ) : 0; // Input var okay.
+		$total_from_request = isset( $_POST['total_num_results'] ) ? absint( $_POST['total_num_results'] ) : 0; // Input var okay.
 
 		// We need to check to see if there is any new data that has been added.
-		// Record the difference if one is found.
-		if ( $total_from_query >= $total_from_get ) {
+		if ( $total_from_query > $total_from_request ) {
 			$this->total_num_results = (int) $total_from_query;
 		} else {
-			$this->total_num_results = (int) $total_from_get;
+			$this->total_num_results = (int) $total_from_request;
 		}
 
-		if ( $total_from_query !== $total_from_get && $total_from_get > 0 ) {
-			$this->results_changed = $total_from_get - $total_from_query;
-		}
-
+		$this->record_change_if_totals_differ( $total_from_request, $total_from_query );
 	}
+
+	/**
+	 * If the amount of total records has changed, the amount is recorded so that it can
+	 * be applied to the offeset when it is calculated. This ensures that the offset takes into
+	 * account if new objects have been added or removed from the query.
+	 *
+	 * @param  int $total_from_request    Total number of results passed up from client.
+	 * @param  int $total_from_query      Total number of results retreived from query.
+	 */
+	public function record_change_if_totals_differ( $total_from_request, $total_from_query ) {
+		if ( $total_from_query !== $total_from_request && $total_from_request > 0 ) {
+			$this->difference_in_result_totals = $total_from_request - $total_from_query;
+		}
+	}
+
 	/**
 	 * Calculate the offset for the current query.
 	 */
@@ -182,7 +193,7 @@ abstract class Batch {
 		if ( 1 !== $this->current_step ) {
 			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
 			// Also subtracting by results changed to account for deleted and added objects.
-			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $this->per_batch_param ] ) - $this->results_changed;
+			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $this->per_batch_param ] ) - $this->difference_in_result_totals;
 		}
 	}
 
@@ -314,7 +325,7 @@ abstract class Batch {
 			// In the case of destructive actions (i.e. deletion) there will be a gap equal to the per_page param.
 			// In all other cases, the difference in totals should equal total number of results.
 			// If neither of these are true, we need to run the last step over again.
-			$difference = $this->total_num_results - $this->results_changed;
+			$difference = $this->total_num_results - $this->difference_in_result_totals;
 			if ( $difference <= $per_page || $difference === $this->total_num_results ) {
 				$this->update_status( 'finished' );
 			} else {
@@ -357,8 +368,6 @@ abstract class Batch {
 			'callback'          => $this->callback,
 			'status'            => $this->status,
 			'batch'             => $this->name,
-			'total_num_results' => $this->total_num_results,
-			'results_changed' => $this->results_changed,
 		) );
 	}
 
