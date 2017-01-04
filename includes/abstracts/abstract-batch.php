@@ -368,6 +368,7 @@ abstract class Batch {
 			'callback'          => $this->callback,
 			'status'            => $this->status,
 			'batch'             => $this->name,
+			'total_num_results' => $this->total_num_results,
 		) );
 	}
 
