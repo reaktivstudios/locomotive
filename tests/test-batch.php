@@ -112,7 +112,7 @@ class BatchTest extends WP_UnitTestCase {
 	 * Make sure adding batch adds to currently registered.
 	 */
 	public function test_register_overwrites_currently_registered_if_same_slug() {
-		$batch = $this->register_successful_batch( 'hey' );
+		$this->register_successful_batch( 'hey' );
 
 		$batch = new Posts();
 		$batch->register( array(
@@ -159,7 +159,7 @@ class BatchTest extends WP_UnitTestCase {
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
-		$run = $post_batch->run( 1 );
+		$post_batch->run( 1 );
 
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertEquals( 'no results found', $batch_status['status'] );
@@ -189,7 +189,7 @@ class BatchTest extends WP_UnitTestCase {
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
-		$run = $post_batch->run( 1 );
+		$post_batch->run( 1 );
 
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertEquals( 'running', $batch_status['status'] );
