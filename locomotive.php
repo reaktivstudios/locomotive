@@ -39,8 +39,8 @@ final class Loader {
 	 */
 	public function add_dashboard() {
 		add_menu_page(
-			'Locomotive',
-			'Locomotive',
+			__( 'Batch Processes' ),
+			__( 'Batches' ),
 			'manage_options',
 			'locomotive',
 			array( $this, 'dashboard_display' )
