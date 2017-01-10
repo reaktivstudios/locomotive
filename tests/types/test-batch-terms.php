@@ -126,6 +126,38 @@ class TermBatchTest extends WP_UnitTestCase {
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
+	/**
+	 * Test that batch gets run when data is destroyed during process.
+	 */
+	public function test_run_with_destructive_callback() {
+
+		$term_batch = new Terms();
+
+		$term_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'term',
+			'callback' => __NAMESPACE__ . '\\my_callback_delete_term',
+			'args'     => array(
+				'number' => 3,
+				'taxonomy' => 'post_tag',
+				'hide_empty' => false,
+			),
+		) );
+
+		// Simulate running twice with pass back of results number from client.
+		$term_batch->run( 1 );
+		$_POST['total_num_results'] = 5;
+		$term_batch->run( 2 );
+
+		// Check that all terms have been deleted.
+		$all_terms = get_terms( array( 'taxonomy' => 'post_tag', 'hide_empty' => false, 'number' => 0 ) );
+		$this->assertCount( 0, $all_terms );
+
+		// Ensure that we are still getting a finished message.
+		$batch_status = get_option( 'loco_batch_' . $term_batch->slug );
+		$this->assertEquals( 'finished', $batch_status['status'] );
+	}
+
 }
 
 /**
@@ -135,4 +167,13 @@ class TermBatchTest extends WP_UnitTestCase {
  */
 function my_term_callback_function_test( $result ) {
 	update_term_meta( $result->term_id, 'custom-key', 'my-value' );
+}
+
+/**
+ * Callback function with destructive action (deletion).
+ *
+ * @param  WP_Term $result Result item.
+ */
+function my_callback_delete_term( $result ) {
+	wp_delete_term( $result->term_id, 'post_tag' );
 }

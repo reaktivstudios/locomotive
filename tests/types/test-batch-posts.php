@@ -123,7 +123,7 @@ class PostBatchTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test that batch gets run.
+	 * Test that batch gets run when data is destroyed during process.
 	 */
 	public function test_run_with_destructive_callback() {
 
