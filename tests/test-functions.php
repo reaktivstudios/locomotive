@@ -99,7 +99,7 @@ class BatchFunctionTest extends WP_UnitTestCase {
 		$this->assertFalse( $this->are_batch_assets_enqueued() );
 
 		// Call our loader class on the locomotive settings page.
-		$this->load_admin_enqueue_hook( 'toplevel_page_locomotive' );
+		$this->load_admin_enqueue_hook( 'tools_page_locomotive' );
 
 		// Check that the items are enquened.
 		$this->assertTrue( $this->are_batch_assets_enqueued() );
