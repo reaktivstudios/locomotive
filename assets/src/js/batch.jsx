@@ -74,7 +74,8 @@ var App = React.createClass( {
 		}
 
 		var self = this,
-			batchSlug = self.state.processing.batch;
+			batchSlug = self.state.processing.batch,
+			totalResults = self.state.processing.remote_data.total_num_results;
 
 		// If we open the modal and it was previously complete, clear it.
 		if ( 100 === this.state.processing.remote_data.progress ) {
@@ -86,6 +87,8 @@ var App = React.createClass( {
 			this.setState( { processing: this.state.processing, errors: [] } );
 		}
 
+
+
 		$.ajax( {
 			type: 'POST',
 			url: batch.ajaxurl,
@@ -93,6 +96,7 @@ var App = React.createClass( {
 				batch_process: batchSlug,
 				nonce:         batch.nonce,
 				step:          currentStep,
+				total_num_results: totalResults,
 				action:        'run_batch',
 			},
 			dataType: 'json',
@@ -126,7 +130,7 @@ var App = React.createClass( {
 				// Determine if we have to run another step in the batch. Checks if there are more steps
 				// that need to run and makes sure the 'status' from the server is still 'running'.
 				if ( response.currentStep !== response.total_steps && 'running' === response.status.toLowerCase() ) {
-					self.runBatch( currentStep + 1 );
+					self.runBatch( response.current_step + 1 );
 				}
 			}
 		} ).fail( function () {
