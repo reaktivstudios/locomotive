@@ -38,7 +38,7 @@ final class Loader {
 	 * Admin Dashboard.
 	 */
 	public function add_dashboard() {
-		add_menu_page(
+		add_management_page(
 			__( 'Batch Processes' ),
 			__( 'Batches' ),
 			'manage_options',
@@ -88,7 +88,7 @@ final class Loader {
 	public function scripts( $hook ) {
 
 		// Exclude our scripts and CSS files from loading globally.
-		if ( 'toplevel_page_locomotive' !== $hook ) {
+		if ( 'tools_page_locomotive' !== $hook ) {
 			return;
 		}
 
