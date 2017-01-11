@@ -90,7 +90,7 @@ abstract class Batch {
 	/**
 	 * Total number of results.
 	 *
-	 * @var array
+	 * @var int
 	 */
 	public $total_num_results;
 
