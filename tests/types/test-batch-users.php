@@ -19,7 +19,7 @@ class UserBatchTest extends WP_UnitTestCase {
 	 */
 	public function setUp() {
 		parent::setUp();
-		$this->users = $this->factory->user->create_many( 5 );
+		$this->users = $this->factory->user->create_many( 9 );
 	}
 
 
@@ -70,7 +70,7 @@ class UserBatchTest extends WP_UnitTestCase {
 			'type'     => 'user',
 			'callback' => __NAMESPACE__ . '\\my_user_callback_function_test',
 			'args'     => array(
-				'number' => 7,
+				'number' => 10,
 			),
 		) );
 
@@ -116,6 +116,33 @@ class UserBatchTest extends WP_UnitTestCase {
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
+	public function test_run_with_destructive_callback() {
+
+		$user_batch = new Users();
+
+		$user_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'user',
+			'callback' => __NAMESPACE__ . '\\my_callback_delete_user',
+			'args'     => array(
+				'number' => 5,
+			),
+		) );
+
+		// Simulate running twice with pass back of results number from client.
+		$user_batch->run( 1 );
+		$_POST['total_num_results'] = 9;
+		$user_batch->run( 2 );
+
+		// Check that all users have been deleted.
+		$all_users = get_users();
+		$this->assertCount( 0, $all_users );
+
+		// Ensure that we are still getting a finished message.
+		$batch_status = get_option( 'loco_batch_' . $user_batch->slug );
+		$this->assertEquals( 'finished', $batch_status['status'] );
+	}
+
 }
 
 /**
@@ -125,4 +152,13 @@ class UserBatchTest extends WP_UnitTestCase {
  */
 function my_user_callback_function_test( $result ) {
 	update_metadata( 'user', $result->ID, 'custom-key', 'my-value' );
+}
+
+/**
+ * Callback function with destructive action (deletion).
+ *
+ * @param  WP_User $result Result item.
+ */
+function my_callback_delete_user( $result ) {
+	wp_delete_user( $result->ID );
 }

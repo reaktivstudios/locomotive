@@ -122,6 +122,37 @@ class PostBatchTest extends WP_UnitTestCase {
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
+	/**
+	 * Test that batch gets run when data is destroyed during process.
+	 */
+	public function test_run_with_destructive_callback() {
+
+		$post_batch = new Posts();
+
+		$post_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'post',
+			'callback' => __NAMESPACE__ . '\\my_callback_delete_post',
+			'args'     => array(
+				'posts_per_page' => 5,
+				'post_type'      => 'post',
+			),
+		) );
+
+		// Simulate running twice with pass back of results number from client.
+		$post_batch->run( 1 );
+		$_POST['total_num_results'] = 10;
+		$post_batch->run( 2 );
+
+		// Check that all posts have been deleted.
+		$all_posts = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => -1 ) );
+		$this->assertCount( 0, $all_posts );
+
+		// Ensure that we are still getting a finished message.
+		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
+		$this->assertEquals( 'finished', $batch_status['status'] );
+	}
+
 }
 
 /**
@@ -131,4 +162,13 @@ class PostBatchTest extends WP_UnitTestCase {
  */
 function my_post_callback_function_test( $result ) {
 	update_post_meta( $result->ID, 'custom-key', 'my-value' );
+}
+
+/**
+ * Callback function with destructive action (deletion).
+ *
+ * @param  WP_Post $result Result item.
+ */
+function my_callback_delete_post( $result ) {
+	wp_delete_post( $result->ID, true );
 }

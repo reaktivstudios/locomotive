@@ -95,6 +95,13 @@ abstract class Batch {
 	public $total_num_results;
 
 	/**
+	 * Holds difference between total from client and total from query, if one exists.
+	 *
+	 * @var int
+	 */
+	public $difference_in_result_totals = 0;
+
+	/**
 	 * Errors from results
 	 *
 	 * @var array
@@ -143,8 +150,50 @@ abstract class Batch {
 	 */
 	public function get_results() {
 		$this->args = wp_parse_args( $this->args, $this->default_args );
+		$results = $this->batch_get_results();
 		$this->calculate_offset();
-		return $this->batch_get_results();
+		return $results;
+	}
+
+	/**
+	 * Set the total number of results
+	 *
+	 * Uses a number passed from the client to the server and compares it to the total objects
+	 * pulled by the latest query. If the dataset is larger, we increase the total_num_results number.
+	 * Otherwise, keep it at the original (to account for deletion / changes).
+	 *
+	 * @param int $total_from_query Total number of results from latest query.
+	 */
+	public function set_total_num_results( $total_from_query ) {
+		// If this is past step 1, the client is passing back the total number of results.
+		// This accounts for deletion / destructive actions to the data.
+		$total_from_request = isset( $_POST['total_num_results'] ) ? absint( $_POST['total_num_results'] ) : 0; // Input var okay.
+
+		// In all cases we want to ensure that we use the higher of the two results total (from client or query).
+		// We go with the higher number because we want to lock the total number of steps calculated at it's highest total.
+		// With a destructive action, that would be total from request. If addivitve action, it would be total from query.
+		// In all other cases, these two numbers are equal, so either would work.
+		if ( $total_from_query > $total_from_request ) {
+			$this->total_num_results = (int) $total_from_query;
+		} else {
+			$this->total_num_results = (int) $total_from_request;
+		}
+
+		$this->record_change_if_totals_differ( $total_from_request, $total_from_query );
+	}
+
+	/**
+	 * If the amount of total records has changed, the amount is recorded so that it can
+	 * be applied to the offeset when it is calculated. This ensures that the offset takes into
+	 * account if new objects have been added or removed from the query.
+	 *
+	 * @param  int $total_from_request    Total number of results passed up from client.
+	 * @param  int $total_from_query      Total number of results retreived from query.
+	 */
+	public function record_change_if_totals_differ( $total_from_request, $total_from_query ) {
+		if ( $total_from_query !== $total_from_request && $total_from_request > 0 ) {
+			$this->difference_in_result_totals = $total_from_request - $total_from_query;
+		}
 	}
 
 	/**
@@ -153,7 +202,9 @@ abstract class Batch {
 	public function calculate_offset() {
 		if ( 1 !== $this->current_step ) {
 			// Example: step 2: 1 * 10 = offset of 10, step 3: 2 * 10 = offset of 20.
-			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $this->per_batch_param ] );
+			// The difference in result totals is used in case of additive or destructive actions.
+			// if 5 posts were deleted in step 1 (20 - 15 = 5) then the offset should remain at 0 ( offset of 5 - 5) in step 2.
+			$this->args['offset'] = ( ( $this->current_step - 1 ) * $this->args[ $this->per_batch_param ] ) - $this->difference_in_result_totals;
 		}
 	}
 
@@ -278,8 +329,23 @@ abstract class Batch {
 		$per_page = apply_filters( 'loco_batch_' . $this->slug . '_per_page', $per_page );
 
 		$total_steps = ceil( $this->total_num_results / $per_page );
+
 		if ( (int) $this->current_step === (int) $total_steps ) {
-			$this->update_status( 'finished' );
+
+			// The difference here calcuates the gap between the original total and the most recent query.
+			// In the case of a deletion process the final step will have a number exactly equal to the posts_per_page.
+			// If 20 total, then the last step would have 4 for instance.
+			// In all other cases, the difference would be the same as the total number of results (20 - 0 = 20).
+			// The exception is a deletion process where a new object is added during the process.
+			// In this case, then the final step would have less then the posts_per_page but never more (so <=).
+			// We check this difference and compare it before saying that we are finished. If not, we run the last step over.
+			$difference = $this->total_num_results - $this->difference_in_result_totals;
+			if ( $difference <= $per_page || $difference === $this->total_num_results ) {
+				$this->update_status( 'finished' );
+			} else {
+				$this->current_step = $this->current_step - 1;
+				$this->update_status( 'running' );
+			}
 		} else {
 			$this->update_status( 'running' );
 		}

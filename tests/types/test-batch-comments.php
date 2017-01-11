@@ -117,8 +117,47 @@ class CommentBatchTest extends WP_UnitTestCase {
 		$this->assertEquals( 'finished', $batch_status['status'] );
 	}
 
+	/**
+	 * Test that batch gets run when data is destroyed during process.
+	 */
+	public function test_run_with_destructive_callback() {
+
+		$comment_batch = new Comments();
+
+		$comment_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'comment',
+			'callback' => __NAMESPACE__ . '\\my_callback_delete_comment',
+			'args'     => array(
+				'number' => 5,
+			),
+		) );
+
+		// Simulate running twice with pass back of results number from client.
+		$comment_batch->run( 1 );
+		$_POST['total_num_results'] = 10;
+		$comment_batch->run( 2 );
+
+		// Check that all comments have been deleted.
+		$all_posts = get_comments();
+		$this->assertCount( 0, $all_posts );
+
+		// Ensure that we are still getting a finished message.
+		$batch_status = get_option( 'loco_batch_' . $comment_batch->slug );
+		$this->assertEquals( 'finished', $batch_status['status'] );
+	}
+
 }
 
 function my_comment_callback_function( $result ) {
 	update_comment_meta( $result->comment_ID, 'custom-key', 'my-value' );
+}
+
+/**
+ * Callback function with destructive action (deletion).
+ *
+ * @param  WP_Comment $result Result item.
+ */
+function my_callback_delete_comment( $result ) {
+	wp_delete_comment( $result->comment_ID, true );
 }
