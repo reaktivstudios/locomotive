@@ -42,7 +42,7 @@ class CommentBatchTest extends WP_UnitTestCase {
 		$batch_status = get_option( 'loco_batch_' . $comment_batch->slug );
 		$this->assertFalse( $batch_status );
 
-		$run = $comment_batch->run( 1 );
+		$comment_batch->run( 1 );
 
 		$batch_status = get_option( 'loco_batch_' . $comment_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
@@ -57,7 +57,7 @@ class CommentBatchTest extends WP_UnitTestCase {
 		}
 
 		// Run again so it skips some.
-		$run = $comment_batch->run( 1 );
+		$comment_batch->run( 1 );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class CommentBatchTest extends WP_UnitTestCase {
 			),
 		) );
 
-		$run = $comment_batch->run( 1 );
+		$comment_batch->run( 1 );
 
 		$comment_batch->clear_result_status();
 
@@ -111,7 +111,7 @@ class CommentBatchTest extends WP_UnitTestCase {
 		$batch_status = get_option( 'loco_batch_' . $comment_batch->slug );
 		$this->assertFalse( $batch_status );
 
-		$run = $comment_batch->run( 2 );
+		$comment_batch->run( 2 );
 
 		$batch_status = get_option( 'loco_batch_' . $comment_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );

@@ -44,7 +44,7 @@ class PostBatchTest extends WP_UnitTestCase {
 
 		$this->assertFalse( $batch_status );
 
-		$run = $post_batch->run( 1 );
+		$post_batch->run( 1 );
 
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );
@@ -59,7 +59,7 @@ class PostBatchTest extends WP_UnitTestCase {
 		}
 
 		// Run again so it skips some.
-		$run = $post_batch->run( 1 );
+		$post_batch->run( 1 );
 	}
 
 	/**
@@ -79,7 +79,7 @@ class PostBatchTest extends WP_UnitTestCase {
 			),
 		) );
 
-		$run = $post_batch->run( 1 );
+		$post_batch->run( 1 );
 
 		$post_batch->clear_result_status();
 
@@ -116,7 +116,7 @@ class PostBatchTest extends WP_UnitTestCase {
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertFalse( $batch_status );
 
-		$run = $post_batch->run( 2 );
+		$post_batch->run( 2 );
 
 		$batch_status = get_option( 'loco_batch_' . $post_batch->slug );
 		$this->assertEquals( 'finished', $batch_status['status'] );

@@ -67,6 +67,13 @@ abstract class Batch {
 	public $callback;
 
 	/**
+	 * Status of current process.
+	 *
+	 * @var string
+	 */
+	public $status;
+
+	/**
 	 * Currently registered batches.
 	 *
 	 * @var array
@@ -76,14 +83,14 @@ abstract class Batch {
 	/**
 	 * Current step this batch is on.
 	 *
-	 * @var array
+	 * @var int
 	 */
 	public $current_step = 0;
 
 	/**
 	 * Total number of results.
 	 *
-	 * @var array
+	 * @var int
 	 */
 	public $total_num_results;
 
