@@ -26,6 +26,25 @@
 	margin-top: 0;
 }
 
+.batch-picker .button-secondary {
+	background: none !important;
+	border: none !important;
+	box-shadow: none;
+	margin-left: 10px;
+	font-size: 12px;
+	color: #cc7373;
+}
+
+.batch-picker .button-secondary:active {
+	box-shadow: none;
+	transform: none;
+	color: #666;
+}
+
+.batch-picker .button-secondary[disabled] {
+	background: none !important;
+	color: #ccc !important;
+}
 /**
  * Overlay that contains info about current batch process.
  */
