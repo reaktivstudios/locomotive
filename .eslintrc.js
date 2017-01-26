@@ -50,6 +50,7 @@ module.exports = {
         "space-before-blocks" : "error",
         "space-before-function-paren" : "error",
         "space-in-parens" : [ "error", "always" ],
-        "wrap-iife": [ "error", "any" ]
+        "wrap-iife": [ "error", "any" ],
+        "yoda": [ "warn", "always" ]
     }
 };

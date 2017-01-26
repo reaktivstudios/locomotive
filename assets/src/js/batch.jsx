@@ -143,7 +143,7 @@ var App = React.createClass( {
 	},
 
 	toggleResetModal : function ( active ) {
-		if ( active === false || active === true ) {
+		if ( false === active || true === active ) {
 			this.setState( { resetActive: active } );
 		}
 	},
@@ -209,7 +209,7 @@ var App = React.createClass( {
 		}
 
 		// If we are currently processing a batch and there are results.
-		if ( sProcessing.remote_data.current_step !== sProcessing.remote_data.total_steps && sProcessing.remote_data.total_num_results !== 0 ) {
+		if ( sProcessing.remote_data.current_step !== sProcessing.remote_data.total_steps && 0 !== sProcessing.remote_data.total_num_results ) {
 			canRun = false;
 		}
 
