@@ -38,11 +38,11 @@ var ModalReset = React.createClass( {
 		return (
 			<div className={ classes }>
 				<div className="batch-overlay__inner">
-         <h3>Are you sure you want to reset this process?</h3>
-         <p>Doing so will reset the last run time back to never, and delete all associated post meta and options data.</p>
+					<h3>Are you sure you want to reset this process?</h3>
+					<p>Doing so will reset the last run time back to never, and delete all associated post meta and options data.</p>
 
-         <button id="submit" className="button button-primary" onClick={ this.props.resetBatch }>Reset</button>
-          <button id="submit" className="button button-secondary" onClick={ this.closeModal }>Cancel</button>
+					<button id="submit" className="button button-primary" onClick={ this.props.resetBatch }>Reset</button>
+					<button id="submit" className="button button-secondary" onClick={ this.closeModal }>Cancel</button>
 				</div>
 			</div>
 		);
