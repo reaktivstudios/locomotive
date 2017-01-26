@@ -7,7 +7,7 @@ var $ = jQuery; // We are loading this file after jQuery through `wp_enqueue_scr
  */
 import BatchPicker from './components/BatchPicker';
 import Modal from './components/Modal';
-import ModalError from './components/ModalReset';
+import ModalReset from './components/ModalReset';
 
 /**
  * Our Locomotive App.
@@ -142,8 +142,8 @@ var App = React.createClass( {
 		this.toggleProcessing( true );
 	},
 
-	toggleResetModal : function( active ) {
-		if( active === false || active === true ) {
+	toggleResetModal : function ( active ) {
+		if ( active === false || active === true ) {
 			this.setState( { resetActive: active } );
 		}
 	},
@@ -246,7 +246,7 @@ var App = React.createClass( {
 					toggleProcessing={ this.toggleProcessing }
 				/>
 
-				<ModalError
+				<ModalReset
 					isOpen={ this.state.resetActive }
 					resetBatch={ this.resetBatch }
 					toggleResetModal={ this.toggleResetModal }

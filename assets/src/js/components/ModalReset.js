@@ -10,8 +10,8 @@ var ModalReset = React.createClass( {
 	 */
 	propTypes: {
 		isOpen: React.PropTypes.bool,
-    resetBatch: React.PropTypes.func,
-    toggleResetModal: React.PropTypes.func
+		resetBatch: React.PropTypes.func,
+		toggleResetModal: React.PropTypes.func
 	},
 
 	mixins: [
@@ -24,9 +24,9 @@ var ModalReset = React.createClass( {
 		}
 	},
 
-  closeModal: function() {
-    this.props.toggleResetModal( false );
-  },
+	closeModal: function () {
+		this.props.toggleResetModal( false );
+	},
 
 	render : function () {
 		var classes = 'locomotive-overlay';
@@ -41,8 +41,8 @@ var ModalReset = React.createClass( {
          <h3>Are you sure you want to reset this process?</h3>
          <p>Doing so will reset the last run time back to never, and delete all associated post meta and options data.</p>
 
-         <button id="submit" className="button button-primary" onClick={ this.props.resetBatch.bind( null, 1 ) }>Reset</button>
-          <button id="submit" className="button button-secondary" onClick={ this.handleClickOutside.bind( null ) }>Cancel</button>
+         <button id="submit" className="button button-primary" onClick={ this.props.resetBatch }>Reset</button>
+          <button id="submit" className="button button-secondary" onClick={ this.closeModal }>Cancel</button>
 				</div>
 			</div>
 		);
