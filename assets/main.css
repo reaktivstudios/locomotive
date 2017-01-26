@@ -2,7 +2,7 @@
  * Styles for the Locomotive plugin.
  */
 
-* {
+#batch-main * {
 	box-sizing: border-box;
 }
 
