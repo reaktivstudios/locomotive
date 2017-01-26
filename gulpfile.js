@@ -54,6 +54,7 @@ gulp.task( 'eslint', function() {
     return gulp.src([ 'assets/src/**/*.js', 'assets/src/**/*.jsx' ])
               .pipe( eslint() )
               .pipe( eslint.format() )
+              .pipe( eslint.failAfterError() )
 });
 
 /**
