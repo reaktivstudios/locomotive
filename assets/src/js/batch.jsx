@@ -196,20 +196,20 @@ var App = React.createClass( {
 	canInteractWithBatch : function () {
 		// Default to being able to run a batch.
 		var canRun = true;
-		var sProcessing = this.state.processing;
+		var state = this.state.processing;
 
 		// If we don't have a batch selected.
-		if ( false === sProcessing.batch ) {
+		if ( false === state.batch ) {
 			canRun = false;
 		}
 
 		// If we are have the modal open.
-		if ( sProcessing.active ) {
+		if ( state.active ) {
 			canRun = false;
 		}
 
 		// If we are currently processing a batch and there are results.
-		if ( sProcessing.remote_data.current_step !== sProcessing.remote_data.total_steps && 0 !== sProcessing.remote_data.total_num_results ) {
+		if ( state.remote_data.current_step !== state.remote_data.total_steps && 0 !== state.remote_data.total_num_results ) {
 			canRun = false;
 		}
 
