@@ -13,7 +13,7 @@ var BatchPicker = React.createClass( {
 		updateSelectedBatch: React.PropTypes.func,
 		runBatch: React.PropTypes.func,
 		canInteractWithBatch: React.PropTypes.bool,
-		resetBatch: React.PropTypes.func
+		toggleResetModal: React.PropTypes.func
 	},
 	/**
 	 * Render an individual batch option.
@@ -46,8 +46,8 @@ var BatchPicker = React.createClass( {
 					{ Object.keys( this.props.batches ).map( this.renderBatchOption ) }
 				</ul>
 
-				<button id="submit" className="button button-primary" onClick={ this.props.runBatch.bind( null, 1 ) } disabled={ ! this.props.canInteractWithBatch }>Run Batch Process</button>
-				<button id="reset" className="button button-secondary" onClick={ this.props.resetBatch } disabled={ ! this.props.canInteractWithBatch }>Reset Batch Process</button>
+				<button id="submit" className="button button-primary" onClick={ this.props.runBatch.bind( null, 1 ) } disabled={ ! this.props.canInteractWithBatch }>Run</button>
+				<button id="reset" className="button-link" onClick={ this.props.toggleResetModal.bind( null, true ) } disabled={ ! this.props.canInteractWithBatch }>Reset Batch</button>
 			</div>
 		);
 	}

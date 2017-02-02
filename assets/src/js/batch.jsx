@@ -7,6 +7,7 @@ var $ = jQuery; // We are loading this file after jQuery through `wp_enqueue_scr
  */
 import BatchPicker from './components/BatchPicker';
 import Modal from './components/Modal';
+import ModalReset from './components/ModalReset';
 
 /**
  * Our Locomotive App.
@@ -36,6 +37,7 @@ var App = React.createClass( {
 				}
 			},
 			errors: [],
+			resetActive: false
 		};
 	},
 
@@ -140,6 +142,11 @@ var App = React.createClass( {
 		this.toggleProcessing( true );
 	},
 
+	toggleResetModal : function ( active ) {
+		if ( false === active || true === active ) {
+			this.setState( { resetActive: active } );
+		}
+	},
 	/**
 	 * Reset the selected batch process.
 	 */
@@ -147,6 +154,8 @@ var App = React.createClass( {
 		if ( '' === this.state.processing.batch ) {
 			return;
 		}
+
+		this.setState( { resetActive: false } );
 
 		var self = this,
 			batchSlug = self.state.processing.batch.toString();
@@ -187,20 +196,20 @@ var App = React.createClass( {
 	canInteractWithBatch : function () {
 		// Default to being able to run a batch.
 		var canRun = true;
-		var sProcessing = this.state.processing;
+		var processingState = this.state.processing;
 
 		// If we don't have a batch selected.
-		if ( false === sProcessing.batch ) {
+		if ( false === processingState.batch ) {
 			canRun = false;
 		}
 
 		// If we are have the modal open.
-		if ( sProcessing.active ) {
+		if ( processingState.active ) {
 			canRun = false;
 		}
 
 		// If we are currently processing a batch and there are results.
-		if ( sProcessing.remote_data.current_step !== sProcessing.remote_data.total_steps && sProcessing.remote_data.total_num_results !== 0 ) {
+		if ( processingState.remote_data.current_step !== processingState.remote_data.total_steps && 0 !== processingState.remote_data.total_num_results ) {
 			canRun = false;
 		}
 
@@ -226,7 +235,7 @@ var App = React.createClass( {
 					canInteractWithBatch={ this.canInteractWithBatch() }
 					updateSelectedBatch={ this.updateSelectedBatch }
 					runBatch={ this.runBatch }
-					resetBatch={ this.resetBatch }
+					toggleResetModal={ this.toggleResetModal }
 				/>
 
 				<Modal
@@ -235,6 +244,12 @@ var App = React.createClass( {
 					batchInfo={ this.state.processing.remote_data }
 					batchErrors={ this.state.errors }
 					toggleProcessing={ this.toggleProcessing }
+				/>
+
+				<ModalReset
+					isOpen={ this.state.resetActive }
+					resetBatch={ this.resetBatch }
+					toggleResetModal={ this.toggleResetModal }
 				/>
 			</div>
 		);
