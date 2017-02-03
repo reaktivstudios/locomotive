@@ -134,9 +134,9 @@ class UserBatchTest extends WP_UnitTestCase {
 		$_POST['total_num_results'] = 9;
 		$user_batch->run( 2 );
 
-		// Check that all users have been deleted.
+		// Check that all users have been deleted. There should be one remaining, because of the main User ID.
 		$all_users = get_users();
-		$this->assertCount( 0, $all_users );
+		$this->assertCount( 1, $all_users );
 
 		// Ensure that we are still getting a finished message.
 		$batch_status = get_option( 'loco_batch_' . $user_batch->slug );
