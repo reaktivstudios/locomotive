@@ -196,6 +196,32 @@ class BatchTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that offset is applied properly to each step
+	 */
+	public function test_for_proper_offset() {
+		$this->factory->post->create_many( 10 );
+
+		$post_batch = new Posts();
+
+		$post_batch->register( array(
+			'name'     => 'Hey there',
+			'type'     => 'post',
+			'callback' => __NAMESPACE__ . '\\my_post_callback_function_test',
+			'args'     => array(
+				'posts_per_page' => 5,
+				'post_type'      => 'post',
+			),
+		) );
+
+		$first_run = $post_batch->run( 1 );
+		$second_run = $post_batch->run( 2 );
+
+		// Results from the first and second run should NOT match.
+		$this->assertNotEquals( $second_run['query_results'][0]->ID, $first_run['query_results'][0]->ID );
+
+	}
+
+	/**
 	 * Test that batch gets run.
 	 */
 	public function test_run_with_error() {
