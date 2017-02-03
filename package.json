@@ -1,6 +1,6 @@
 {
   "name": "locomotive",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Batch Processing WordPress plugin from Reaktiv Studios",
   "main": "gulpfile.js",
   "scripts": {
