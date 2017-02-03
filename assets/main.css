@@ -61,7 +61,7 @@
 	margin: auto;
 	position: absolute;
 	top: -650px;
-	left: 0; bottom: 0; right: 0;
+	left: 0; right: 0;
 
 	background: white;
 	box-shadow: 0 0 10px #ccc;
