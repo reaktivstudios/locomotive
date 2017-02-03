@@ -28,7 +28,7 @@ final class Loader {
 	 * Define all the constants we need
 	 */
 	public function define_constants() {
-		define( 'LOCO_VERSION', '0.1.0-dev' );
+		define( 'LOCO_VERSION', '0.1.0' );
 		define( 'LOCO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 		define( 'LOCO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		define( 'LOCO_PLUGIN_FILE', __FILE__ );
