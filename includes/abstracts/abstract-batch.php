@@ -144,14 +144,22 @@ abstract class Batch {
 	/**
 	 * Main plugin method for querying data.
 	 *
+	 * We need to run the query twice for each step. The first query is run in order to properly set
+	 * the total number of results retrieved from the *query*. This number is then compared to the original total
+	 * from the *request*, and a new offset is calculated based on these values. Once the offset is calculated, we
+	 * run the query again, this time actually pulling the results.
+	 *
 	 * @since 0.1
 	 *
 	 * @return mixed An array of data to be processed in bulk fashion.
 	 */
 	public function get_results() {
 		$this->args = wp_parse_args( $this->args, $this->default_args );
-		$results = $this->batch_get_results();
+		$this->batch_get_results();
 		$this->calculate_offset();
+
+		// Run query again, but this time with the new offset calculated.
+		$results = $this->batch_get_results();
 		return $results;
 	}
 
