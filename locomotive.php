@@ -45,6 +45,9 @@ final class Loader {
 			'locomotive',
 			array( $this, 'dashboard_display' )
 		);
+
+		// Load our contextual help tab.
+		add_action( 'load-tools_page_locomotive', array( $this, 'dashboard_help_tab' ) );
 	}
 
 	/**
@@ -53,6 +56,46 @@ final class Loader {
 	public function dashboard_display() {
 		$registered_batches = locomotive_get_all_batches();
 		include LOCO_PLUGIN_DIR . 'templates/dashboard.php';
+	}
+
+	/**
+	 * The contextual help tab display.
+	 */
+	public function dashboard_help_tab() {
+
+		// Bail if we don't have our current screen available yet.
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+
+		// If any part of getting the screen isn't correct, bail.
+		if ( ! is_object( $screen ) || empty( $screen->id ) || 'tools_page_locomotive' !== $screen->id ) {
+			return;
+		}
+
+		// Load our actual help tab.
+		$screen->add_help_tab( array(
+			'id'        => 'help-overview',
+			'title'     => esc_html__( 'Overview', 'locomotive' ),
+			'content'   => '<p>' . esc_html__( 'Locomotive is a batch processing library that can be used to write a single or set of functions to be processed across a large data set, right from the WordPress admin. You can use it to add meta values to posts based on arbitrary data, process and delete spam comments and revisions, submit posts through external API\'s, or simply change data on a large amount of posts at the same time.', 'locomotive' ) . '</p>',
+		) );
+
+		// Set up the text for the sidebar.
+		$side   = '<p><strong>' . esc_html__( 'More on GitHub:', 'locomotive' ) . '</strong></p>';
+		$side  .= '<ul>';
+			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive">' . esc_html__( 'Repository', 'locomotive' ) . '</a></li>';
+			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/wiki">' . esc_html__( 'Documentation', 'locomotive' ) . '</a></li>';
+			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/wiki/Examples">' . esc_html__( 'Examples', 'locomotive' ) . '</a></li>';
+			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/issues">' . esc_html__( 'Issues', 'locomotive' ) . '</a></li>';
+		$side  .= '</ul>';
+
+		// Send through our filter.
+		$side   = apply_filters( 'loco_help_tab_sidebar', $side );
+
+		// Load the sidebar portion of the help tab.
+		$screen->set_help_sidebar( $side );
 	}
 
 	/**
