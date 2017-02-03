@@ -78,17 +78,17 @@ final class Loader {
 		// Load our actual help tab.
 		$screen->add_help_tab( array(
 			'id'        => 'help-overview',
-			'title'     => __( 'Overview', 'locomotive' ),
-			'content'   => '<p>' . __( 'Locomotive is a batch processing library that can be used to write a single or set of functions to be processed across a large data set, right from the WordPress admin. You can use it to add meta values to posts based on arbitrary data, process and delete spam comments and revisions, submit posts through external API\'s, or simply change data on a large amount of posts at the same time.', 'locomotive' ) . '</p>',
+			'title'     => esc_html__( 'Overview', 'locomotive' ),
+			'content'   => '<p>' . esc_html__( 'Locomotive is a batch processing library that can be used to write a single or set of functions to be processed across a large data set, right from the WordPress admin. You can use it to add meta values to posts based on arbitrary data, process and delete spam comments and revisions, submit posts through external API\'s, or simply change data on a large amount of posts at the same time.', 'locomotive' ) . '</p>',
 		) );
 
 		// Set up the text for the sidebar.
-		$side   = '<p><strong>' . __( 'More on GitHub:', 'locomotive' ) . '</strong></p>';
+		$side   = '<p><strong>' . esc_html__( 'More on GitHub:', 'locomotive' ) . '</strong></p>';
 		$side  .= '<ul>';
-			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive">' . __( 'Repository', 'locomotive' ) . '</a></li>';
-			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/wiki">' . __( 'Documentation', 'locomotive' ) . '</a></li>';
-			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/wiki/Examples">' . __( 'Examples', 'locomotive' ) . '</a></li>';
-			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/issues">' . __( 'Issues', 'locomotive' ) . '</a></li>';
+			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive">' . esc_html__( 'Repository', 'locomotive' ) . '</a></li>';
+			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/wiki">' . esc_html__( 'Documentation', 'locomotive' ) . '</a></li>';
+			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/wiki/Examples">' . esc_html__( 'Examples', 'locomotive' ) . '</a></li>';
+			$side  .= '<li><a href="https://github.com/reaktivstudios/locomotive/issues">' . esc_html__( 'Issues', 'locomotive' ) . '</a></li>';
 		$side  .= '</ul>';
 
 		// Send through our filter.
