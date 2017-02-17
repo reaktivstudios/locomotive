@@ -2,6 +2,7 @@
     "name": "reaktivstudios/locomotive",
     "description": "Run batch processes in WordPress.",
     "license": "GPL2+",
+    "type": "wordpress-plugin",
     "authors": [
         {
             "name": "Reaktiv Studios",
