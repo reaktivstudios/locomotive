@@ -16,41 +16,70 @@ use Rkv\Locomotive\Batches\Comments;
  * Register a new batch process.
  *
  * @param  array $args Arguments for the batch process.
- * @throws Exception Only post & user are accepted $args['type'].
+ * @throws Exception If the batch processor doesn't extend the Batch abstract class.
  */
 function register_batch_process( $args ) {
 	if ( empty( $args['type'] ) ) {
 		$args['type'] = '';
 	}
 
-	switch ( $args['type'] ) {
+	/**
+	 * Filter the batch processor to be used with the batch process being registered.
+	 *
+	 * @param Batch  $batch_processor The batch processor to use, defaults to null.
+	 * @param string $type            Type of data for this batch process.
+	 * @param array  $args            Arguments for the batch process.
+	 */
+	$batch_processor = apply_filters( 'loco_register_batch_process_processor', null, $args['type'], $args );
+
+	if ( empty( $batch_processor ) ) {
+		return;
+	}
+
+	if ( ! is_subclass_of( $batch_processor, 'Rkv\Locomotive\Abstracts\Batch' ) ) {
+		throw new Exception( __( 'Batch processor must extend the Batch abstract class.', 'locomotive' ) );
+	}
+
+	$batch_processor->register( $args );
+}
+
+/**
+ * Filters the batch processor to use for default data types.
+ *
+ * @param Batch  $batch_processor The batch processor to use, defaults to null.
+ * @param string $type            Type of data for this batch process.
+ *
+ * @return Batch The batch processor to use for a specific data type.
+ */
+function register_default_batch_processors( $batch_processor, $type ) {
+	switch ( $type ) {
 		case 'post':
-			$batch_process = new Posts();
-			$batch_process->register( $args );
+			$batch_processor = new Posts();
 			break;
 
 		case 'user':
-			$batch_process = new Users();
-			$batch_process->register( $args );
+			$batch_processor = new Users();
 			break;
+
 		case 'site':
 			if ( is_multisite() ) {
-				$batch_process = new Sites();
-				$batch_process->register( $args );
+				$batch_processor = new Sites();
 			}
 			break;
 
 		case 'term':
-			$batch_process = new Terms();
-			$batch_process->register( $args );
+			$batch_processor = new Terms();
 			break;
 
 		case 'comment':
-			$batch_process = new Comments();
-			$batch_process->register( $args );
+			$batch_processor = new Comments();
 			break;
 	}
+
+	return $batch_processor;
 }
+
+add_filter( 'loco_register_batch_process_processor', __NAMESPACE__ . '\\register_default_batch_processors', 10, 2 );
 
 /**
  * Get the batch hooks that have been added and some info about them.
