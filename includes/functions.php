@@ -34,9 +34,9 @@ function register_batch_process( $args ) {
 	 */
 	$batch_processor = apply_filters( 'loco_register_batch_processor', null, $args['type'], $args );
 
-	//Check if filter returned a valid processor.
-	//If so, use that, else continue to defaults
-	if( is_string( $batch_processor )  && is_subclass_of( $batch_processor, 'Rkv\Locomotive\Abstracts\Batch' ) ){
+	// Check if filter returned a valid processor.
+	// If so, use that, else continue to defaults.
+	if ( is_string( $batch_processor ) && is_subclass_of( $batch_processor, 'Rkv\Locomotive\Abstracts\Batch' ) ) {
 		$batch_process = new $batch_processor();
 		$batch_process->register( $args );
 		return;
