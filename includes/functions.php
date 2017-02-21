@@ -23,6 +23,8 @@ function register_batch_process( $args ) {
 		$args['type'] = '';
 	}
 
+	$batch_processor = get_default_batch_processor_for_type( $args['type'] );
+
 	/**
 	 * Filter the batch processor to be used with the batch process being registered.
 	 *
@@ -30,7 +32,7 @@ function register_batch_process( $args ) {
 	 * @param string $type            Type of data for this batch process.
 	 * @param array  $args            Arguments for the batch process.
 	 */
-	$batch_processor = apply_filters( 'loco_register_batch_process_processor', null, $args['type'], $args );
+	$batch_processor = apply_filters( 'loco_register_batch_process_processor', $batch_processor, $args['type'], $args );
 
 	if ( empty( $batch_processor ) ) {
 		return;
@@ -42,26 +44,6 @@ function register_batch_process( $args ) {
 
 	$batch_processor->register( $args );
 }
-
-/**
- * Filters the batch processor to use for default data types.
- *
- * @param Batch  $batch_processor The batch processor to use, defaults to null.
- * @param string $type            Type of data for this batch process.
- *
- * @return Batch The batch processor to use for a specific data type.
- */
-function register_default_batch_processors( $batch_processor, $type ) {
-    $default_processor = get_default_batch_processor_for_type( $type );
-
-    if ( ! $default_processor ) {
-        return $batch_processor;
-    }
-
-    return $default_processor;
-}
-
-add_filter( 'loco_register_batch_process_processor', __NAMESPACE__ . '\\register_default_batch_processors', 10, 2 );
 
 /**
  * Returns the default batch processor used for a specific type of data.
