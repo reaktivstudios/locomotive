@@ -35,7 +35,10 @@ function register_batch_process( $args ) {
 	$batch_processor = apply_filters( 'loco_register_batch_process_processor', $batch_processor, $args['type'], $args );
 
 	if ( empty( $batch_processor ) ) {
-		return;
+		throw new Exception( sprintf(
+			__( 'Batch processor not found for type "%1$s"', 'locomotive' ),
+			$args['type']
+		) );
 	}
 
 	if ( ! is_subclass_of( $batch_processor, 'Rkv\Locomotive\Abstracts\Batch' ) ) {
