@@ -52,34 +52,51 @@ function register_batch_process( $args ) {
  * @return Batch The batch processor to use for a specific data type.
  */
 function register_default_batch_processors( $batch_processor, $type ) {
+    $default_processor = get_default_batch_processor_for_type( $type );
+
+    if ( ! $default_processor ) {
+        return $batch_processor;
+    }
+
+    return $default_processor;
+}
+
+add_filter( 'loco_register_batch_process_processor', __NAMESPACE__ . '\\register_default_batch_processors', 10, 2 );
+
+/**
+ * Returns the default batch processor used for a specific type of data.
+ *
+ * @param string $type Type of data to get a batch processor for.
+ *
+ * @return Batch|null The batch processor to use for the specified type, null if not a default type.
+ */
+function get_default_batch_processor_for_type( $type ) {
 	switch ( $type ) {
 		case 'post':
-			$batch_processor = new Posts();
+			return new Posts();
 			break;
 
 		case 'user':
-			$batch_processor = new Users();
+			return new Users();
 			break;
 
 		case 'site':
 			if ( is_multisite() ) {
-				$batch_processor = new Sites();
+				return new Sites();
 			}
 			break;
 
 		case 'term':
-			$batch_processor = new Terms();
+			return new Terms();
 			break;
 
 		case 'comment':
-			$batch_processor = new Comments();
+			return new Comments();
 			break;
 	}
 
-	return $batch_processor;
+	return null;
 }
-
-add_filter( 'loco_register_batch_process_processor', __NAMESPACE__ . '\\register_default_batch_processors', 10, 2 );
 
 /**
  * Get the batch hooks that have been added and some info about them.
